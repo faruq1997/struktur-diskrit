@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Struktur Diskrit - Universitas Nusa Mandiri</title>
+
+<!-- ✅ Bootstrap 5 CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body { background-color: #f8fafc; font-family: "Segoe UI", sans-serif; }
+header { background-color: #0d6efd; color: white; padding: 1.5rem; text-align: center; }
+.editable { background-color: #fff8e1; cursor: text; }
+.alert code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+</style>
+</head>
+
+<body>
+<header>
+  <h3>🎓 Contoh Struktur Diskrit</h3>
+  <p>Universitas Nusa Mandiri – Sistem Informasi (Semester 1)</p>
+</header>
+
+<div class="container my-4">
+  <ul class="nav nav-tabs mb-3" id="tabMenu">
+    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#quantor">Kuantor</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#induksi">Induksi</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#himpunan">Himpunan</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#relasi">Relasi</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#fungsi">Fungsi</a></li>
+  </ul>
+
+  <div class="tab-content">
+
+    <!-- ============== 1️⃣ KUANTOR ============== -->
+    <div class="tab-pane fade show active" id="quantor">
+      <div class="card p-3">
+        <h5>Game Kuantor (∀, ∃)</h5>
+        <p>Semua Mahasiswa memiliki email nusamandiri (Universal), jika ada mahasiswa yang ipk >= 3.8 maka berprestasi (Eksistensial)</p>
+
+        <div class="table-responsive">
+          <table class="table table-bordered text-center align-middle" id="quantorTable">
+            <thead class="table-light">
+              <tr><th>Nama</th><th>Email</th><th>IPK</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="d-flex gap-2 my-2">
+          <button class="btn btn-primary" onclick="generateQuantor()">🔄 Generate Data</button>
+          <button class="btn btn-success" onclick="checkQuantor()">✅ Cek Hasil</button>
+        </div>
+
+        <div id="quantorResult" class="alert alert-info">Belum dicek.</div>
+      </div>
+    </div>
+
+    <!-- ============== 2️⃣ INDUKSI ============== -->
+    <div class="tab-pane fade" id="induksi">
+      <div class="card p-3">
+        <h5>Game Induksi – Total SKS Mahasiswa</h5>
+        <p>Menghitung total SKS yang diambil oleh seorang mahasiswa selama beberapa semester. Dimana tiap semester rata-rata mahasiswa mengambil 20 SKS. Sehingga semestinya tiap naik semester sks yang didapat adalah akumulatif dari sebelumnya. <code>total = 20 × n</code> masih benar.</p>
+
+        <div class="table-responsive">
+          <table class="table table-bordered text-center" id="induksiTable">
+            <thead class="table-light"><tr><th>Semester (n)</th><th>Jumlah SKS</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <button class="btn btn-success" onclick="checkInduksi()">✅ Cek Induksi</button>
+        <div id="induksiResult" class="alert alert-info mt-2">Belum dicek.</div>
+      </div>
+    </div>
+
+    <!-- ============== 3️⃣ HIMPUNAN ============== -->
+    <div class="tab-pane fade" id="himpunan">
+      <div class="card p-3">
+        <h5>Game Himpunan</h5>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label>Himpunan A</label>
+            <input id="setA" class="form-control" placeholder="Contoh: 1,2,3,4" />
+          </div>
+          <div class="col-md-4">
+            <label>Himpunan B</label>
+            <input id="setB" class="form-control" placeholder="Contoh: 3,4,5" />
+          </div>
+          <div class="col-md-4 d-grid align-items-end">
+            <button class="btn btn-primary" onclick="processSets()">Tampilkan Hasil</button>
+          </div>
+        </div>
+        <div id="setResult" class="alert alert-light border mt-3">Masukkan dua himpunan untuk mulai.</div>
+      </div>
+    </div>
+
+    <!-- ============== 4️⃣ RELASI ============== -->
+    <div class="tab-pane fade" id="relasi">
+      <div class="card p-3">
+        <h5>Game Relasi – Dosen & Mata Kuliah</h5>
+        <div class="d-flex gap-2 mb-2 flex-wrap">
+          <select id="dosenSelect" class="form-select w-auto">
+            <option value="">Pilih Dosen</option>
+            <option>Bu Rina</option><option>Pak Andi</option><option>Bu Siti</option>
+          </select>
+          <select id="matkulSelect" class="form-select w-auto">
+            <option value="">Pilih Mata Kuliah</option>
+            <option>Algoritma</option><option>Basis Data</option><option>Logika Informatika</option>
+          </select>
+          <button class="btn btn-success" onclick="addRelasi()">Tambah Relasi</button>
+        </div>
+
+        <table class="table table-bordered text-center">
+          <thead class="table-light"><tr><th>Dosen</th><th>Mata Kuliah</th></tr></thead>
+          <tbody id="relasiTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============== 5️⃣ FUNGSI ============== -->
+    <div class="tab-pane fade" id="fungsi">
+      <div class="card p-3">
+        <h5>Game Fungsi – Pemetaan NIM → Nama</h5>
+        <p>Edit tabel dan cek apakah pemetaan valid (setiap NIM ke satu mahasiswa).</p>
+        <table class="table table-bordered text-center" id="fungsiTable">
+          <thead class="table-light"><tr><th>NIM</th><th>Nama</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" onclick="generateFungsi()">🔄 Generate Data</button>
+          <button class="btn btn-success" onclick="checkFungsi()">✅ Cek Fungsi</button>
+        </div>
+        <div id="fungsiResult" class="alert alert-info mt-2">Belum dicek.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bootstrap Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// =============== KUANTOR ===============
+function generateQuantor(){
+  const data = [
+    {nama:"Rina", email:"rina@nusamandiri.ac.id", ipk:3.8},
+    {nama:"Andi", email:"andi@gmail.com", ipk:3.2},
+    {nama:"Siti", email:"siti@nusamandiri.ac.id", ipk:3.9},
+  ];
+  let html="";
+  data.forEach(d=>{
+    html+=`<tr>
+      <td>${d.nama}</td>
+      <td contenteditable="true" class="editable">${d.email}</td>
+      <td contenteditable="true" class="editable">${d.ipk}</td>
+    </tr>`;
+  });
+  document.querySelector("#quantorTable tbody").innerHTML=html;
+  document.querySelector("#quantorResult").innerHTML="Data berhasil dibuat. Silakan edit & tekan cek.";
+}
+function checkQuantor(){
+  const rows = document.querySelectorAll("#quantorTable tbody tr");
+  let allEmail=true, anyHigh=false;
+  rows.forEach(r=>{
+    const email=r.cells[1].innerText.trim();
+    const ipk=parseFloat(r.cells[2].innerText);
+    if(!email.endsWith("@nusamandiri.ac.id")) allEmail=false;
+    if(ipk>=3.8) anyHigh=true;
+  });
+  const result = allEmail && anyHigh ?
+    `<span class='text-success fw-bold'>∀ dan ∃ terpenuhi! Semua email valid & ada mahasiswa berprestasi.</span>` :
+    `<span class='text-danger fw-bold'>Kondisi belum terpenuhi.</span>`;
+  document.querySelector("#quantorResult").innerHTML=result;
+}
+
+// =============== INDUKSI ===============
+function generateInduksi(){
+  let html="";
+  for(let i=1;i<=5;i++){
+    html+=`<tr><td>${i}</td><td contenteditable="true" class="editable">${20}</td></tr>`;
+  }
+  document.querySelector("#induksiTable tbody").innerHTML=html;
+}
+generateInduksi();
+function checkInduksi(){
+  const rows=document.querySelectorAll("#induksiTable tbody tr");
+  let valid=true;
+  rows.forEach(r=>{
+    const n=parseInt(r.cells[0].innerText);
+    const sks=parseInt(r.cells[1].innerText);
+    if(sks!==20*n) valid=false;
+  });
+  document.querySelector("#induksiResult").innerHTML=valid ?
+    `<span class='text-success fw-bold'>Induksi terbukti benar untuk semua semester.</span>` :
+    `<span class='text-danger fw-bold'>Ada semester yang tidak sesuai rumus 20×n.</span>`;
+}
+
+// =============== HIMPUNAN ===============
+function toSet(v){return new Set(v.split(",").map(x=>x.trim()).filter(Boolean));}
+function processSets(){
+  const A=toSet(document.getElementById("setA").value);
+  const B=toSet(document.getElementById("setB").value);
+  const union=[...new Set([...A,...B])];
+  const inter=[...A].filter(x=>B.has(x));
+  const diff=[...A].filter(x=>!B.has(x));
+  document.getElementById("setResult").innerHTML=`
+  <b>Gabungan (A ∪ B):</b> {${union.join(", ")}}<br>
+  <b>Irisan (A ∩ B):</b> {${inter.join(", ")}}<br>
+  <b>Selisih (A − B):</b> {${diff.join(", ")}}
+  `;
+}
+
+// =============== RELASI ===============
+const relasi=[];
+function addRelasi(){
+  const dosen=document.getElementById("dosenSelect").value;
+  const matkul=document.getElementById("matkulSelect").value;
+  if(!dosen||!matkul) return alert("Pilih dosen dan mata kuliah dulu.");
+  relasi.push({dosen,matkul});
+  let html="";
+  relasi.forEach(r=>{html+=`<tr><td>${r.dosen}</td><td>${r.matkul}</td></tr>`});
+  document.getElementById("relasiTable").innerHTML=html;
+}
+
+// =============== FUNGSI ===============
+function generateFungsi(){
+  const data=[
+    {nim:"231001", nama:"Rina"},
+    {nim:"231002", nama:"Andi"},
+    {nim:"231003", nama:"Andi"},
+  ];
+  let html="";
+  data.forEach(d=>{
+    html+=`<tr>
+      <td contenteditable="true" class="editable">${d.nim}</td>
+      <td contenteditable="true" class="editable">${d.nama}</td>
+    </tr>`;
+  });
+  document.querySelector("#fungsiTable tbody").innerHTML=html;
+  document.querySelector("#fungsiResult").innerHTML="Data fungsi berhasil dibuat.";
+}
+generateFungsi();
+function checkFungsi(){
+  const rows=document.querySelectorAll("#fungsiTable tbody tr");
+  const nims=[...rows].map(r=>r.cells[0].innerText.trim());
+  const unique=new Set(nims);
+  const valid = nims.length===unique.size;
+  document.querySelector("#fungsiResult").innerHTML = valid ?
+    `<span class='text-success fw-bold'>Valid: setiap NIM punya 1 mahasiswa (fungsi sah).</span>` :
+    `<span class='text-danger fw-bold'>Tidak valid: ada NIM ganda → fungsi tidak sah.</span>`;
+}
+</script>
+</body>
+</html>
