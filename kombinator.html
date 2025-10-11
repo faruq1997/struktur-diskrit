@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>🐍 Snake Kombinatorika</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap 5 & jQuery (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    body { background: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', sans-serif; }
+    .navbar { background:#111827; }
+    #gameArea { display:flex; justify-content:center; align-items:center; margin-top:1rem; }
+    canvas { background:#1e293b; border:2px solid #334155; }
+    #hud { text-align:center; margin-top:1rem; }
+    .modal-content { background:#111827; color:#e2e8f0; }
+    .btn-primary { background:#6366f1; border-color:#6366f1; }
+    .badge-soft { background:rgba(99,102,241,.12); color:#c7d2fe; border:1px solid rgba(99,102,241,.35); }
+  </style>
+</head>
+<body>
+
+<nav class="navbar border-bottom border-secondary">
+  <div class="container-fluid">
+    <span class="navbar-brand text-light fw-bold">🐍 Snake Kombinatorika</span>
+    <button class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#helpModal">Bantuan</button>
+  </div>
+</nav>
+
+<div id="hud">
+  <span class="badge text-bg-dark">Skor: <span id="score">0</span></span>
+  <span class="badge badge-soft ms-2" id="questionLabel">Soal: ...</span>
+</div>
+
+<div id="gameArea">
+  <canvas id="gameCanvas" width="600" height="400"></canvas>
+</div>
+
+<!-- Bantuan -->
+<div class="modal fade" id="helpModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Panduan Permainan</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>Gerakkan ular dengan tombol panah (↑ ↓ ← →).</p>
+        <p>Setiap makanan memiliki label jawaban kombinatorial (contoh: <code>60</code> untuk P(5,3)).</p>
+        <p>Pilih makanan yang merupakan <strong>jawaban benar</strong> untuk soal di atas layar.</p>
+        <ul>
+          <li>Benar → skor +10 dan ular tumbuh.</li>
+          <li>Salah → game over.</li>
+        </ul>
+        <p>Soal dapat berupa Faktorial, Permutasi, atau Kombinasi.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-dismiss="modal">Mulai Bermain</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ========= Utility Kombinatorika ========= */
+function fact(n){ let r=1n; for(let i=2n;i<=n;i++) r*=i; return r; }
+function perm(n,r){ if(r>n) return 0n; let res=1n; for(let i=0n;i<r;i++) res*=(n-i); return res; }
+function comb(n,r){ if(r>n) return 0n; if(r>n-r) r=n-r; let num=1n, den=1n; for(let i=1n;i<=r;i++){ num*=(n-r+i); den*=i; } return num/den; }
+function rand(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+
+/* ========= Soal Generator ========= */
+function genQuestion(){
+  const type = ["fact","perm","comb"][rand(0,2)];
+  let n = rand(4,9), r = rand(2, n-1);
+  let ans;
+  if(type==="fact"){ ans = fact(BigInt(n)); return {q:`Berapa ${n}! ?`, a:ans.toString()}; }
+  if(type==="perm"){ ans = perm(BigInt(n),BigInt(r)); return {q:`Hitung P(${n},${r})`, a:ans.toString()}; }
+  ans = comb(BigInt(n),BigInt(r)); return {q:`Hitung C(${n},${r})`, a:ans.toString()};
+}
+
+/* ========= Game Variables ========= */
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const box = 20; // grid size
+let snake, dir, foodItems, question, score, gameOver;
+
+/* ========= Game Initialization ========= */
+function initGame(){
+  snake = [{x:10, y:10}];
+  dir = "RIGHT";
+  score = 0;
+  gameOver = false;
+  question = genQuestion();
+  $("#questionLabel").text(`Soal: ${question.q}`);
+  $("#score").text(score);
+  spawnFoods();
+}
+
+/* ========= Spawn Food (3 opsi: 1 benar, 2 salah) ========= */
+function spawnFoods(){
+  foodItems = [];
+  const correct = { x: rand(0, (canvas.width/box)-1), y: rand(0, (canvas.height/box)-1), val: question.a, correct: true };
+  foodItems.push(correct);
+  for(let i=0;i<2;i++){
+    const wrongVal = BigInt(question.a) + BigInt(rand(-5,5)||1);
+    foodItems.push({ x: rand(0,(canvas.width/box)-1), y: rand(0,(canvas.height/box)-1), val: wrongVal.toString(), correct: false });
+  }
+}
+
+/* ========= Drawing ========= */
+function draw(){
+  ctx.fillStyle = "#1e293b";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // snake
+  for(let i=0;i<snake.length;i++){
+    ctx.fillStyle = (i===0) ? "#6366f1" : "#94a3b8";
+    ctx.fillRect(snake[i].x*box, snake[i].y*box, box-1, box-1);
+  }
+
+  // food
+  foodItems.forEach(f=>{
+    ctx.fillStyle = f.correct ? "#22c55e" : "#f87171";
+    ctx.fillRect(f.x*box, f.y*box, box-1, box-1);
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "10px monospace";
+    ctx.fillText(f.val, f.x*box+2, f.y*box+12);
+  });
+}
+
+/* ========= Movement ========= */
+function move(){
+  if(gameOver) return;
+  let head = {...snake[0]};
+  if(dir==="LEFT") head.x--; else if(dir==="RIGHT") head.x++;
+  else if(dir==="UP") head.y--; else if(dir==="DOWN") head.y++;
+
+  // collision with wall
+  if(head.x<0 || head.x>=canvas.width/box || head.y<0 || head.y>=canvas.height/box){ endGame(); return; }
+
+  // collision with self
+  for(let s of snake){ if(s.x===head.x && s.y===head.y){ endGame(); return; } }
+
+  // check food collision
+  for(let i=0;i<foodItems.length;i++){
+    if(head.x===foodItems[i].x && head.y===foodItems[i].y){
+      if(foodItems[i].correct){
+        score+=10;
+        $("#score").text(score);
+        question = genQuestion();
+        $("#questionLabel").text(`Soal: ${question.q}`);
+        spawnFoods();
+        snake.unshift(head);
+        return; // skip removing tail (grow)
+      } else {
+        endGame();
+        return;
+      }
+    }
+  }
+
+  snake.unshift(head);
+  snake.pop();
+}
+
+/* ========= Game Over ========= */
+function endGame(){
+  gameOver = true;
+  ctx.fillStyle = "rgba(0,0,0,0.6)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "#f87171";
+  ctx.font = "30px sans-serif";
+  ctx.fillText("💀 Game Over", canvas.width/2-100, canvas.height/2);
+  ctx.font = "18px monospace";
+  ctx.fillText(`Skor: ${score}`, canvas.width/2-35, canvas.height/2+30);
+}
+
+/* ========= Control ========= */
+document.addEventListener("keydown", e=>{
+  if(e.key==="ArrowLeft" && dir!=="RIGHT") dir="LEFT";
+  if(e.key==="ArrowRight" && dir!=="LEFT") dir="RIGHT";
+  if(e.key==="ArrowUp" && dir!=="DOWN") dir="UP";
+  if(e.key==="ArrowDown" && dir!=="UP") dir="DOWN";
+  if(e.key==="r" || e.key==="R") initGame();
+});
+
+/* ========= Main Loop ========= */
+function loop(){
+  draw();
+  move();
+  setTimeout(loop, 120);
+}
+
+/* ========= Start ========= */
+$(function(){
+  initGame();
+  loop();
+});
+</script>
+</body>
+</html>
