@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>Game Kombinatorika — Struktur Diskrit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap 5 (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- jQuery (CDN) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- Bootstrap JS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    body { background: #0f172a; color: #e2e8f0; }
+    .navbar, .offcanvas, .modal-content { background: #0b1220; }
+    .card { background: #111827; border-color: #1f2937; }
+    .form-control, .form-select { background: #0b1220; color: #e2e8f0; border-color:#1f2937; }
+    .form-control:focus, .form-select:focus { box-shadow: 0 0 0 .25rem rgba(99,102,241,.25); border-color:#6366f1; }
+    .btn-primary { background:#6366f1; border-color:#6366f1; }
+    .btn-outline-light { border-color:#334155; color:#e2e8f0; }
+    .btn-outline-light:hover { background:#334155; }
+    .badge-soft { background: rgba(99,102,241,.12); color:#c7d2fe; border:1px solid rgba(99,102,241,.35); }
+    .kb-output { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .big { font-size:1.25rem; }
+    .progress { background:#1f2937; height: .6rem; }
+    .answer-correct { border: 1px solid #16a34a; box-shadow: 0 0 0 .2rem rgba(22,163,74,.25); }
+    .answer-wrong { border: 1px solid #dc2626; box-shadow: 0 0 0 .2rem rgba(220,38,38,.25); }
+    .muted { color:#94a3b8; }
+    a { color:#93c5fd; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg border-bottom border-secondary">
+  <div class="container">
+    <a class="navbar-brand text-light" href="#">
+      <span class="fw-bold">Kombinatorika</span> <span class="muted">Game • Struktur Diskrit</span>
+    </a>
+    <button class="btn btn-outline-light ms-auto" data-bs-toggle="offcanvas" data-bs-target="#help">Bantuan</button>
+  </div>
+</nav>
+
+<main class="container my-4">
+
+  <!-- Tabs -->
+  <ul class="nav nav-pills mb-4" id="modeTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="quiz-tab" data-bs-toggle="tab" data-bs-target="#quiz" type="button" role="tab">Quiz Mode</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="calc-tab" data-bs-toggle="tab" data-bs-target="#calc" type="button" role="tab">Calculator Mode</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="challenge-tab" data-bs-toggle="tab" data-bs-target="#challenge" type="button" role="tab">Challenge</button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+
+    <!-- QUIZ MODE -->
+    <section class="tab-pane fade show active" id="quiz" role="tabpanel">
+      <div class="row g-3 align-items-stretch">
+        <div class="col-lg-8">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Pertanyaan</h5>
+                <div>
+                  <span class="badge rounded-pill text-bg-dark border me-2"><span id="qIdx">1</span>/<span id="qTotal">10</span></span>
+                  <span class="badge badge-soft">Skor: <span id="score">0</span></span>
+                </div>
+              </div>
+              <hr>
+              <div id="questionText" class="big mb-2"></div>
+              <div id="questionHint" class="muted mb-3"></div>
+              <div id="answers" class="row gy-2"></div>
+
+              <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-outline-light" id="btnExplain">Lihat Penjelasan</button>
+                <button class="btn btn-primary ms-auto" id="btnNext">Soal Selanjutnya</button>
+              </div>
+              <div class="mt-3">
+                <div class="progress">
+                  <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+              </div>
+              <div id="explanation" class="mt-3 small"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-title">Pengaturan Quiz</h6>
+              <div class="row g-2">
+                <div class="col-12">
+                  <label class="form-label">Topik</label>
+                  <select id="topic" class="form-select">
+                    <option value="mixed" selected>Campur (Sum/Product, Faktorial, P, C)</option>
+                    <option value="sumprod">Prinsip Penjumlahan & Perkalian</option>
+                    <option value="fact">Faktorial</option>
+                    <option value="perm">Permutasi</option>
+                    <option value="comb">Kombinasi</option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label class="form-label">Jumlah Soal</label>
+                  <input type="number" class="form-control" id="numQuestions" min="5" max="30" value="10">
+                </div>
+                <div class="col-6">
+                  <label class="form-label">Timer (detik/soal)</label>
+                  <input type="number" class="form-control" id="perQuestionTimer" min="0" value="30">
+                </div>
+                <div class="col-12">
+                  <button id="btnRestart" class="btn btn-primary w-100 mt-2">Mulai/Ulangi Quiz</button>
+                </div>
+                <div class="col-12">
+                  <div class="small muted">Tips: jawaban angka besar ditampilkan dengan <code>BigInt</code>. Fokus ke konsep, bukan kalkulator murni.</div>
+                </div>
+              </div>
+              <hr>
+              <div class="d-flex align-items-center gap-2">
+                <span class="muted">Waktu tersisa:</span>
+                <span class="badge text-bg-dark" id="timerBadge">–</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALCULATOR MODE -->
+    <section class="tab-pane fade" id="calc" role="tabpanel">
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Kalkulator n!, P(n, r), C(n, r)</h5>
+              <div class="row g-2">
+                <div class="col-4">
+                  <label class="form-label">n</label>
+                  <input type="number" id="nVal" class="form-control" min="0" value="5">
+                </div>
+                <div class="col-4">
+                  <label class="form-label">r</label>
+                  <input type="number" id="rVal" class="form-control" min="0" value="3">
+                </div>
+                <div class="col-4">
+                  <label class="form-label">Mode</label>
+                  <select id="modeSelect" class="form-select">
+                    <option value="fact">Faktorial (n!)</option>
+                    <option value="perm">Permutasi P(n,r)</option>
+                    <option value="comb" selected>Kombinasi C(n,r)</option>
+                  </select>
+                </div>
+                <div class="col-12 d-flex gap-2">
+                  <button class="btn btn-primary" id="btnCalc">Hitung</button>
+                  <button class="btn btn-outline-light" id="btnShowSteps">Tampilkan Langkah</button>
+                </div>
+              </div>
+              <hr>
+              <div class="kb-output">
+                <div class="muted">Hasil:</div>
+                <div id="calcResult" class="big fw-bold">—</div>
+                <div id="calcSteps" class="mt-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASSWORD SPACE -->
+        <div class="col-lg-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Ruang Password (Counting)</h5>
+              <div class="row g-2">
+                <div class="col-6">
+                  <label class="form-label">Panjang (L)</label>
+                  <input type="number" id="pwdLen" class="form-control" min="1" value="8">
+                </div>
+                <div class="col-6">
+                  <label class="form-label">Jenis Karakter</label>
+                  <select id="pwdKind" class="form-select">
+                    <option value="10">Angka (10)</option>
+                    <option value="26">Huruf kecil (26)</option>
+                    <option value="52">Huruf kecil+besar (52)</option>
+                    <option value="62" selected>Huruf+Angka (62)</option>
+                    <option value="95">Printable ASCII ~95</option>
+                  </select>
+                </div>
+                <div class="col-12 d-flex gap-2">
+                  <button class="btn btn-primary" id="btnPwd">Hitung Kombinasi</button>
+                  <button class="btn btn-outline-light" id="btnPwdExplain">Penjelasan</button>
+                </div>
+              </div>
+              <hr>
+              <div class="kb-output">
+                <div class="muted">Total kemungkinan:</div>
+                <div id="pwdResult" class="big fw-bold">—</div>
+                <div id="pwdExtra" class="mt-2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHALLENGE -->
+    <section class="tab-pane fade" id="challenge" role="tabpanel">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <h5 class="card-title mb-0">Challenge 60 Detik</h5>
+            <button class="btn btn-primary" id="btnStartChallenge">Start</button>
+          </div>
+          <hr>
+          <div class="row g-3">
+            <div class="col-lg-8">
+              <div id="challengeQ" class="big"></div>
+              <div id="challengeHint" class="muted mb-2"></div>
+              <div id="challengeAnswers" class="row gy-2"></div>
+            </div>
+            <div class="col-lg-4">
+              <div class="d-flex align-items-center gap-2">
+                <span class="muted">Waktu:</span>
+                <span class="badge text-bg-dark" id="chTime">60</span>
+                <span class="muted ms-3">Benar:</span>
+                <span class="badge text-bg-dark" id="chCorrect">0</span>
+                <span class="muted ms-3">Salah:</span>
+                <span class="badge text-bg-dark" id="chWrong">0</span>
+              </div>
+              <div class="progress mt-3">
+                <div id="chProgress" class="progress-bar" style="width: 0%"></div>
+              </div>
+              <div class="mt-3" id="chExplain"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- Bantuan -->
+<div class="offcanvas offcanvas-end text-light" tabindex="-1" id="help">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Bantuan</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <p><strong>Quiz Mode</strong>: pilih topik, jumlah soal, dan timer → klik “Mulai/Ulangi Quiz”. Jawab MCQ, lihat penjelasan, lanjut ke soal berikutnya.</p>
+    <p><strong>Calculator Mode</strong>: hitung <code>n!</code>, <code>P(n,r)</code>, <code>C(n,r)</code> dan lihat langkahnya. Di kanan ada simulasi ruang password: total kemungkinan = <code>k^L</code>.</p>
+    <p><strong>Challenge</strong>: mode cepat 60 detik dengan skor benar/salah.</p>
+    <p>Kalkulasi besar memakai <code>BigInt</code>. Untuk very large numbers, hasil ditampilkan apa adanya dan juga dalam notasi log10 (mendekati).</p>
+  </div>
+</div>
+
+<script>
+/* ===================== UTIL BIGINT ===================== */
+const toBig = (x) => BigInt(x);
+const fact = (n) => {
+  n = BigInt(n);
+  if (n < 0n) throw new Error("n harus ≥ 0");
+  let res = 1n;
+  for (let i=2n; i<=n; i++) res *= i;
+  return res;
+};
+const perm = (n,r) => {
+  n = BigInt(n); r = BigInt(r);
+  if (r<0n || n<0n || r>n) return 0n;
+  let res = 1n;
+  for (let i=0n;i<r;i++) res *= (n - i);
+  return res;
+};
+const comb = (n,r) => {
+  n = BigInt(n); r = BigInt(r);
+  if (r<0n || n<0n || r>n) return 0n;
+  // gunakan simetri untuk efisiensi
+  if (r > n - r) r = n - r;
+  let num = 1n, den = 1n;
+  for (let i=1n;i<=r;i++){
+    num *= (n - r + i);
+    den *= i;
+    // sederhanakan sesekali (gcd kecil tidak diperlukan — BigInt pembagian eksak di akhir)
+  }
+  return num / den;
+};
+const powBig = (a, b) => {
+  a = BigInt(a); b = BigInt(b);
+  let res = 1n;
+  for (let i=0n;i<b;i++) res *= a;
+  return res;
+};
+const formatBig = (x) => {
+  // tampilkan asli + approx log10
+  const s = x.toString();
+  if (s.length <= 18) return s;
+  const digits = s.length;
+  const head = s.slice(0,3);
+  return `${s}\n≈ ${head}e${digits-3} (≈10^${digits-1} kemungkinan)`;
+};
+const approxLog10Big = (x) => {
+  const s = x.toString();
+  return s.length - 1; // pendekatan: order of magnitude
+};
+
+/* ===================== QUIZ DATA ===================== */
+function randInt(a,b){ // inclusive
+  return Math.floor(Math.random()*(b-a+1))+a;
+}
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// Pembuat soal per topik
+function makeSumProd(){
+  // contoh: username 3 huruf (26) DAN password 2 angka (10) => 26^3 * 10^2
+  const L1 = randInt(2,4), L2 = randInt(1,3);
+  const alph = 26, digits = 10;
+  const correct = powBig(alph, L1) * powBig(digits, L2);
+  const q = `Seorang pengguna membuat username ${L1} huruf (26 pilihan/posisi) DAN password ${L2} digit (10 pilihan/posisi). 
+  Berapa banyak pasangan (username, password) yang mungkin?`;
+  const hint = `Rule of Product: total = 26^${L1} × 10^${L2}`;
+  return makeMCQ(q, correct, hint);
+}
+function makeFact(){
+  const n = randInt(4,8);
+  const correct = fact(n);
+  const q = `Berapa banyak cara menyusun ${n} produk berbeda pada etalase?`;
+  const hint = `Itu adalah ${n}! (semua urutan)`;
+  return makeMCQ(q, correct, hint);
+}
+function makePerm(){
+  const n = randInt(8,12), r = randInt(2,4);
+  const correct = perm(n,r);
+  const q = `Dari ${n} mahasiswa, berapa banyak cara memilih ${r} mahasiswa untuk posisi KETUA → SEKRETARIS → BENDAHARA (urutan penting)?`;
+  const hint = `Permutasi: P(n,r) = n × (n-1) × ... × (n-r+1)`;
+  return makeMCQ(q, correct, hint);
+}
+function makeComb(){
+  const n = randInt(9,14), r = randInt(3,5);
+  const correct = comb(n,r);
+  const q = `Dari ${n} kandidat, berapa banyak cara membentuk tim berisi ${r} orang (urutan tidak penting)?`;
+  const hint = `Kombinasi: C(n,r) = n! / (r!(n-r)!)`;
+  return makeMCQ(q, correct, hint);
+}
+
+function makeMCQ(question, correctBig, hint){
+  // buat 3 distraktor dekat (±10%/±20%)
+  const correctStr = correctBig.toString();
+  const approx = Number(correctStr.length > 15 ? approxLog10Big(correctBig) : Number(correctStr)); // fallback
+  let options = new Set();
+  options.add(correctBig.toString());
+  const neighbors = [0.9, 1.1, 0.8, 1.2];
+  for (let k of neighbors){
+    let v;
+    if (correctStr.length > 8){
+      // gunakan orde magnituda untuk angka besar
+      const delta = randInt(-1,1);
+      const exp = Math.max(1, (correctStr.length-1) + delta);
+      v = "1" + "0".repeat(exp);
+    } else {
+      v = Math.max(1, Math.round(Number(correctBig) * k));
+    }
+    options.add(v.toString());
+    if (options.size >= 4) break;
+  }
+  const arr = shuffle(Array.from(options)).slice(0,4);
+  const idx = arr.indexOf(correctBig.toString());
+  return {
+    q: question,
+    hint: hint,
+    options: arr,
+    correctIndex: idx < 0 ? 0 : idx,
+    explain: hint + `<br><span class="muted">Nilai tepat:</span> <code>${correctBig.toString()}</code>`
+  };
+}
+
+/* ===================== QUIZ ENGINE ===================== */
+let quiz = {
+  bank: [],
+  idx: 0,
+  score: 0,
+  total: 10,
+  timerPerQ: 30,
+  timerId: null,
+  remaining: 0
+};
+
+function buildBank(topic, total){
+  const makers = {
+    sumprod: [makeSumProd],
+    fact: [makeFact],
+    perm: [makePerm],
+    comb: [makeComb],
+    mixed: [makeSumProd, makeFact, makePerm, makeComb]
+  };
+  const pool = makers[topic] || makers.mixed;
+  const bank = [];
+  for (let i=0;i<total;i++){
+    const f = pool[i % pool.length];
+    bank.push(f());
+  }
+  return shuffle(bank);
+}
+
+function renderQuestion(){
+  const item = quiz.bank[quiz.idx];
+  $("#qIdx").text(quiz.idx+1);
+  $("#qTotal").text(quiz.total);
+  $("#questionText").text(item.q);
+  $("#questionHint").text(item.hint);
+  $("#explanation").empty();
+  const $ans = $("#answers").empty();
+
+  item.options.forEach((opt, i)=>{
+    const id = `opt-${quiz.idx}-${i}`;
+    const col = $(`
+      <div class="col-12">
+        <label class="w-100">
+          <input type="radio" name="ans" class="btn-check" id="${id}">
+          <span class="btn btn-outline-light w-100 text-start">${opt}</span>
+        </label>
+      </div>
+    `);
+    $ans.append(col);
+  });
+
+  // click handler
+  $("#answers input").on("change", function(){
+    const chosen = Number($(this).attr("id").split("-").pop());
+    const item = quiz.bank[quiz.idx];
+    $("#answers .btn").removeClass("answer-correct answer-wrong");
+    const btn = $(this).next();
+    if (chosen === item.correctIndex){
+      btn.addClass("answer-correct");
+      quiz.score++;
+      $("#score").text(quiz.score);
+    } else {
+      btn.addClass("answer-wrong");
+      // highlight correct
+      $("#answers input").eq(item.correctIndex).next().addClass("answer-correct");
+    }
+    stopTimer();
+  });
+  // progress
+  const pct = ((quiz.idx)/quiz.total)*100;
+  $("#progressBar").css("width", pct+"%");
+  // timer
+  startTimer();
+}
+
+function startTimer(){
+  if (quiz.timerPerQ <= 0) { $("#timerBadge").text("∞"); return; }
+  quiz.remaining = quiz.timerPerQ;
+  $("#timerBadge").text(quiz.remaining);
+  quiz.timerId = setInterval(()=>{
+    quiz.remaining--;
+    $("#timerBadge").text(quiz.remaining);
+    if (quiz.remaining <= 0){
+      stopTimer();
+      // auto reveal correct
+      const item = quiz.bank[quiz.idx];
+      $("#answers input").eq(item.correctIndex).next().addClass("answer-correct");
+    }
+  }, 1000);
+}
+function stopTimer(){
+  if (quiz.timerId){ clearInterval(quiz.timerId); quiz.timerId = null; }
+}
+
+function nextQuestion(){
+  if (quiz.idx < quiz.total-1){
+    quiz.idx++;
+    renderQuestion();
+  } else {
+    $("#questionText").html("Selesai 🎉");
+    $("#questionHint").empty();
+    $("#answers").empty();
+    $("#explanation").html(`<div class="alert alert-success">Skor akhir: <strong>${quiz.score}</strong> dari ${quiz.total}</div>`);
+    $("#progressBar").css("width","100%");
+    stopTimer();
+  }
+}
+
+function showExplanation(){
+  const item = quiz.bank[quiz.idx];
+  $("#explanation").html(`<div class="alert alert-secondary">${item.explain}</div>`);
+}
+
+function restartQuiz(){
+  stopTimer();
+  quiz.total = Math.max(5, Math.min(30, Number($("#numQuestions").val()||10)));
+  quiz.timerPerQ = Number($("#perQuestionTimer").val()||0);
+  quiz.idx = 0;
+  quiz.score = 0;
+  $("#score").text(0);
+  quiz.bank = buildBank($("#topic").val(), quiz.total);
+  renderQuestion();
+}
+
+$("#btnNext").on("click", nextQuestion);
+$("#btnExplain").on("click", showExplanation);
+$("#btnRestart").on("click", restartQuiz);
+
+/* ===================== CALCULATOR ===================== */
+function calcRun(){
+  const n = Number($("#nVal").val()||0);
+  const r = Number($("#rVal").val()||0);
+  const mode = $("#modeSelect").val();
+
+  try{
+    let res, steps = "";
+    if (mode === "fact"){
+      res = fact(n);
+      steps = `${n}! = ` + (n<=1 ? "1" : Array.from({length:n},(_,i)=>n-i).join(" × ")) + ` = ${res}`;
+    } else if (mode === "perm"){
+      res = perm(n,r);
+      steps = `P(${n},${r}) = ${n}! / (${n}-${r})! = ` + `${n} × ${(n-1)} × ... × ${(n-r+1)} = ${res}`;
+    } else {
+      res = comb(n,r);
+      steps = `C(${n},${r}) = ${n}! / (${r}!·${n}-${r})! = ${res}`;
+    }
+    $("#calcResult").text(formatBig(res));
+    $("#calcSteps").text(steps);
+  }catch(e){
+    $("#calcResult").text("Error: " + e.message);
+    $("#calcSteps").empty();
+  }
+}
+$("#btnCalc").on("click", calcRun);
+$("#btnShowSteps").on("click", ()=>$("#calcSteps").toggle());
+
+/* ===================== PASSWORD SPACE ===================== */
+function runPwd(){
+  const L = Number($("#pwdLen").val()||1);
+  const k = Number($("#pwdKind").val());
+  const total = powBig(k, L);
+  $("#pwdResult").text(formatBig(total));
+  const approxPow10 = (Math.log10 ? Math.round(L*Math.log10(k)) : (L * Math.log10 ? Math.round(L*Math.log10(k)) : L*Math.log10(k)));
+  $("#pwdExtra").html(`Model: <code>k^L</code> dengan k=${k}, L=${L}.<br>
+  Orde magnituda ~ 10^<strong>${approxPow10}</strong> (perkiraan).`);
+}
+$("#btnPwd").on("click", runPwd);
+$("#btnPwdExplain").on("click", ()=>{
+  $("#pwdExtra").html(`Setiap posisi memiliki <em>k</em> pilihan dan independen → Rule of Product:
+  total kombinasi = <code>k × k × ... × k</code> (L kali) = <code>k^L</code>.`);
+});
+
+/* ===================== CHALLENGE MODE ===================== */
+let ch = {time:60, tId:null, correct:0, wrong:0, current:null};
+function chGen(){
+  const pool = [makeSumProd, makeFact, makePerm, makeComb];
+  return pool[randInt(0,pool.length-1)]();
+}
+function chRender(){
+  const it = ch.current = chGen();
+  $("#challengeQ").text(it.q);
+  $("#challengeHint").text(it.hint);
+  $("#chExplain").empty();
+  const $wrap = $("#challengeAnswers").empty();
+  it.options.forEach((opt,i)=>{
+    const btn = $(`<div class="col-12"><button class="btn btn-outline-light w-100">${opt}</button></div>`);
+    btn.on("click", ()=>{
+      if (i===it.correctIndex){ ch.correct++; $("#chCorrect").text(ch.correct); }
+      else { ch.wrong++; $("#chWrong").text(ch.wrong); }
+      $("#chExplain").html(`<div class="alert alert-secondary">${it.explain}</div>`);
+      chRender();
+    });
+    $wrap.append(btn);
+  });
+}
+function chStart(){
+  ch.time = 60; ch.correct=0; ch.wrong=0;
+  $("#chTime").text(ch.time); $("#chCorrect").text(0); $("#chWrong").text(0);
+  chRender();
+  if (ch.tId) clearInterval(ch.tId);
+  ch.tId = setInterval(()=>{
+    ch.time--;
+    $("#chTime").text(ch.time);
+    $("#chProgress").css("width", `${(60-ch.time)/60*100}%`);
+    if (ch.time<=0){
+      clearInterval(ch.tId); ch.tId=null;
+      $("#challengeQ").html("Waktu Habis ⏱️");
+      $("#challengeAnswers").empty();
+      $("#chExplain").html(`<div class="alert alert-success">Hasil: Benar <strong>${ch.correct}</strong>, Salah <strong>${ch.wrong}</strong></div>`);
+    }
+  },1000);
+}
+$("#btnStartChallenge").on("click", chStart);
+
+/* ===================== INIT ===================== */
+$(function(){
+  restartQuiz();
+});
+</script>
+</body>
+</html>
