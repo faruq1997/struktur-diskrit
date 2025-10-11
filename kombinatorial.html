@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Combination Picker — Struktur Diskrit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap 5 & jQuery -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    body {
+      background: #f9fafb;
+      color: #1e293b;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .navbar {
+      background: linear-gradient(90deg, #6366f1, #3b82f6);
+    }
+    .navbar .navbar-brand {
+      color: #fff;
+      font-weight: 600;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .person-btn {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0;
+      border-radius: 8px;
+      border: 2px solid #cbd5e1;
+      background: #f1f5f9;
+      color: #1e293b;
+      font-weight: 500;
+      transition: all .2s ease;
+    }
+    .person-btn:hover { background: #e0e7ff; border-color: #818cf8; }
+    .person-btn.active {
+      background: #6366f1;
+      color: #fff;
+      border-color: #4f46e5;
+      box-shadow: 0 0 6px rgba(99,102,241,0.5);
+    }
+    #combinationList {
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: monospace;
+      background: #f8fafc;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+    .badge-soft {
+      background: #e0e7ff;
+      color: #3730a3;
+      border: 1px solid #c7d2fe;
+    }
+    .result-area {
+      background: #f1f5f9;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+    .btn-primary {
+      background: #3b82f6;
+      border: none;
+    }
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+    .btn-outline-light {
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+      background: #fff;
+    }
+    .btn-outline-light:hover {
+      background: #e0e7ff;
+    }
+    .modal-content {
+      background: #ffffff;
+      color: #1e293b;
+    }
+    @media (max-width: 768px) {
+      #combinationList { max-height: 150px; font-size: 0.9rem; }
+      .person-btn { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+
+<body>
+<nav class="navbar shadow-sm">
+  <div class="container-fluid">
+    <span class="navbar-brand">🎯 Combination Picker</span>
+    <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#helpModal">Bantuan</button>
+  </div>
+</nav>
+
+<div class="container my-4">
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="card p-3 h-100">
+        <h5 class="mb-2 text-primary fw-semibold">🧑‍🤝‍🧑 Daftar Kandidat</h5>
+        <div id="candidateList" class="row"></div>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="card p-3 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0 text-primary">Soal</h5>
+          <span class="badge badge-soft fs-6">Skor: <span id="score">0</span></span>
+        </div>
+        <hr class="mt-0">
+        <p id="questionText" class="fs-5 mb-3 text-dark fw-semibold"></p>
+
+        <div class="result-area mb-3">
+          <p class="mb-1"><strong>Pilihan Anda:</strong> <span id="selectedItems" class="text-primary">–</span></p>
+          <p class="mb-1"><strong>Total kombinasi mungkin:</strong> <span id="combTotal" class="text-success">–</span></p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+          <button id="checkBtn" class="btn btn-primary flex-fill fw-semibold">✅ Periksa Jawaban</button>
+          <button id="nextBtn" class="btn btn-outline-light flex-fill fw-semibold">➡️ Soal Berikutnya</button>
+        </div>
+
+        <div class="mt-4">
+          <h6 class="fw-bold text-secondary">💡 Kombinasi yang mungkin:</h6>
+          <div id="combinationList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Bantuan -->
+<div class="modal fade" id="helpModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Panduan Permainan</h5>
+        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li>Setiap soal memberi instruksi seperti <em>“Pilih 3 dari 6 kandidat.”</em></li>
+          <li>Klik nama-nama untuk memilih sebanyak <strong>r</strong> anggota.</li>
+          <li>Tekan <strong>Periksa Jawaban</strong> untuk validasi, skor +10 jika benar.</li>
+          <li>Tekan <strong>Soal Berikutnya</strong> untuk lanjut ke soal baru.</li>
+        </ul>
+        <p>Kombinasi total dihitung dengan rumus <code>C(n, r) = n! / (r!(n−r)!)</code>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== Kombinatorika util ===== */
+function fact(n){ let r=1n; for(let i=2n;i<=n;i++) r*=i; return r; }
+function comb(n,r){ if(r>n) return 0n; if(r>n-r) r=n-r;
+  let num=1n, den=1n;
+  for(let i=1n;i<=r;i++){ num*=(n-r+i); den*=i; }
+  return num/den;
+}
+
+/* ===== Variabel Game ===== */
+let n=0, r=0, score=0, selected=[], candidates=[];
+
+/* ===== Generate Soal ===== */
+function newQuestion(){
+  n = Math.floor(Math.random()*3)+5;   // 5–7 kandidat
+  r = Math.floor(Math.random()*(n-3))+2; // 2–(n-2)
+  selected = [];
+  $("#questionText").text(`Pilih ${r} dari ${n} kandidat berikut untuk membentuk tim.`);
+  $("#selectedItems").text("–");
+  $("#combTotal").text(comb(BigInt(n), BigInt(r)).toString());
+  generateCandidates();
+  showCombinations();
+}
+
+/* ===== Generate Daftar Kandidat ===== */
+function generateCandidates(){
+  const names = ["Andi","Budi","Citra","Dewi","Eka","Fajar","Gita","Hadi","Intan","Joko","Kiki","Lina"];
+  candidates = names.slice(0,n);
+  const list = $("#candidateList").empty();
+  candidates.forEach((name, i)=>{
+    const btn = $(`<div class="col-6 col-md-6"><button class="person-btn" data-idx="${i}">${name}</button></div>`);
+    list.append(btn);
+  });
+}
+
+/* ===== Menangani Klik Kandidat ===== */
+$(document).on("click",".person-btn",function(){
+  const idx = $(this).data("idx");
+  if(selected.includes(idx)){
+    selected = selected.filter(x=>x!==idx);
+    $(this).removeClass("active");
+  }else{
+    if(selected.length<r){ selected.push(idx); $(this).addClass("active"); }
+    else {
+      $(this).addClass("border-danger");
+      setTimeout(()=>$(this).removeClass("border-danger"),400);
+    }
+  }
+  const names = selected.map(i=>candidates[i]);
+  $("#selectedItems").text(names.length>0?names.join(", "):"–");
+});
+
+/* ===== Menampilkan Semua Kombinasi Kemungkinan ===== */
+function showCombinations(){
+  const list = $("#combinationList").empty();
+  const all = generateCombinations(candidates, r);
+  all.forEach(c=>{
+    list.append(`<div>${c.join(", ")}</div>`);
+  });
+}
+
+/* Fungsi kombinasi rekursif */
+function generateCombinations(arr, r){
+  if(r===0) return [[]];
+  if(arr.length<r) return [];
+  const [first, ...rest] = arr;
+  const withFirst = generateCombinations(rest, r-1).map(c=>[first,...c]);
+  const withoutFirst = generateCombinations(rest, r);
+  return withFirst.concat(withoutFirst);
+}
+
+/* ===== Cek Jawaban ===== */
+function checkAnswer(){
+  if(selected.length!==r){
+    alert(`Pilih tepat ${r} anggota!`);
+    return;
+  }
+  const userCombo = selected.map(i=>candidates[i]).sort();
+  const allComb = generateCombinations(candidates, r).map(c=>c.sort().join(","));
+  if(allComb.includes(userCombo.join(","))){
+    score+=10;
+    $("#score").text(score);
+    Swal.fire({
+      icon: 'success',
+      title: 'Benar!',
+      text: 'Kombinasi valid! Skor +10 🎉',
+      confirmButtonColor: '#3b82f6'
+    });
+  }else{
+    Swal.fire({
+      icon: 'error',
+      title: 'Salah',
+      text: 'Kombinasi tidak valid 😅',
+      confirmButtonColor: '#3b82f6'
+    });
+  }
+}
+
+/* ===== Next Soal ===== */
+$("#checkBtn").on("click", checkAnswer);
+$("#nextBtn").on("click", newQuestion);
+
+/* ===== Init ===== */
+$(function(){ newQuestion(); });
+</script>
+
+<!-- SweetAlert2 for nice alerts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</body>
+</html>
