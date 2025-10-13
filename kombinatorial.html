@@ -2,271 +2,161 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Combination Picker — Struktur Diskrit</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎲 Game Kombinatorial - Hitung Kombinasi</title>
 
-  <!-- Bootstrap 5 & jQuery -->
+  <!-- ✅ Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- ✅ jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <style>
     body {
-      background: #f9fafb;
-      color: #1e293b;
-      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(145deg, #f8f9fa, #e3f2fd);
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .navbar {
-      background: linear-gradient(90deg, #6366f1, #3b82f6);
-    }
-    .navbar .navbar-brand {
-      color: #fff;
-      font-weight: 600;
-    }
-    .card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .person-btn {
-      width: 100%;
-      padding: 12px;
-      margin: 6px 0;
-      border-radius: 8px;
-      border: 2px solid #cbd5e1;
-      background: #f1f5f9;
-      color: #1e293b;
-      font-weight: 500;
-      transition: all .2s ease;
-    }
-    .person-btn:hover { background: #e0e7ff; border-color: #818cf8; }
-    .person-btn.active {
-      background: #6366f1;
-      color: #fff;
-      border-color: #4f46e5;
-      box-shadow: 0 0 6px rgba(99,102,241,0.5);
-    }
-    #combinationList {
-      max-height: 200px;
-      overflow-y: auto;
-      font-family: monospace;
-      background: #f8fafc;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #e2e8f0;
-    }
-    .badge-soft {
-      background: #e0e7ff;
-      color: #3730a3;
-      border: 1px solid #c7d2fe;
-    }
-    .result-area {
-      background: #f1f5f9;
-      padding: 15px;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-    }
-    .btn-primary {
-      background: #3b82f6;
-      border: none;
-    }
-    .btn-primary:hover {
-      background: #2563eb;
-    }
-    .btn-outline-light {
-      border: 1px solid #cbd5e1;
-      color: #1e293b;
+    .game-box {
       background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      max-width: 450px;
+      width: 100%;
     }
-    .btn-outline-light:hover {
-      background: #e0e7ff;
+    .result-box {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 10px;
     }
-    .modal-content {
-      background: #ffffff;
-      color: #1e293b;
+    .btn-custom {
+      width: 100%;
+      transition: all .2s;
     }
-    @media (max-width: 768px) {
-      #combinationList { max-height: 150px; font-size: 0.9rem; }
-      .person-btn { font-size: 0.9rem; }
+    .btn-custom:hover {
+      transform: scale(1.05);
     }
   </style>
 </head>
 
 <body>
-<nav class="navbar shadow-sm">
-  <div class="container-fluid">
-    <span class="navbar-brand">🎯 Combination Picker</span>
-    <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#helpModal">Bantuan</button>
+  <div class="game-box text-center">
+    <h3 class="fw-bold mb-3">🎲 Game Kombinatorial</h3>
+    <p class="text-muted">Jawab pertanyaan berikut dengan menghitung jumlah <strong>kombinasi</strong> yang mungkin!</p>
+    <hr>
+
+    <div id="question" class="mb-3 fw-medium"></div>
+
+    <input type="number" id="answerInput" class="form-control text-center mb-3" placeholder="Masukkan jawabanmu..." />
+    <button id="btnSubmit" class="btn btn-primary btn-custom">Kirim Jawaban 🚀</button>
+
+    <div id="result" class="result-box mt-3"></div>
+
+    <button id="btnNext" class="btn btn-outline-secondary btn-custom mt-3 d-none">Soal Selanjutnya 🔁</button>
   </div>
-</nav>
 
-<div class="container my-4">
-  <div class="row g-4">
-    <div class="col-lg-4">
-      <div class="card p-3 h-100">
-        <h5 class="mb-2 text-primary fw-semibold">🧑‍🤝‍🧑 Daftar Kandidat</h5>
-        <div id="candidateList" class="row"></div>
-      </div>
-    </div>
+  <script>
+const questions = [
+  // --- Soal dasar mahasiswa / panitia ---
+  { text: "Berapa banyak cara memilih 3 mahasiswa dari 5 mahasiswa?", n: 5, r: 3 },
+  { text: "Dari 6 panitia, pilih 3 tanpa urutan. Berapa kombinasi?", n: 6, r: 3 },
+  { text: "Dari 8 calon ketua, berapa cara memilih 2 untuk final?", n: 8, r: 2 },
+  { text: "Sebuah kelas berisi 10 orang, berapa cara memilih 4 untuk menjadi pengurus kelas?", n: 10, r: 4 },
+  { text: "Ada 12 mahasiswa, berapa cara memilih 5 untuk lomba debat?", n: 12, r: 5 },
 
-    <div class="col-lg-8">
-      <div class="card p-3 h-100">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <h5 class="mb-0 text-primary">Soal</h5>
-          <span class="badge badge-soft fs-6">Skor: <span id="score">0</span></span>
-        </div>
-        <hr class="mt-0">
-        <p id="questionText" class="fs-5 mb-3 text-dark fw-semibold"></p>
+  // --- Warna dan objek visual ---
+  { text: "Dari 7 warna, berapa kombinasi 2 warna yang mungkin?", n: 7, r: 2 },
+  { text: "Toko memiliki 8 warna cat, berapa kombinasi 3 warna untuk dinding?", n: 8, r: 3 },
+  { text: "Dari 10 warna bola, pilih 4 warna berbeda. Berapa kombinasi?", n: 10, r: 4 },
 
-        <div class="result-area mb-3">
-          <p class="mb-1"><strong>Pilihan Anda:</strong> <span id="selectedItems" class="text-primary">–</span></p>
-          <p class="mb-1"><strong>Total kombinasi mungkin:</strong> <span id="combTotal" class="text-success">–</span></p>
-        </div>
+  // --- Tim dan olahraga ---
+  { text: "Dari 10 pemain, berapa kombinasi 4 pemain untuk satu tim?", n: 10, r: 4 },
+  { text: "Klub sepak bola memiliki 15 pemain. Berapa kombinasi 11 pemain untuk tim utama?", n: 15, r: 11 },
+  { text: "Dari 9 pemain basket, pilih 5 untuk starting lineup.", n: 9, r: 5 },
+  { text: "Ada 12 atlet, berapa cara memilih 3 untuk lomba estafet?", n: 12, r: 3 },
 
-        <div class="d-flex flex-wrap gap-2">
-          <button id="checkBtn" class="btn btn-primary flex-fill fw-semibold">✅ Periksa Jawaban</button>
-          <button id="nextBtn" class="btn btn-outline-light flex-fill fw-semibold">➡️ Soal Berikutnya</button>
-        </div>
+  // --- Barang dan produk ---
+  { text: "Toko memiliki 6 jenis minuman, berapa kombinasi 2 minuman yang bisa dibeli pelanggan?", n: 6, r: 2 },
+  { text: "Dari 10 produk, pelanggan ingin membeli 3 produk berbeda. Berapa kombinasi?", n: 10, r: 3 },
+  { text: "Gudang memiliki 12 barang, manajer memilih 4 untuk dikirim. Berapa kombinasi?", n: 12, r: 4 },
+  { text: "Terdapat 15 model laptop, berapa kombinasi 5 model yang bisa dipilih untuk display toko?", n: 15, r: 5 },
 
-        <div class="mt-4">
-          <h6 class="fw-bold text-secondary">💡 Kombinasi yang mungkin:</h6>
-          <div id="combinationList"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+  // --- Angka dan data ---
+  { text: "Dari 9 angka berbeda, berapa kombinasi 3 angka yang bisa dibentuk?", n: 9, r: 3 },
+  { text: "Berapa banyak subset berisi 4 elemen dari himpunan 10 elemen?", n: 10, r: 4 },
+  { text: "Dari 20 data pelanggan, berapa cara memilih 6 sampel acak?", n: 20, r: 6 },
+  { text: "Ada 8 variabel penelitian, berapa kombinasi 3 variabel yang bisa dikombinasikan?", n: 8, r: 3 },
 
-<!-- Modal Bantuan -->
-<div class="modal fade" id="helpModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content border-0 shadow">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title">Panduan Permainan</h5>
-        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <ul>
-          <li>Setiap soal memberi instruksi seperti <em>“Pilih 3 dari 6 kandidat.”</em></li>
-          <li>Klik nama-nama untuk memilih sebanyak <strong>r</strong> anggota.</li>
-          <li>Tekan <strong>Periksa Jawaban</strong> untuk validasi, skor +10 jika benar.</li>
-          <li>Tekan <strong>Soal Berikutnya</strong> untuk lanjut ke soal baru.</li>
-        </ul>
-        <p>Kombinasi total dihitung dengan rumus <code>C(n, r) = n! / (r!(n−r)!)</code>.</p>
-      </div>
-    </div>
-  </div>
-</div>
+  // --- Acara dan lomba ---
+  { text: "Panitia memiliki 7 lomba, berapa kombinasi 3 lomba yang bisa dijalankan dalam sehari?", n: 7, r: 3 },
+  { text: "Dari 10 peserta, pilih 5 untuk babak semifinal.", n: 10, r: 5 },
+  { text: "Ada 9 finalis, berapa kombinasi 4 orang untuk tim presentasi?", n: 9, r: 4 },
+  { text: "Kompetisi poster memiliki 8 desain, pilih 2 untuk disubmit.", n: 8, r: 2 },
 
-<script>
-/* ===== Kombinatorika util ===== */
-function fact(n){ let r=1n; for(let i=2n;i<=n;i++) r*=i; return r; }
-function comb(n,r){ if(r>n) return 0n; if(r>n-r) r=n-r;
-  let num=1n, den=1n;
-  for(let i=1n;i<=r;i++){ num*=(n-r+i); den*=i; }
-  return num/den;
-}
+  // --- Studi kasus umum ---
+  { text: "Terdapat 5 mata kuliah pilihan, mahasiswa harus memilih 3. Berapa kombinasi?", n: 5, r: 3 },
+  { text: "Dari 7 dosen pembimbing, pilih 2 untuk seminar proposal.", n: 7, r: 2 },
+  { text: "Ada 11 startup, investor ingin menanam dana ke 4 di antaranya.", n: 11, r: 4 },
+  { text: "Panitia lomba desain terdiri dari 9 orang, pilih 3 untuk juri utama.", n: 9, r: 3 },
+  { text: "Terdapat 6 topik penelitian, pilih 2 untuk proyek semester ini.", n: 6, r: 2 },
+  { text: "Dari 10 mahasiswa, berapa kombinasi 5 orang untuk studi kasus kelompok?", n: 10, r: 5 },
+  { text: "Ada 8 proposal, reviewer harus memilih 4 untuk didanai.", n: 8, r: 4 },
+  { text: "Panitia ingin membuat tim kecil berisi 3 dari 7 anggota. Berapa cara?", n: 7, r: 3 },
+  { text: "Sebuah organisasi memiliki 9 divisi, berapa kombinasi 5 divisi yang bisa diaudit bersamaan?", n: 9, r: 5 }
+];
 
-/* ===== Variabel Game ===== */
-let n=0, r=0, score=0, selected=[], candidates=[];
 
-/* ===== Generate Soal ===== */
-function newQuestion(){
-  n = Math.floor(Math.random()*3)+5;   // 5–7 kandidat
-  r = Math.floor(Math.random()*(n-3))+2; // 2–(n-2)
-  selected = [];
-  $("#questionText").text(`Pilih ${r} dari ${n} kandidat berikut untuk membentuk tim.`);
-  $("#selectedItems").text("–");
-  $("#combTotal").text(comb(BigInt(n), BigInt(r)).toString());
-  generateCandidates();
-  showCombinations();
-}
+    let index = 0;
 
-/* ===== Generate Daftar Kandidat ===== */
-function generateCandidates(){
-  const names = ["Andi","Budi","Citra","Dewi","Eka","Fajar","Gita","Hadi","Intan","Joko","Kiki","Lina"];
-  candidates = names.slice(0,n);
-  const list = $("#candidateList").empty();
-  candidates.forEach((name, i)=>{
-    const btn = $(`<div class="col-6 col-md-6"><button class="person-btn" data-idx="${i}">${name}</button></div>`);
-    list.append(btn);
-  });
-}
-
-/* ===== Menangani Klik Kandidat ===== */
-$(document).on("click",".person-btn",function(){
-  const idx = $(this).data("idx");
-  if(selected.includes(idx)){
-    selected = selected.filter(x=>x!==idx);
-    $(this).removeClass("active");
-  }else{
-    if(selected.length<r){ selected.push(idx); $(this).addClass("active"); }
-    else {
-      $(this).addClass("border-danger");
-      setTimeout(()=>$(this).removeClass("border-danger"),400);
+    function factorial(num) {
+      return num <= 1 ? 1 : num * factorial(num - 1);
     }
-  }
-  const names = selected.map(i=>candidates[i]);
-  $("#selectedItems").text(names.length>0?names.join(", "):"–");
-});
 
-/* ===== Menampilkan Semua Kombinasi Kemungkinan ===== */
-function showCombinations(){
-  const list = $("#combinationList").empty();
-  const all = generateCombinations(candidates, r);
-  all.forEach(c=>{
-    list.append(`<div>${c.join(", ")}</div>`);
-  });
-}
+    function combination(n, r) {
+      return factorial(n) / (factorial(r) * factorial(n - r));
+    }
 
-/* Fungsi kombinasi rekursif */
-function generateCombinations(arr, r){
-  if(r===0) return [[]];
-  if(arr.length<r) return [];
-  const [first, ...rest] = arr;
-  const withFirst = generateCombinations(rest, r-1).map(c=>[first,...c]);
-  const withoutFirst = generateCombinations(rest, r);
-  return withFirst.concat(withoutFirst);
-}
+    function loadQuestion() {
+      $("#result").text("");
+      $("#answerInput").val("");
+      $("#btnNext").addClass("d-none");
 
-/* ===== Cek Jawaban ===== */
-function checkAnswer(){
-  if(selected.length!==r){
-    alert(`Pilih tepat ${r} anggota!`);
-    return;
-  }
-  const userCombo = selected.map(i=>candidates[i]).sort();
-  const allComb = generateCombinations(candidates, r).map(c=>c.sort().join(","));
-  if(allComb.includes(userCombo.join(","))){
-    score+=10;
-    $("#score").text(score);
-    Swal.fire({
-      icon: 'success',
-      title: 'Benar!',
-      text: 'Kombinasi valid! Skor +10 🎉',
-      confirmButtonColor: '#3b82f6'
-    });
-  }else{
-    Swal.fire({
-      icon: 'error',
-      title: 'Salah',
-      text: 'Kombinasi tidak valid 😅',
-      confirmButtonColor: '#3b82f6'
-    });
-  }
-}
+      const q = questions[index];
+      $("#question").text(q.text);
+    }
 
-/* ===== Next Soal ===== */
-$("#checkBtn").on("click", checkAnswer);
-$("#nextBtn").on("click", newQuestion);
+    function checkAnswer() {
+      const q = questions[index];
+      const correct = combination(q.n, q.r);
+      const userAnswer = parseInt($("#answerInput").val());
 
-/* ===== Init ===== */
-$(function(){ newQuestion(); });
-</script>
+      if (isNaN(userAnswer)) {
+        $("#result").html("⚠️ Masukkan angka terlebih dahulu!");
+        return;
+      }
 
-<!-- SweetAlert2 for nice alerts -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      if (userAnswer === correct) {
+        $("#result").html(`🎉 Benar! Kombinasinya = <strong>${correct}</strong>`);
+      } else {
+        $("#result").html(`❌ Salah. Jawaban yang benar = <strong>${correct}</strong>`);
+      }
 
+      $("#btnNext").removeClass("d-none");
+    }
+
+    function nextQuestion() {
+      index = (index + 1) % questions.length;
+      loadQuestion();
+    }
+
+    $("#btnSubmit").click(checkAnswer);
+    $("#btnNext").click(nextQuestion);
+    $(document).keypress(function(e){ if(e.which===13) checkAnswer(); });
+
+    loadQuestion();
+  </script>
 </body>
 </html>
