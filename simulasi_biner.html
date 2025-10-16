@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulasi Sistem Biner, CPU, RAM & Storage Interaktif</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body {
+  background-color: #f8fafc;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+h2, h4 { font-weight: 700; color: #1e293b; }
+h5 { font-weight: 600; color: #334155; }
+
+/* Bit Blocks */
+.bit-block {
+  width: 50px; height: 70px;
+  font-size: 1.8rem;
+  display: flex; align-items: center; justify-content: center;
+  background-color: #e2e8f0;
+  border: 2px solid #64748b;
+  border-radius: 8px;
+  margin: 3px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.bit-block:hover { background-color: #cbd5e1; transform: translateY(-3px); }
+.bit-block.active { animation: bounceBit 0.25s; background-color: #93c5fd; color: #1e3a8a; }
+@keyframes bounceBit { 40% { transform: translateY(-10px); } }
+
+.binary-container {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 5px;
+}
+.card-sim {
+  background: #fff;
+  border: none; border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 25px; margin-bottom: 25px;
+}
+.highlight {
+  background-color: #fef9c3; padding: 5px 10px;
+  border-radius: 6px; font-weight: 600;
+}
+
+/* CPU sections */
+.cpu-section {
+  border: 2px dashed #94a3b8;
+  border-radius: 10px; padding: 15px;
+  transition: all 0.3s ease;
+}
+.cpu-section.active {
+  border-color: #0d6efd; background-color: #eff6ff;
+  box-shadow: 0 0 10px rgba(13,110,253,0.2);
+}
+
+/* CPU Components */
+.cpu-main {
+  background-color: #6f42c1;
+  padding: 15px 25px;
+  border-radius: 12px;
+  color: white;
+  margin-top: 20px;
+}
+.sub-block {
+  background: white; color: #111827;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  margin: 6px auto; padding: 5px;
+  font-size: 0.9rem; width: 190px;
+}
+.sub-block:hover {
+  background: #f1f5f9;
+  border-color: #0d6efd;
+}
+
+/* Data Flow */
+.block {
+  text-align: center;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: white;
+  display: inline-block;
+  min-width: 120px;
+}
+.input-block { background-color: #3b82f6; }
+.storage-block { background-color: #f59e0b; }
+.ram-block { background-color: #22c55e; }
+.memory-block { background-color: #10b981; }
+.cpu-block { background-color: #6f42c1; }
+.output-block { background-color: #6366f1; }
+
+.arrow { font-size: 1.8rem; color: #ef4444; animation: blink 1s infinite alternate; }
+@keyframes blink { from {opacity: 0.3;} to {opacity: 1;} }
+
+#dataFlow {
+  position: absolute;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #ef4444;
+  opacity: 0;
+  transition: all 0.7s linear;
+}
+
+/* Footer */
+footer {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 15px 0;
+  margin-top: 50px;
+  font-size: 14px;
+}
+footer strong { color: #38bdf8; }
+
+.youtube-btn {
+  text-decoration: none;
+  background: #ef4444;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.youtube-btn:hover { background: #dc2626; color: #fff; }
+
+@media (max-width:768px){
+  .bit-block { width: 40px; height: 60px; font-size: 1.3rem; }
+  .block { display:block; margin-bottom:8px; }
+}
+</style>
+</head>
+
+<body class="py-4">
+
+<div class="container">
+  <h2 class="text-center mb-4">Simulasi Sistem Biner, CPU, RAM & Storage</h2>
+
+  <!-- === Bagian 1: Simulasi Biner === -->
+  <div class="card-sim text-center">
+    <h4>🧮 Simulasi 8-bit</h4>
+    <div class="binary-container mb-3" id="binaryRow"></div>
+    <button id="resetBtn" class="btn btn-outline-danger btn-sm">Reset Semua Bit</button>
+    <div class="mt-4">
+      <h5>Nilai Desimal: <span id="decimalValue" class="highlight">0</span></h5>
+      <h5>Karakter ASCII: <span id="asciiValue" class="highlight">-</span></h5>
+    </div>
+    <div class="text-center mt-4">
+      <a href="https://youtube.com/shorts/nsM9IqlqeTg?si=tA4JCqrdW-UYox2h" target="_blank" class="youtube-btn">
+        ▶ How Binary System Works (YouTube)
+      </a>
+    </div>
+  </div>
+
+  <!-- === Bagian 2: Simulasi CPU (Fetch-Decode-Execute) === -->
+  <div class="card-sim">
+    <h4 class="text-center mb-3">⚙️ Simulasi CPU (Fetch–Decode–Execute)</h4>
+    <div class="cpu-section mb-3" id="fetch">
+      <strong>1️⃣ Fetch:</strong> CPU mengambil data dari memori.
+      <div class="mt-2"><code id="fetchData">00000000</code></div>
+    </div>
+    <div class="cpu-section mb-3" id="decode">
+      <strong>2️⃣ Decode:</strong> Control Unit menerjemahkan data ke instruksi/karakter.
+      <div class="mt-2">Desimal: <span id="decodeDecimal">0</span></div>
+      <div>ASCII: <span id="decodeAscii">-</span></div>
+    </div>
+    <div class="cpu-section" id="execute">
+      <strong>3️⃣ Execute:</strong> ALU menghasilkan hasil akhir.
+      <div class="mt-2">Output: <span id="executeOutput" class="highlight">-</span></div>
+    </div>
+    <div class="text-center mt-3">
+      <button id="simulateBtn" class="btn btn-primary">Mulai Simulasi CPU</button>
+    </div>
+
+  <!-- === Bagian 3: Contoh String === -->
+  <div class="card-sim">
+    <h4>💬 Contoh: "Universitas Nusa Mandiri"</h4>
+    <p>Klik tombol untuk melihat representasi <strong>biner</strong>, <strong>desimal</strong>, dan <strong>ASCII</strong>.</p>
+    <button id="showExampleBtn" class="btn btn-secondary mb-3">Tampilkan Contoh</button>
+    <div id="exampleOutput" class="table-responsive"></div>
+  </div>
+
+  <!-- === Bagian 4: Visualisasi Aliran Data === -->
+  <div class="card-sim text-center position-relative">
+    <div id="dataFlow"></div>
+    <h4>🔄 Visualisasi Aliran Data Komputer</h4>
+    <p class="text-muted small mb-3">(Simulasi ini menggambarkan bagaimana data mengalir dari input hingga output melalui CPU dan memori.)</p>
+
+    <div class="my-3">
+      <span class="block input-block" id="inputUnit"
+        data-bs-toggle="tooltip" title="Input Unit: menerima data dari pengguna, misalnya huruf 'U'.">
+        Input
+      </span>
+      <span class="arrow mx-1">➡</span>
+      <span class="block storage-block" id="storageUnit"
+        data-bs-toggle="tooltip" title="Storage (HDD/SSD): tempat penyimpanan permanen file atau data.">
+        Storage
+      </span>
+      <span class="arrow mx-1">➡</span>
+      <span class="block ram-block" id="ramUnit"
+        data-bs-toggle="tooltip" title="RAM: menyimpan data aktif sementara agar dapat diproses cepat.">
+        RAM
+      </span>
+      <span class="arrow mx-1">➡</span>
+      <span class="block memory-block" id="memoryUnit"
+        data-bs-toggle="tooltip" title="Memory Unit: buffer internal sebelum data dikirim ke CPU.">
+        Memory
+      </span>
+      <span class="arrow mx-1">➡</span>
+      <span class="block cpu-block" id="cpuUnit"
+        data-bs-toggle="tooltip" title="CPU (Central Processing Unit): otak komputer yang mengatur logika, kontrol, dan perhitungan data.">
+        CPU
+      </span>
+	  <div class="cpu-main mt-3" id="cpuUnit">
+      <strong>CPU</strong><br>
+	  <small>CPU (Central Processing Unit): otak komputer yang mengatur logika, kontrol, dan perhitungan data.</small>
+      <div class="sub-block" id="cu"
+        data-bs-toggle="tooltip" title="Control Unit: mengarahkan data dari memori ke ALU dan ke output sesuai instruksi.">
+        Control Unit
+      </div>
+      <div class="sub-block" id="reg"
+        data-bs-toggle="tooltip" title="Register Unit: tempat penyimpanan cepat di dalam CPU yang menampung bit biner sementara.">
+        Register Unit
+      </div>
+	        <div class="sub-block" id="alu"
+        data-bs-toggle="tooltip" title="ALU: memproses perhitungan logika, misalnya menambah, membandingkan, atau mengonversi bit huruf 'U'.">
+        Arithmetic Logic Unit
+      </div>
+    </div>
+      <span class="arrow mx-1">➡</span>
+      <span class="block output-block" id="outputUnit"
+        data-bs-toggle="tooltip" title="Output: menampilkan hasil di layar, misalnya karakter 'U'.">
+        Output
+      </span>
+    </div>
+
+    <button id="runSimulation" class="btn btn-success mt-3">Jalankan Simulasi Aliran Data</button>
+  </div>
+</div>
+
+<footer class="text-center">
+  <p>© 2025 <strong>GPT with Faruq Aziz</strong></p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+$(function(){
+  const totalBits = 8;
+  const $container = $('#binaryRow');
+
+  // Generate bits
+  for (let i = totalBits - 1; i >= 0; i--) {
+    $container.append(`<div class="bit-block" data-index="${i}">0</div>`);
+  }
+
+  $('.bit-block').on('click', function(){
+    toggleBit(parseInt($(this).data('index')));
+    updateValues();
+  });
+  $('#resetBtn').on('click', ()=>{$('.bit-block').text('0'); updateValues();});
+  $('#simulateBtn').on('click', simulateCPU);
+  $('#runSimulation').on('click', runDataFlow);
+  $('#showExampleBtn').on('click', ()=>showExample("Universitas Nusa Mandiri"));
+
+  function toggleBit(index){
+    const bits = $('.bit-block').toArray();
+    let carry = true, i = index;
+    while (i < totalBits && carry){
+      const bitEl = $(bits[totalBits - 1 - i]);
+      const current = bitEl.text() === '1' ? 1 : 0;
+      const next = (current + 1) % 2;
+      bitEl.text(next).addClass('active');
+      setTimeout(()=>bitEl.removeClass('active'), 300);
+      carry = current === 1;
+      i++;
+    }
+  }
+
+  function getBinaryString(){ return $('.bit-block').map(function(){ return $(this).text(); }).get().join(''); }
+
+  function updateValues(){
+    const bin = getBinaryString();
+    const dec = parseInt(bin,2);
+    const ascii = (dec >= 32 && dec <= 126) ? String.fromCharCode(dec) : '-';
+    $('#decimalValue').text(dec);
+    $('#asciiValue').text(ascii);
+  }
+
+  async function simulateCPU(){
+    const bin = getBinaryString();
+    const dec = parseInt(bin,2);
+    const ascii = (dec >= 32 && dec <= 126) ? String.fromCharCode(dec) : '-';
+    $('.cpu-section').removeClass('active');
+    $('#fetch').addClass('active');
+    $('#fetchData').text(bin); await delay(700);
+    $('#fetch').removeClass('active');
+    $('#decode').addClass('active');
+    $('#decodeDecimal').text(dec);
+    $('#decodeAscii').text(ascii === '-' ? 'Kode kontrol ASCII' : ascii); await delay(700);
+    $('#decode').removeClass('active');
+    $('#execute').addClass('active');
+    $('#executeOutput').html(ascii === '-' ? `<span class="text-danger">Kode kontrol ASCII (${dec})</span>` : ascii);
+    await delay(1000);
+    $('#execute').removeClass('active');
+  }
+
+  async function runDataFlow(){
+    const $dataFlow = $('#dataFlow');
+    const steps = ['#inputUnit','#storageUnit','#ramUnit','#memoryUnit','#cpuUnit','#cu','#reg','#alu','#outputUnit'];
+    for (const s of steps){
+      const $t = $(s);
+      const offset = $t.offset();
+      const x = offset.left + $t.outerWidth()/2;
+      const y = offset.top + $t.outerHeight()/2 - $(window).scrollTop();
+      $dataFlow.css({ opacity: 1, left: x, top: y });
+      highlight($t); await delay(900);
+    }
+    $dataFlow.css({ opacity: 0 });
+  }
+
+  function highlight($el){
+    $('.block, .sub-block').css('box-shadow','none');
+    $el.css('box-shadow','0 0 15px 5px rgba(239,68,68,0.6)');
+  }
+
+  function showExample(text){
+    let html = '<table class="table table-bordered table-striped align-middle"><thead><tr><th>Karakter</th><th>Desimal</th><th>Biner</th></tr></thead><tbody>';
+    for (let char of text){
+      const dec = char.charCodeAt(0);
+      const bin = dec.toString(2).padStart(8,'0');
+      html += `<tr><td>${char}</td><td>${dec}</td><td><code>${bin}</code></td></tr>`;
+    }
+    html += '</tbody></table>';
+    $('#exampleOutput').html(html);
+  }
+
+  function delay(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+  updateValues();
+
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  [...tooltipTriggerList].map(t => new bootstrap.Tooltip(t));
+});
+</script>
+</body>
+</html>
