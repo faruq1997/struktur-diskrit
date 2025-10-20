@@ -75,7 +75,9 @@ Proyek ini menggunakan lisensi
 **Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International (CC BY-NC-SA 4.0)**
 
 ✅ **Diperbolehkan:** digunakan dan dimodifikasi untuk keperluan pembelajaran
+
 ❌ **Dilarang:** penggunaan untuk tujuan komersial
+
 🔗 **Wajib:** mencantumkan atribusi dan menjaga lisensi turunan tetap sama
 
 📄 Detail lisensi: [Creative Commons BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
