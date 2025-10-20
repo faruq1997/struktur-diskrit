@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logika Proposisi Interaktif – Final</title>
+
+<!-- Bootstrap & jQuery -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+  :root { --bg:#0b0b11; --card:#131321; --muted:#aeb7d2; --accent:#27e38a; --danger:#ff6b81; }
+  body{ background:var(--bg); color:#fff; font-family:"Segoe UI", system-ui, -apple-system, Roboto, Arial; }
+  h1,h2,h3,h4,h5{ color:#fff; }
+  .nav-tabs .nav-link{ color:#cfd6ff; border:0; }
+  .nav-tabs .nav-link.active{ color:#000; background:var(--accent); border:0; font-weight:600; }
+  .card-dark{ background:var(--card); border:1px solid #232646; border-radius:14px; }
+  .btn-outline-light{ border-color:#cfd6ff; color:#fff; }
+  .btn-outline-light:hover{ background:#cfd6ff; color:#000; }
+  .btn-toggle{ min-width:120px; height:56px; border-radius:10px; border:2px solid #fff; background:transparent; color:#fff; font-weight:600; }
+  .btn-toggle.active{ background:var(--accent); color:#001c0f; border-color:var(--accent); }
+  .lamp{ width:120px; height:120px; border-radius:50%; margin:18px auto; background:#2a2f4f; border:6px solid #3c4777; transition:.3s; }
+  .lamp.on{ background:#1de27f; box-shadow:0 0 22px #1de27f; }
+  .select-dark{ background:#0f1122; color:#fff; border:2px solid #cfd6ff; border-radius:8px; padding:8px 10px; }
+  .table-dark thead th{ color:#cfd6ff; }
+  .drag-item{ background:#0f1122; color:#fff; border:1px dashed #3b4272; border-radius:8px; padding:8px 10px; margin:.4rem 0; cursor:grab; }
+  .drop-zone{ min-height:160px; border:2px dashed #3b4272; border-radius:12px; padding:10px; }
+  .drop-zone.ok{ border-color:var(--accent); }
+  .drop-zone.bad{ border-color:var(--danger); }
+  .muted{ color:var(--muted); }
+  .pair-drop{ border:1px dashed #3b4272; border-radius:10px; padding:10px 12px; min-height:56px; display:flex; align-items:center; color:#fff; background:#0f1122; }
+  .pair-drop.correct{ background:#153a2c; border-color:#1de27f; color:#aefcd5; }
+  .pair-drop.wrong{ background:#3a1620; border-color:#ff7a8b; color:#ffd1d7; }
+  .pair-src{ background:#0f1122; border:1px solid #3b4272; border-radius:10px; padding:10px 12px; cursor:grab; }
+  .pair-src.dragging{ opacity:.6; }
+  .tiny{ font-size:.92rem; color:#cfd6ff; }
+  .svg-wrap{ background:#0f1122; border-radius:12px; border:1px solid #232646; padding:8px; }
+  .wire{ stroke:#6f7cc7; stroke-width:6; opacity:.9; }
+  .wire.on{ stroke:#27e38a; filter: drop-shadow(0 0 6px #27e38a); }
+  .node circle{ fill:#2a2f4f; stroke:#3c4777; stroke-width:6; }
+  .node.active circle{ fill:#1de27f; }
+  .badge-soft{ background:#10142a; border:1px solid #243064; color:#cfd6ff; }
+  .modal-content{ background:#0f1122; color:#fff; border:1px solid #232646; }
+</style>
+</head>
+<body>
+<div class="container py-4">
+
+  <div class="d-flex flex-column flex-md-row align-items-md-center mb-4 gap-3">
+    <h1 class="m-0">🧩 Logika Proposisi Interaktif – Final</h1>
+    <div class="ms-md-auto d-flex gap-2">
+      <button class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#helpModal">Bantuan</button>
+      <button class="btn btn-outline-light btn-sm" id="btnResetAll">Reset Semua</button>
+    </div>
+  </div>
+
+  <ul class="nav nav-tabs mb-4" role="tablist">
+    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab1" role="tab">1. Pernyataan</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab2" role="tab">2. Majemuk</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab3" role="tab">3. Kesetaraan</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab4" role="tab">4. Aljabar</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab5" role="tab">5. (Bi)Implikasi</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab6" role="tab">6. Argumentasi</a></li>
+  </ul>
+
+  <div class="tab-content">
+
+    <!-- 1. Pernyataan: Drag & Drop klasifikasi -->
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+      <div class="card card-dark p-3">
+        <h2 class="mb-2">📘 Pernyataan</h2>
+        <p class="muted">Tarik kalimat ke kolom yang benar. <span class="badge badge-soft ms-2">Poin: <span id="ptPernyataan">0</span></span></p>
+        <div class="row g-3 mt-1">
+          <div class="col-lg-4">
+            <div class="p-3 border rounded-3" style="border-color:#243064;">
+              <h5 class="mb-3">Kalimat</h5>
+              <div id="kalimatList"></div>
+              <div class="tiny mt-2">Pernyataan: kalimat deklaratif yang bisa dinilai benar atau salah.</div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <h5 class="mb-2">Pernyataan ✅</h5>
+            <div id="zoneYes" class="drop-zone"></div>
+          </div>
+          <div class="col-lg-4">
+            <h5 class="mb-2">Bukan Pernyataan ❌</h5>
+            <div id="zoneNo" class="drop-zone"></div>
+          </div>
+        </div>
+        <div class="d-flex gap-2 mt-3">
+          <button id="btnCekPernyataan" class="btn btn-outline-light btn-sm">Cek Jawaban</button>
+          <button id="btnUlangPernyataan" class="btn btn-outline-light btn-sm">Ulang</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Pernyataan Majemuk: Switch P/Q + Lampu + Tabel -->
+    <div class="tab-pane fade" id="tab2" role="tabpanel">
+      <div class="card card-dark p-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+          <div>
+            <h2 class="mb-1">🔗 Pernyataan Majemuk</h2>
+            <div class="tiny">Toggle P/Q, pilih operator, lihat output & tabel.</div>
+          </div>
+          <div class="badge badge-soft">Latihan</div>
+        </div>
+        <hr>
+        <div class="row g-4">
+          <div class="col-lg-4">
+            <div class="d-grid gap-2 mb-3">
+              <button id="btnP" class="btn-toggle">P = F</button>
+              <button id="btnQ" class="btn-toggle">Q = F</button>
+            </div>
+            <label class="form-label">Operator</label>
+            <select id="operator" class="select-dark w-100">
+              <option value="NOT">Negasi (¬P)</option>
+              <option value="AND" selected>Konjungsi (P ∧ Q)</option>
+              <option value="OR">Disjungsi (P ∨ Q)</option>
+              <option value="NAND">Not-And (¬(P ∧ Q))</option>
+              <option value="NOR">Joint Denial (¬(P ∨ Q))</option>
+              <option value="XOR">Exclusive OR (P ⊕ Q)</option>
+              <option value="XNOR">Exclusive NOR (¬(P ⊕ Q))</option>
+            </select>
+
+            <div class="mt-3">
+              <div id="lamp" class="lamp"></div>
+              <h4 id="resultText" class="text-center">Hasil: FALSE</h4>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <h5 class="mb-2">Tabel Kebenaran (dinamis)</h5>
+            <div class="table-responsive">
+              <table class="table table-dark table-striped align-middle">
+                <thead><tr><th>P</th><th>Q</th><th id="thOp">Operator</th><th>Output</th></tr></thead>
+                <tbody id="truthTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Kesetaraan Logis: DRAG & DROP pasangan ekuivalen -->
+    <div class="tab-pane fade" id="tab3" role="tabpanel">
+      <div class="card card-dark p-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+          <div>
+            <h2 class="mb-1">⚖️ Kesetaraan Logis</h2>
+            <div class="tiny">Tarik ekspresi di kolom kiri ke pasangan ekuivalen di kanan. <span class="badge badge-soft ms-2">Skor: <span id="scoreEq">0</span></span></div>
+          </div>
+          <button id="btnResetEq" class="btn btn-outline-light btn-sm">Ulang</button>
+        </div>
+        <hr>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <h6>Kiri (seret)</h6>
+            <div id="eqLeft" class="d-grid gap-2"></div>
+          </div>
+          <div class="col-md-6">
+            <h6>Kanan (lepaskan di sini)</h6>
+            <div id="eqRight" class="d-grid gap-3"></div>
+          </div>
+        </div>
+        <div class="tiny mt-3">Poin +5 untuk kecocokan yang benar. Drag ke target yang sesuai.</div>
+      </div>
+    </div>
+
+    <!-- 4. Aljabar Proposisi: Puzzle hukum -->
+    <div class="tab-pane fade" id="tab4" role="tabpanel">
+      <div class="card card-dark p-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+          <div>
+            <h2 class="mb-1">🧮 Aljabar Proposisi</h2>
+            <div class="tiny">Pilih hukum yang tepat untuk menyederhanakan ekspresi. <span class="badge badge-soft ms-2">Benar: <span id="aljabarOk">0</span></span></div>
+          </div>
+          <button id="btnNextAlg" class="btn btn-outline-light btn-sm">Soal Baru</button>
+        </div>
+        <hr>
+        <div id="algWrap" class="p-3 rounded-3" style="background:#0f1122; border:1px solid #232646;">
+          <div class="mb-2 tiny">Ekspresi:</div>
+          <div id="algExpr" class="h4">—</div>
+          <div class="mb-2 tiny mt-3">Bentuk setara:</div>
+          <div id="algTgt" class="h4">—</div>
+          <div class="row g-2 mt-3" id="algChoices"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Implikasi & Biimplikasi: Visual panah -->
+    <div class="tab-pane fade" id="tab5" role="tabpanel">
+      <div class="card card-dark p-3">
+        <h2 class="mb-1">🔁 Implikasi & Biimplikasi</h2>
+        <div class="tiny">Aktifkan P/Q dan pilih mode untuk melihat aliran logika.</div>
+        <hr>
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-4">
+            <div class="d-grid gap-2 mb-3">
+              <button id="btnImpP" class="btn-toggle">P = F</button>
+              <button id="btnImpQ" class="btn-toggle">Q = F</button>
+            </div>
+            <label class="form-label">Mode</label>
+            <select id="modeImp" class="select-dark w-100">
+              <option value="IMP">Implikasi (P → Q)</option>
+              <option value="BIC">Biimplikasi (P ↔ Q)</option>
+            </select>
+            <div class="mt-3">
+              <div class="badge badge-soft">Output: <span id="impOut">T</span></div>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="svg-wrap">
+              <svg id="impSvg" viewBox="0 0 600 240" width="100%" height="240" xmlns="http://www.w3.org/2000/svg">
+                <g class="node" id="nodeP" transform="translate(120,120)">
+                  <circle r="32"></circle>
+                  <text x="0" y="6" font-size="20" fill="#fff" text-anchor="middle" font-weight="600">P</text>
+                </g>
+                <g class="node" id="nodeQ" transform="translate(480,120)">
+                  <circle r="32"></circle>
+                  <text x="0" y="6" font-size="20" fill="#fff" text-anchor="middle" font-weight="600">Q</text>
+                </g>
+                <defs>
+                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#6f7cc7" />
+                  </marker>
+                  <marker id="arrowOn" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#27e38a" />
+                  </marker>
+                </defs>
+                <line id="pq" x1="160" y1="120" x2="440" y2="120" class="wire" marker-end="url(#arrow)"/>
+                <line id="qp" x1="440" y1="120" x2="160" y2="120" class="wire" marker-end="url(#arrow)" style="display:none"/>
+              </svg>
+            </div>
+            <div class="tiny mt-2">Hijau menyala menunjukkan implikasi aktif berdasarkan nilai P dan Q.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Argumentasi Logis: Mini quiz -->
+    <div class="tab-pane fade" id="tab6" role="tabpanel">
+      <div class="card card-dark p-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+          <div>
+            <h2 class="mb-1">🧠 Argumentasi Logis</h2>
+            <div class="tiny">Pilih kesimpulan yang valid. <span class="badge badge-soft ms-2">Skor: <span id="argScore">0</span></span></div>
+          </div>
+          <button id="btnArgNext" class="btn btn-outline-light btn-sm">Soal Baru</button>
+        </div>
+        <hr>
+        <div id="argPremis" class="mb-3"></div>
+        <div id="argChoices" class="row g-2"></div>
+        <div id="argExplain" class="tiny mt-3"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal Bantuan (Definisi & Studi Kasus per Materi) -->
+<div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="helpLabel">📖 Bantuan: Definisi & Studi Kasus Awam</h5>
+        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <h6>1) Pernyataan</h6>
+        <p><b>Definisi:</b> Kalimat deklaratif yang bisa dinilai benar atau salah.</p>
+        <p class="tiny">Studi kasus: “Lampu menyala” (bisa dicek benar/salah), berbeda dengan “Tolong nyalakan lampu” (perintah).</p>
+        <hr>
+        <h6>2) Pernyataan Majemuk</h6>
+        <p><b>Definisi:</b> Gabungan proposisi menggunakan operator (AND, OR, NOT, XOR, dll).</p>
+        <p class="tiny">Studi kasus: “User login DAN akun aktif” → keduanya harus benar agar akses diberikan.</p>
+        <hr>
+        <h6>3) Kesetaraan Logis</h6>
+        <p><b>Definisi:</b> Dua ekspresi berbeda yang memiliki tabel kebenaran identik.</p>
+        <p class="tiny">Studi kasus: ¬(P ∨ Q) setara dengan (¬P ∧ ¬Q) — sering dipakai membalik syarat.</p>
+        <hr>
+        <h6>4) Aljabar Proposisi</h6>
+        <p><b>Definisi:</b> Himpunan hukum untuk menyederhanakan ekspresi logika.</p>
+        <p class="tiny">Studi kasus: “P ∨ (P ∧ Q)” disederhanakan jadi “P” (Absorpsi) untuk menulis kode yang ringkas.</p>
+        <hr>
+        <h6>5) Implikasi & Biimplikasi</h6>
+        <p><b>Definisi:</b> Implikasi (P→Q) menyatakan “jika P maka Q”; Biimplikasi (P↔Q) menyatakan dua arah.</p>
+        <p class="tiny">Studi kasus: “Jika sensor gerak aktif maka lampu menyala”; biimplikasi untuk status yang harus sinkron.</p>
+        <hr>
+        <h6>6) Argumentasi Logis</h6>
+        <p><b>Definisi:</b> Aturan penarikan kesimpulan dari premis (Modus Ponens, Tollens, dsb.).</p>
+        <p class="tiny">Studi kasus: “Jika hujan maka jalan basah. Hujan. Kesimpulan: jalan basah.”</p>
+      </div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-outline-light" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ===========================
+   1) PERNYATAAN – Drag & Drop
+   =========================== */
+const kalimatBank = [
+  {t:"Server sedang aktif.", yes:true},
+  {t:"Apakah jaringan lambat?", yes:false},
+  {t:"2 + 2 = 4.", yes:true},
+  {t:"Tolong nyalakan komputer.", yes:false},
+  {t:"Semua user memiliki akun aktif.", yes:true},
+  {t:"Jangan keluar!", yes:false},
+  {t:"React adalah framework JS.", yes:true}, // evaluatif: bisa dinilai benar/salah (sebenarnya library)
+  {t:"Ayo semangat!", yes:false},
+];
+function buildPernyataan(){
+  const $list = $("#kalimatList").empty();
+  shuffle(kalimatBank).forEach((k)=>{
+    const $p = $("<p>").addClass("drag-item").attr("draggable","true").text(k.t).data("yes",k.yes);
+    $list.append($p);
+  });
+  $("#zoneYes, #zoneNo").empty().removeClass("ok bad");
+  $("#ptPernyataan").text(localStorage.getItem("ptPernyataan")||0);
+}
+$(document).on("dragstart",".drag-item",function(e){
+  $(this).addClass("dragging");
+  e.originalEvent.dataTransfer.setData("text/plain", $(this).text());
+  e.originalEvent.dataTransfer.setData("yes", $(this).data("yes"));
+});
+$(document).on("dragend",".drag-item",function(){ $(this).removeClass("dragging"); });
+$(".drop-zone").on("dragover", e=>e.preventDefault());
+$(".drop-zone").on("drop", function(e){
+  e.preventDefault();
+  const txt = e.originalEvent.dataTransfer.getData("text/plain");
+  const yes = e.originalEvent.dataTransfer.getData("yes")==="true";
+  const $p = $("<p>").addClass("drag-item").attr("draggable","true").text(txt).data("yes",yes);
+  $(this).append($p);
+});
+$("#btnCekPernyataan").on("click", function(){
+  let score = Number(localStorage.getItem("ptPernyataan")||0);
+  let ok = 0, total=0;
+  $("#zoneYes .drag-item").each(function(){ total++; if($(this).data("yes")===true) ok++; });
+  $("#zoneNo .drag-item").each(function(){ total++; if($(this).data("yes")===false) ok++; });
+  const acc = total? Math.round((ok/total)*100):0;
+  if(acc>=80){ score+=10; $("#zoneYes, #zoneNo").addClass("ok").removeClass("bad"); }
+  else { $("#zoneYes, #zoneNo").addClass("bad").removeClass("ok"); }
+  localStorage.setItem("ptPernyataan", score);
+  $("#ptPernyataan").text(score);
+});
+$("#btnUlangPernyataan").on("click", buildPernyataan);
+
+/* ==================================
+   2) MAJEMUK – Toggle, Operator, Tabel
+   ================================== */
+let P=false, Q=false;
+const OPS = {
+  NOT:{label:"¬P", needsQ:false, fn:(P,Q)=>!P},
+  AND:{label:"P ∧ Q", fn:(P,Q)=>P&&Q},
+  OR:{label:"P ∨ Q", fn:(P,Q)=>P||Q},
+  NAND:{label:"¬(P ∧ Q)", fn:(P,Q)=>!(P&&Q)},
+  NOR:{label:"¬(P ∨ Q)", fn:(P,Q)=>!(P||Q)},
+  XOR:{label:"P ⊕ Q", fn:(P,Q)=>(P||Q)&&!(P&&Q)},
+  XNOR:{label:"¬(P ⊕ Q)", fn:(P,Q)=>!((P||Q)&&!(P&&Q))}
+};
+function evalMaj(){ const key=$("#operator").val(); const op=OPS[key]; return op.fn(P,Q); }
+function refreshMaj(){
+  $("#btnP").toggleClass("active",P).text("P = "+(P?"T":"F"));
+  $("#btnQ").toggleClass("active",Q).text("Q = "+(Q?"T":"F"));
+  const out = evalMaj();
+  $("#lamp").toggleClass("on",out);
+  $("#resultText").text("Hasil: "+(out?"TRUE":"FALSE"));
+  buildTruth();
+}
+function buildTruth(){
+  const key=$("#operator").val(); const label=OPS[key].label;
+  $("#thOp").text(label);
+  const rows = (key==="NOT") ? [[false,false],[true,false]] : [[false,false],[false,true],[true,false],[true,true]];
+  const $tb=$("#truthTable").empty();
+  rows.forEach(([p,q])=>{
+    const out = OPS[key].fn(p,q);
+    const tr = `<tr>
+      <td>${p?"T":"F"}</td>
+      <td>${key==="NOT"?"—":(q?"T":"F")}</td>
+      <td>${label}</td>
+      <td class="${out?'text-success fw-bold':'text-danger fw-bold'}">${out?"T":"F"}</td>
+    </tr>`;
+    $tb.append(tr);
+  });
+}
+$("#btnP").on("click", ()=>{ P=!P; refreshMaj(); });
+$("#btnQ").on("click", ()=>{ Q=!Q; refreshMaj(); });
+$("#operator").on("change", refreshMaj);
+
+/* =======================================
+   3) KESETARAAN – Drag & Drop pasangan
+   ======================================= */
+const pairs = [
+  ["¬(¬P)", "P", "Involusi"],
+  ["P ∧ Q", "Q ∧ P", "Komutatif(∧)"],
+  ["P ∨ Q", "Q ∨ P", "Komutatif(∨)"],
+  ["P ∧ (Q ∨ R)", "(P ∧ Q) ∨ (P ∧ R)", "Distributif"],
+  ["P ∨ (Q ∧ R)", "(P ∨ Q) ∧ (P ∨ R)", "Distributif"],
+  ["¬(P ∧ Q)", "(¬P ∨ ¬Q)", "De Morgan"],
+  ["¬(P ∨ Q)", "(¬P ∧ ¬Q)", "De Morgan"],
+  ["P → Q", "(¬P ∨ Q)", "Implikasi"],
+  ["P ↔ Q", "(P → Q) ∧ (Q → P)", "Biimplikasi"],
+  ["P ∨ (P ∧ Q)", "P", "Absorpsi"],
+  ["P ∧ (P ∨ Q)", "P", "Absorpsi"]
+];
+let scoreEq = 0;
+function buildEq(){
+  $("#eqLeft, #eqRight").empty();
+  const use = shuffle(pairs).slice(0,8);
+  // Sisi kiri (draggable)
+  use.forEach((p, idx)=>{
+    const $src = $(`<div class="pair-src" draggable="true" data-idx="${idx}" data-law="${p[2]}">${p[0]} <span class="tiny text-secondary ms-2">${p[2]}</span></div>`);
+    $("#eqLeft").append($src);
+  });
+  // Sisi kanan (targets)
+  const right = use.map((p,i)=>({txt:p[1], idx:i, law:p[2]}));
+  shuffle(right).forEach(r=>{
+    const $tgt = $(`<div class="pair-drop" data-idx="${r.idx}">${r.txt} <span class="tiny text-secondary ms-2">${r.law}</span></div>`);
+    $("#eqRight").append($tgt);
+  });
+  $("#scoreEq").text(scoreEq);
+}
+// DnD handlers
+$(document).on("dragstart",".pair-src",function(e){
+  $(this).addClass("dragging");
+  e.originalEvent.dataTransfer.setData("idx", $(this).data("idx"));
+  e.originalEvent.dataTransfer.setData("text/plain", $(this).text());
+});
+$(document).on("dragend",".pair-src",function(){ $(this).removeClass("dragging"); });
+$(document).on("dragover",".pair-drop",function(e){ e.preventDefault(); });
+$(document).on("drop",".pair-drop",function(e){
+  e.preventDefault();
+  const leftIdx = Number(e.originalEvent.dataTransfer.getData("idx"));
+  const rightIdx = Number($(this).data("idx"));
+  if($(this).hasClass("correct")) return;
+  if(leftIdx===rightIdx){
+    $(this).addClass("correct").removeClass("wrong");
+    scoreEq += 5;
+    $("#scoreEq").text(scoreEq);
+    // append src text for feedback
+    const text = e.originalEvent.dataTransfer.getData("text/plain");
+    $(this).html(text);
+    // disable source
+    $(`.pair-src[draggable][data-idx='${leftIdx}']`).attr("draggable","false").css("opacity",".4");
+  } else {
+    $(this).addClass("wrong");
+    setTimeout(()=>$(this).removeClass("wrong"), 600);
+  }
+});
+$("#btnResetEq").on("click", ()=>{ scoreEq=0; buildEq(); });
+
+/* ==========================================
+   4) ALJABAR – Pilih hukum yang menyederhanakan
+   ========================================== */
+const algBank = [
+  {expr:"P ∨ (Q ∧ R)", tgt:"(P ∨ Q) ∧ (P ∨ R)", law:"Distributif"},
+  {expr:"P ∧ (Q ∨ R)", tgt:"(P ∧ Q) ∨ (P ∧ R)", law:"Distributif"},
+  {expr:"P ∨ (P ∧ Q)", tgt:"P", law:"Absorpsi"},
+  {expr:"P ∧ (P ∨ Q)", tgt:"P", law:"Absorpsi"},
+  {expr:"¬(P ∧ Q)", tgt:"¬P ∨ ¬Q", law:"De Morgan"},
+  {expr:"¬(P ∨ Q)", tgt:"¬P ∧ ¬Q", law:"De Morgan"},
+  {expr:"P ∧ T", tgt:"P", law:"Identitas"},
+  {expr:"P ∨ F", tgt:"P", law:"Identitas"},
+  {expr:"P ∨ ¬P", tgt:"T", law:"Komplemen"},
+  {expr:"P ∧ ¬P", tgt:"F", law:"Komplemen"},
+  {expr:"¬(¬P)", tgt:"P", law:"Involusi"},
+  {expr:"P → Q", tgt:"¬P ∨ Q", law:"Implikasi"},
+];
+let algOk=0;
+function newAlg(){
+  const q = sample(algBank);
+  $("#algExpr").text(q.expr);
+  $("#algTgt").text(q.tgt);
+  const laws = shuffle(["Distributif","Absorpsi","De Morgan","Identitas","Komplemen","Involusi","Implikasi"]).slice(0,3);
+  if(!laws.includes(q.law)){ laws[0]=q.law; shuffle(laws); }
+  const $c=$("#algChoices").empty();
+  laws.forEach(l=>{
+    const btn = $(`<div class="col-md-4"><div class="pair-src text-white" style="cursor:pointer" data-law="${l}">${l}</div></div>`);
+    $c.append(btn);
+  });
+}
+$(document).on("click","#algChoices .pair-src", function(){
+  const pick = $(this).data("law");
+  const expr=$("#algExpr").text(), tgt=$("#algTgt").text();
+  const found = algBank.find(a=>a.expr===expr && a.tgt===tgt);
+  const correct = found && pick===found.law;
+  if(correct){ $(this).css({background:"#153a2c", borderColor:"#1de27f", color:"#aefcd5"}); algOk++; $("#aljabarOk").text(algOk); }
+  else { $(this).css({background:"#3a1620", borderColor:"#ff7a8b", color:"#ffd1d7"}); }
+  $("#algChoices .pair-src").css("pointer-events","none").css("opacity",".9");
+});
+$("#btnNextAlg").on("click", function(){
+  newAlg();
+  $("#algChoices .pair-src").css("pointer-events","").css("opacity","1").attr("style","");
+});
+
+/* ===========================================
+   5) (Bi)IMPLIKASI – Visual panah dan output
+   =========================================== */
+let IP=false, IQ=false;
+function evalImp(mode,p,q){ return (mode==="IMP") ? ((!p) || q) : ((p&&q)||(!p&&!q)); }
+function refreshImp(){
+  $("#btnImpP").toggleClass("active",IP).text("P = "+(IP?"T":"F"));
+  $("#btnImpQ").toggleClass("active",IQ).text("Q = "+(IQ?"T":"F"));
+  const mode=$("#modeImp").val();
+  const pq = document.getElementById("pq");
+  const qp = document.getElementById("qp");
+  if(mode==="IMP"){
+    qp.style.display="none";
+    const active = IP;
+    pq.classList.toggle("on", active);
+    pq.setAttribute("marker-end", active? "url(#arrowOn)" : "url(#arrow)");
+  }else{
+    qp.style.display="";
+    const active = (IP===IQ);
+    pq.classList.toggle("on", active);
+    qp.classList.toggle("on", active);
+    pq.setAttribute("marker-end", active? "url(#arrowOn)" : "url(#arrow)");
+    qp.setAttribute("marker-end", active? "url(#arrowOn)" : "url(#arrow)");
+  }
+  $("#nodeP").toggleClass("active", IP);
+  $("#nodeQ").toggleClass("active", IQ);
+  const out = evalImp(mode, IP, IQ);
+  $("#impOut").text(out? "T":"F");
+}
+$("#btnImpP").on("click", ()=>{ IP=!IP; refreshImp(); });
+$("#btnImpQ").on("click", ()=>{ IQ=!IQ; refreshImp(); });
+$("#modeImp").on("change", refreshImp);
+
+/* ========================================
+   6) ARGUMENTASI – Mini quiz inferensi
+   ======================================== */
+const argBank = [
+  {type:"Modus Ponens", premis:["P → Q","P"], opsi:["Q","¬Q"], ans:"Q",
+    explain:"Jika P menyiratkan Q dan P benar, maka Q harus benar."},
+  {type:"Modus Tollens", premis:["P → Q","¬Q"], opsi:["¬P","P"], ans:"¬P",
+    explain:"Jika P menyiratkan Q dan Q salah, maka P salah."},
+  {type:"Disjunctive Syllogism", premis:["P ∨ Q","¬P"], opsi:["Q","¬Q"], ans:"Q",
+    explain:"Jika salah satu benar dan P salah, maka Q benar."},
+  {type:"Hypothetical Syllogism", premis:["P → Q","Q → R"], opsi:["P → R","R → P"], ans:"P → R",
+    explain:"Implikasi berantai: dari P menuju R."},
+  {type:"Simplification", premis:["P ∧ Q"], opsi:["P","Q"], ans:"P",
+    explain:"Dari konjungsi benar, tiap komponen benar."},
+  {type:"Conjunction", premis:["P","Q"], opsi:["P ∧ Q","P ∨ Q"], ans:"P ∧ Q",
+    explain:"Dua pernyataan benar dapat digabungkan dengan ∧."},
+  {type:"Addition", premis:["P"], opsi:["P ∨ Q","P ∧ Q"], ans:"P ∨ Q",
+    explain:"Jika P benar maka P ∨ Q juga benar."}
+];
+let argScore=0;
+function newArg(){
+  const q = sample(argBank);
+  $("#argPremis").html(`
+    <div class="tiny text-secondary mb-1">Tipe: <b>${q.type}</b></div>
+    <div class="h5">Premis:</div>
+    <ul class="mb-2">
+      ${q.premis.map(p=>`<li class="h6">${p}</li>`).join("")}
+    </ul>
+    <div class="h6 mb-2">Kesimpulan yang valid?</div>
+  `);
+  const $c=$("#argChoices").empty();
+  shuffle(q.opsi).forEach(o=>{
+    $c.append(`<div class="col-md-4"><div class="pair-src text-white" style="cursor:pointer" data-ans="${q.ans}" data-opt="${o}">${o}</div></div>`);
+  });
+  $("#argExplain").empty();
+}
+$(document).on("click","#argChoices .pair-src", function(){
+  const pick=$(this).data("opt"); const ans=$(this).data("ans");
+  const correct = (pick===ans);
+  if(correct){ $(this).css({background:"#153a2c", borderColor:"#1de27f", color:"#aefcd5"}); argScore+=10; $("#argScore").text(argScore); }
+  else { $(this).css({background:"#3a1620", borderColor:"#ff7a8b", color:"#ffd1d7"}); }
+  $("#argChoices .pair-src").css("pointer-events","none").css("opacity",".9");
+  const info = argBank.find(x=>x.ans===ans && $("#argPremis").text().includes(x.type));
+  $("#argExplain").html(`<span class="badge badge-soft me-2">${info?.type||"Aturan"}</span>${info?.explain||""}`);
+});
+$("#btnArgNext").on("click", ()=>{ newArg(); $("#argChoices .pair-src").attr("style","").css("pointer-events",""); });
+
+/* =========================
+   Helpers & Init
+   ========================= */
+function shuffle(a){ const arr=a.slice(); for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+function sample(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+function resetAll(){
+  // Pernyataan
+  buildPernyataan();
+  // Majemuk
+  P=false; Q=false; $("#operator").val("AND"); refreshMaj();
+  // Kesetaraan (DnD)
+  buildEq();
+  // Aljabar
+  $("#aljabarOk").text(0); algOk=0; newAlg();
+  // (Bi)Implikasi
+  IP=false; IQ=false; $("#modeImp").val("IMP"); refreshImp();
+  // Argumentasi
+  argScore=0; $("#argScore").text(argScore); newArg();
+}
+$("#btnResetAll").on("click", ()=>resetAll());
+
+$(function(){ resetAll(); });
+</script>
+</body>
+</html>
