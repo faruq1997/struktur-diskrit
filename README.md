@@ -1,89 +1,82 @@
-# Struktur Diskrit
+---
 
-Modul interaktif pembelajaran **Struktur Diskrit** menggunakan *Jupyter Notebook* dan visualisasi berbasis web.  
-Cocok untuk mahasiswa, dosen, atau siapa pun yang ingin memahami konsep dasar matematika diskrit secara praktis dan visual.
+# 🧠 Struktur Diskrit – Pembelajaran Interaktif
 
-🎮 **Visualisasi Interaktif:** [faruq1997.github.io/struktur-diskrit](https://faruq1997.github.io/struktur-diskrit)
+Modul interaktif pembelajaran **Struktur Diskrit** berbasis [Google Colab](https://colab.research.google.com/) dan **visualisasi web interaktif**.
+Dirancang untuk **mahasiswa, dosen, dan praktisi** yang ingin memahami konsep dasar *matematika diskrit* secara **praktis, eksploratif, dan visual**.
+
+🎮 **Visualisasi Interaktif Online:**
+🔗 [faruq1997.github.io/struktur-diskrit](https://faruq1997.github.io/struktur-diskrit)
 
 ---
 
 ## 📘 Deskripsi
 
-Repository ini berisi kumpulan notebook dan halaman web interaktif untuk mendukung perkuliahan Struktur Diskrit.  
-Materi disusun bertahap sesuai pertemuan, dengan pendekatan eksploratif — setiap konsep disertai contoh, latihan, dan visualisasi sederhana.
+Repository ini berisi kumpulan **notebook interaktif (Colab)** dan **halaman web visualisasi** yang mendukung perkuliahan *Struktur Diskrit*.
+Pendekatan yang digunakan bersifat **eksperiensial (learning by doing)**, dengan integrasi antara teori, contoh kasus, dan eksplorasi interaktif berbasis JavaScript.
 
----
+Setiap topik disusun dengan:
 
-## 📂 Struktur File
-
-| File | Pertemuan | Topik |
-|------|------------|-------|
-| `Himpunan_Relasi_dan_Fungsi.ipynb` | 1 & 2 | Himpunan, relasi, fungsi |
-| `Kuantor dan Induksi.ipynb` | 3 | Kuantor, logika predikat, induksi matematis |
-| `Kombinatorial.ipynb` | 4 | Permutasi, kombinasi, prinsip pencacahan |
-| `index.html` | - | Halaman utama visualisasi |
-| `kombinatorial.html` | - | Visualisasi kombinatorial |
-| `Contoh_Format_Tugas_Diskusi_Kelompok.docx` | - | Template tugas dan diskusi |
+* Penjelasan konseptual singkat
+* Ilustrasi visual atau simulasi sederhana
+* Contoh kode di Python/JavaScript
+* Latihan atau eksperimen interaktif
 
 ---
 
 ## 🧩 Materi Pembelajaran
 
-### Pertemuan 1–2: Himpunan, Relasi, dan Fungsi
-- Operasi himpunan dan representasinya  
-- Relasi dan sifat-sifatnya  
-- Fungsi: definisi, domain, range, injektif, surjektif, bijektif  
+### 🧮 **Pertemuan 1–2: Himpunan, Relasi, dan Fungsi**
 
-### Pertemuan 3: Kuantor dan Induksi
-- Kuantor universal dan eksistensial  
-- Logika predikat  
-- Pembuktian menggunakan induksi matematis  
+* Operasi dasar himpunan dan diagram Venn
+* Representasi himpunan (list, grafik, tabel)
+* Relasi dan sifat-sifatnya (refleksif, simetris, transitif)
+* Fungsi: definisi, domain, range, injektif, surjektif, bijektif
 
-### Pertemuan 4: Kombinatorial
-- Prinsip dasar pencacahan  
-- Permutasi dan kombinasi  
-- Aplikasi kombinatorial dalam algoritma dan peluang  
+### 🔍 **Pertemuan 3: Kuantor dan Induksi**
 
----
+* Kuantor universal (∀) dan eksistensial (∃)
+* Logika predikat dan variabel terikat
+* Pembuktian dengan induksi matematis
+* Aplikasi induksi pada algoritma rekursif
 
-## ⚙️ Cara Menjalankan
+### 🎲 **Pertemuan 4: Kombinatorial**
 
-1. **Instalasi**
-   ```bash
-   git clone https://github.com/faruq1997/struktur-diskrit.git
-   cd struktur-diskrit
-   ````
+* Prinsip dasar pencacahan
+* Permutasi, kombinasi, dan variasinya
+* Penerapan kombinatorial dalam peluang dan algoritma brute force
 
-2. **Buka Jupyter Notebook**
+### 💡 **Pertemuan 5: Logika Proposisi**
 
-   ```bash
-   jupyter notebook
-   ```
-3. Pilih file `.ipynb` sesuai pertemuan dan jalankan sel secara berurutan.
-4. Untuk versi visual, buka `index.html` atau kunjungi GitHub Pages di tautan di atas.
+* Pernyataan dan nilai kebenaran
+* Pernyataan majemuk dan tabel kebenaran
+* Kesetaraan logis dan hukum aljabar proposisi
+* Implikasi, biimplikasi, dan argumentasi logis
+* Visualisasi interaktif: *truth table builder*, *logic circuit*, dan *game logic trainer*
 
 ---
 
 ## 🤝 Kontribusi
 
-Kontribusi sangat terbuka untuk siapa pun.
+Kontribusi sangat terbuka untuk siapa pun yang ingin memperkaya materi.
 Anda dapat menambahkan:
 
-* Contoh latihan dan soal
-* Penjelasan tambahan
-* Visualisasi interaktif baru
+* ✏️ Contoh latihan dan soal
+* 📘 Penjelasan tambahan konsep
+* 🎨 Visualisasi atau simulasi interaktif baru
 
-Silakan fork repository ini dan kirim *pull request*.
+Silakan lakukan *fork* repository ini dan kirim *pull request* setelah perubahan Anda stabil.
 
 ---
 
 ## 📜 Lisensi
 
-Materi ini dilisensikan di bawah **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**.
+Proyek ini menggunakan lisensi
+**Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International (CC BY-NC-SA 4.0)**
 
-* ✅ Bebas digunakan dan dimodifikasi untuk pembelajaran
-* ❌ Tidak untuk tujuan komersial
-* 🔗 Wajib mencantumkan atribusi dan membagikan turunan di lisensi yang sama
+✅ **Diperbolehkan:** digunakan dan dimodifikasi untuk keperluan pembelajaran
+❌ **Dilarang:** penggunaan untuk tujuan komersial
+🔗 **Wajib:** mencantumkan atribusi dan menjaga lisensi turunan tetap sama
 
 📄 Detail lisensi: [Creative Commons BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
@@ -91,3 +84,6 @@ Materi ini dilisensikan di bawah **Creative Commons Attribution-NonCommercial-Sh
 
 © 2025 — Disusun untuk tujuan edukasi.
 **Kontributor utama:** [@faruq1997](https://github.com/faruq1997)
+Kolaborator & pengembang interaktif: *Open Learning Contributors Team*
+
+---
