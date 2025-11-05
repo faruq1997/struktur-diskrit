@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Struktur Diskrit</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons (opsional) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body { scroll-behavior: smooth; }
+    .choice-item input { display:none; }
+    .choice-item label {
+      display:block; width:100%; padding:.9rem 1rem; margin-bottom:.5rem;
+      border:1px solid var(--bs-border-color); border-radius:.5rem; cursor:pointer;
+    }
+    .choice-item input:checked + label {
+      border-width:2px; box-shadow:inset 0 0 0 2px var(--bs-primary);
+    }
+    .badge-num { min-width:2.2rem; }
+    .explain-box { display:none; }
+    .choice-correct { border-color: var(--bs-success) !important; }
+    .choice-wrong   { border-color: var(--bs-danger)  !important; }
+    .sticky-bottom-bar {
+      position:sticky; bottom:0; z-index:1020; backdrop-filter:saturate(180%) blur(8px);
+    }
+  </style>
+</head>
+<body data-bs-theme="light">
+  <nav class="navbar bg-body-tertiary border-bottom">
+    <div class="container-fluid">
+      <div class="d-flex align-items-center gap-2">
+        <span class="navbar-brand mb-0 h1"><i class="bi bi-mortarboard"></i> Struktur Diskrit</span>
+        <span class="badge text-bg-primary">Quiz Pertemuan 1 - 6</span>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="form-check form-switch m-0">
+          <input class="form-check-input" type="checkbox" id="themeSwitch">
+          <label class="form-check-label" for="themeSwitch" title="Light/Dark"><i class="bi bi-moon-stars"></i></label>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container my-3" id="app">
+    <!-- header + progress -->
+    <div class="row g-3 align-items-center">
+      <div class="col-12 col-lg-7">
+        <div class="d-flex align-items-center gap-3">
+          <span class="badge text-bg-secondary"><i class="bi bi-list-ol"></i> <span id="qPos">1</span>/<span id="qTotal">60</span></span>
+          <span class="badge text-bg-info"><i class="bi bi-journal-text"></i> Soal <span id="qNumber">1</span></span>
+          <span class="badge text-bg-success" id="scoreBadge">Skor: —</span>
+        </div>
+      </div>
+      <div class="col-12 col-lg-5">
+        <div class="progress" role="progressbar" aria-label="Progress jawaban">
+          <div class="progress-bar" id="progressBar" style="width:0%">0%</div>
+        </div>
+        <div class="form-text"><span id="answeredCount">0</span>/<span id="totalCount">60</span> terjawab</div>
+      </div>
+    </div>
+
+    <!-- soal kartu -->
+    <div class="card mt-3" id="qCard">
+      <div class="card-body">
+        <div class="d-flex align-items-start justify-content-between">
+          <div class="me-2">
+            <span class="badge text-bg-primary badge-num" id="badgeNumber">#1</span>
+        <span class="ms-2 fw-semibold" id="topicTag">Definisi, Macam-macam, Operasi Himpunan</span>
+          </div>
+          <button class="btn btn-sm btn-link text-decoration-none p-0" id="btnCopy"><i class="bi bi-clipboard"></i> salin</button>
+        </div>
+        <p class="mt-2" id="qText">…</p>
+        <div id="choices"></div>
+
+        <div class="alert mt-3 py-2 px-3 d-none alert-dismissible" id="resultBox">
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="explain-box alert alert-secondary mt-2" id="explainBox">
+          <div class="d-flex align-items-start gap-2">
+            <i class="bi bi-lightbulb"></i>
+            <div id="explainText">Pembahasan…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- bottom actions -->
+    <div class="sticky-bottom-bar bg-body border-top mt-3 py-2">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-outline-secondary" id="btnPrev"><i class="bi bi-arrow-left"></i> Prev</button>
+          <button class="btn btn-outline-secondary" id="btnNext">Next <i class="bi bi-arrow-right"></i></button>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="toggleInstant">
+            <label class="form-check-label" for="toggleInstant">Periksa Otomatis</label>
+          </div>
+          <button class="btn btn-primary" id="btnCheck"><i class="bi bi-check2-circle"></i> Periksa</button>
+          <button class="btn btn-outline-info" id="btnExplain"><i class="bi bi-chat-square-text"></i> Lihat Pembahasan</button>
+          <button class="btn btn-outline-danger" id="btnReset"><i class="bi bi-eraser"></i> Reset</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal for Reset Confirmation -->
+  <div class="modal fade" id="resetModal" tabindex="-1" aria-labelledby="resetModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="resetModalLabel">Konfirmasi Reset</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Apakah Anda yakin ingin mereset semua jawaban dan kembali ke soal pertama?</p>
+          <p class="text-muted small">Semua progress yang tersimpan akan dihapus.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-danger" id="confirmReset">Ya, Reset Semua</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ======================= DATA SOAL ======================= */
+/* Sumber: 1–10:contentReference[oaicite:12]{index=12}, 11–20:contentReference[oaicite:13]{index=13}, 21–30:contentReference[oaicite:14]{index=14}, 31–40:contentReference[oaicite:15]{index=15}, 41–50:contentReference[oaicite:16]{index=16}, 51–60:contentReference[oaicite:17]{index=17} */
+const QUESTIONS = [
+  // 1–10 (Pertemuan 1: Himpunan) — :contentReference[oaicite:18]{index=18}
+  {n:1,t:"Kumpulan benda atau objek nyata maupun abstrak yang mempunyai sifat-sifat tertentu yang sama disebut …",o:["Himpunan","Komutatif","Gabungan","Kuasa","Asosiatif"],p:1},
+  {n:2,t:"Notasi yang menyatakan bahwa A merupakan anggota himpunan adalah …",o:["∉","∈","⊆","∩","∪"],p:1},
+  {n:3,t:"A={Matematika Diskrit, Automata, Rangkaian Digital}; B={Automata, TRL}. Operasi A ∩ B menghasilkan …",o:["{Matematika Diskrit}","{Automata}","{Rangkaian Digital}","{TRL}","{}"],p:1},
+  {n:4,t:"A={Matematika Diskrit, Automata, Rangkaian Digital}; B={Automata, TRL}. Operasi A − B menghasilkan …",o:["{Matematika Diskrit}","{Automata}","{Rangkaian Digital}","{TRL}","{}"],p:1},
+  {n:5,t:"Di bawah ini yang termasuk hukum komutatif adalah …",o:["A ∪ B = A","(A ∪ B) ∪ C = A ∪ (B ∪ C)","A ∪ U = U","A ∩ U = A","A ∪ B = B ∪ A"],p:1},
+  {n:6,t:"Jika A = {Mouse, CPU}, maka banyaknya anggota himpunan kuasa (2ᴬ) adalah …",o:["1","2","3","4","0"],p:1},
+  {n:7,t:"A ∪ U = U merupakan bagian hukum aljabar himpunan …",o:["Komutatif","Identitas","Distributif","Asosiatif","De Morgan"],p:1},
+  {n:8,t:"Dari 30 programmer: 25 menguasai Java, 20 menguasai Matlab, 2 tidak keduanya. Berapa yang menguasai Java dan Matlab?",o:["15","17","19","20","21"],p:1},
+  {n:9,t:"Dengan data pada soal sebelumnya, berapa orang yang menguasai Java atau Matlab?",o:["15","17","19","20","28"],p:1},
+  {n:10,t:"A ∩ A = A merupakan hukum aljabar himpunan …",o:["Idempoten","Identitas","Komutatif","Asosiatif","Distributif"],p:1},
+
+  // 11–20 (Pertemuan 2: Relasi & Fungsi) — :contentReference[oaicite:19]{index=19}
+  {n:11,t:"Hubungan antara elemen himpunan dengan elemen himpunan lain disebut …",o:["Fungsi","Himpunan","Relasi","Proyeksi","Join"],p:2},
+  {n:12,t:"Bentuk pemaparan relasi yang benar adalah …",o:["Koordinat","Matriks","Pemetaan","Graf berarah","Semua benar"],p:2},
+  {n:13,t:"A={1,2,3}; R={(1,1),(1,2),(2,2),(2,3),(3,3)}. Relasi tersebut memenuhi sifat …",o:["Refleksif","Simetris","Transitif","Seleksi","Proyeksi"],p:2},
+  {n:14,t:"Notasi operator untuk memilih kolom dalam suatu tabel adalah …",o:["τ","π","σ","μ","ρ"],p:2},
+  {n:15,t:"Relasi di mana tidak ada dua elemen domain memiliki bayangan yang sama disebut …",o:["Relasi","Fungsi","Onto","One-to-one","Himpunan"],p:2},
+  {n:16,t:"T1(NIM,nama_kelas,nilai) dan T2(no_daftar,nama_kelas) digabung NIM=no_daftar. Tabel baru …",o:["T3(nim,nama_kelas)","T3(nim,nama_nilai)","T3(no_daftar,nama_kelas)","T3(nim,nama_kelas,nilai)","T3(no_daftar,nama_kelas,nilai)"],p:2},
+  {n:17,t:"Relasi di mana setiap elemen codomain merupakan bayangan dari minimal satu elemen domain disebut …",o:["One-to-one","Onto","Fungsi","Refleksif","Simetris"],p:2},
+  {n:18,t:"A={1,2,3,4}, B={1,2,3}. Yang termasuk fungsi onto adalah …",o:["{(1,2),(2,1),(3,2)}","{(1,3),(2,1),(3,2),(4,3)}","{(1,2),(2,3)}","{(1,1),(2,2),(3,3)}","{}"],p:2},
+  {n:19,t:"A={1,2,3}; R={(1,1),(1,2),(2,1),(2,3),(3,2),(3,3)} memenuhi sifat …",o:["Refleksif","Simetris","Transitif","Seleksi","Proyeksi"],p:2},
+  {n:20,t:"A={1,2,3}; R={(1,1),(1,2),(2,3),(1,3),(3,3)} memenuhi sifat …",o:["Refleksif","Simetris","Transitif","Seleksi","Proyeksi"],p:2},
+
+  // 21–30 (Pertemuan 3: Kuantor & Induksi) — :contentReference[oaicite:20]{index=20}
+  {n:21,t:"Untuk menyatakan kuantitas suatu objek proposisi digunakan notasi …",o:["Elemen","Kuantor","Refleksif","Relasi","Fungsi"],p:3},
+  {n:22,t:"Simbol kuantitas 'beberapa' adalah …",o:["∃","∀","Ω","Σ","Π"],p:3},
+  {n:23,t:"Negasi dari ∃x adalah …",o:["∃x","∀x","Ωx","Σx","Πx"],p:3},
+  {n:24,t:"Pernyataan p(1) benar dalam induksi matematika disebut …",o:["Langkah Induksi","Hipotesis","Basis Induksi","Hipotesis Induksi","Induksi Matematika"],p:3},
+  {n:25,t:"Teknik pembuktian baku untuk bilangan bulat positif disebut …",o:["Langkah Induksi","Hipotesis","Basis Induksi","Hipotesis Induksi","Induksi Matematika"],p:3},
+  {n:26,t:"“Mahasiswa mengerjakan tugas.” Kuantor universalnya …",o:["Semua mahasiswa mengerjakan tugas","Beberapa mahasiswa mengerjakan tugas","Tidak semua mahasiswa mengerjakan tugas","Salah satu mahasiswa mengerjakan tugas","Mahasiswa belum mengerjakan tugas"],p:3},
+  {n:27,t:"“Mahasiswa mengerjakan tugas.” Kuantor eksistensialnya …",o:["Semua mahasiswa mengerjakan tugas","Beberapa mahasiswa mengerjakan tugas","Tidak semua mahasiswa mengerjakan tugas","Salah satu mahasiswa mengerjakan tugas","Mahasiswa belum mengerjakan tugas"],p:3},
+  {n:28,t:"“Beberapa mahasiswa kuliah online.” Kuantor universalnya …",o:["Mahasiswa belum kuliah online","Salah satu mahasiswa kuliah online","Semua mahasiswa kuliah online","Bukan mahasiswa kuliah online","Semua salah"],p:3},
+  {n:29,t:"Induksi: jumlah n bilangan ganjil pertama = n². Hasil basis induksinya adalah …",o:["1","2","3","4","5"],p:3},
+  {n:30,t:"Induksi: jumlah n bilangan ganjil pertama = n². Hasil langkah induksinya adalah …",o:["n","n²","(n+1)","(n+1)²","(n+2)"],p:3},
+
+  // 31–40 (Pertemuan 4: Kombinatorial) — :contentReference[oaicite:21]{index=21}
+  {n:31,t:"Kaidah penjumlahan & perkalian digunakan dalam …",o:["Kombinatorial","Permutasi","Kombinasi","Relasi","Induksi Matematika"],p:4},
+  {n:32,t:"Pengurutan data di mana urutan tidak diperhatikan adalah …",o:["Permutasi","Kombinasi","Himpunan","Relasi","Fungsi"],p:4},
+  {n:33,t:"Penyusunan objek di mana sebagian objek sama disebut …",o:["Permutasi bentuk umum","Kombinasi bentuk umum","Kombinasi perulangan","Permutasi perulangan","a dan b benar"],p:4},
+  {n:34,t:"Nilai P(8,3) adalah …",o:["6720","240","336","520","56"],p:4},
+  {n:35,t:"Nilai C(6,3) × C(4,2) adalah …",o:["20","6","1440","120","144"],p:4},
+  {n:36,t:"Ibu meletakkan 4 baju dalam lemari. Ada berapa cara baju disusun?",o:["12","24","60","120","256"],p:4},
+  {n:37,t:"4 anak membentuk lingkaran. Banyak urutan adalah …",o:["120","60","30","24","6"],p:4},
+  {n:38,t:"Kata DATA dapat disusun dengan … cara.",o:["6","12","18","24","30"],p:4},
+  {n:39,t:"5 buku disusun menjadi 3 buku. Banyak cara …",o:["12","24","60","120","256"],p:4},
+  {n:40,t:"10 mahasiswa dipilih 3. Banyak cara …",o:["12","24","60","120","256"],p:4},
+
+  // 41–50 (Pertemuan 5: Logika Proposisi) — :contentReference[oaicite:22]{index=22}
+  {n:41,t:"Kalimat yang bernilai benar atau salah saja disebut …",o:["Deklarasi","Proposisi","Pernyataan","Disjungsi","Implikasi"],p:5},
+  {n:42,t:"Negasi dari “Hari ini saya kuliah matematika diskrit” adalah …",o:["Hari ini saya tidak kuliah matematika diskrit","Besok saya kuliah matematika diskrit","Saya kuliah matematika diskrit","Hari ini saya kuliah automata","Semua salah"],p:5},
+  {n:43,t:"Jika p=T, q=F, r=T, proposisi yang bernilai salah adalah …",o:["(p∨q)→r","(p∧q)→r","(p∧¬q)∨r","(p∨q)→¬r","(p∨q)∨r"],p:5},
+  {n:44,t:"Kumpulan premis dan kesimpulan disebut …",o:["Premis","Argumen","Pernyataan","Proposisi","Validitas"],p:5},
+  {n:45,t:"Jika rajin→nilai bagus; rajin. Kesimpulan …",o:["Nilai tidak bagus","Tidak rajin","Nilai bagus","Saya rajin","Semua benar"],p:5},
+  {n:46,t:"“Jika hari hujan maka siapkan payung” termasuk …",o:["Disjungsi","Konjungsi","Implikasi","Biimplikasi","Negasi"],p:5},
+  {n:47,t:"“Jadwal diskrit dan membawa buku” adalah …",o:["Disjungsi","Konjungsi","Implikasi","Biimplikasi","Negasi"],p:5},
+  {n:48,t:"“Jadwal diskrit atau membawa buku” adalah …",o:["Disjungsi","Konjungsi","Implikasi","Biimplikasi","Negasi"],p:5},
+  {n:49,t:"Kebalikan dari pernyataan 'mahasiswa kuliah pengolahan citra' disebut …",o:["Disjungsi","Konjungsi","Implikasi","Biimplikasi","Negasi"],p:5},
+  {n:50,t:"“Kirim email iff ada internet” termasuk …",o:["Disjungsi","Konjungsi","Implikasi","Biimplikasi","Negasi"],p:5},
+
+  // 51–60 (Pertemuan 6: Aljabar Boolean) — :contentReference[oaicite:23]{index=23}
+  {n:51,t:"Aljabar dengan operasi +,·,komplemen serta elemen 0 dan 1 adalah …",o:["Pernyataan","Aritmatika","Aljabar Real","Geometri","Aljabar Boolean"],p:6},
+  {n:52,t:"Yang merupakan hukum dominasi adalah …",o:["a+0=a","a·a=a","a+a’=1","a+1=1","a·b=b·a"],p:6},
+  {n:53,t:"Peubah dalam Boolean disebut …",o:["Relasi","Literal","Fungsi","Komplemen","Variabel"],p:6},
+  {n:54,t:"Jika f(x,y)=x’y+xy’+y’, maka komplemennya adalah …",o:["(x+y’)(x’+y)y","xy’+x’y+y","x’y+xy’+y’","(x’+y)(x+y’)y’","Salah semua"],p:6},
+  {n:55,t:"Jika f(x,y)=x’y+xy’+y’, maka bentuk dualnya adalah …",o:["(x+y’)(x’+y)y","xy’+x’y+y","x’y+xy’+y’","(x’+y)(x+y’)y’","Salah semua"],p:6},
+  {n:56,t:"a·a’=0 merupakan hukum …",o:["Identitas","Komplemen","Idempoten","Dominasi","Penyerapan"],p:6},
+  {n:57,t:"a+0=a merupakan hukum …",o:["Identitas","Komplemen","Idempoten","Dominasi","Penyerapan"],p:6},
+  {n:58,t:"a·1=1 merupakan hukum …",o:["Identitas","Komplemen","Idempoten","Dominasi","Penyerapan"],p:6},
+  {n:59,t:"a+a=a merupakan hukum …",o:["Identitas","Komplemen","Idempoten","Dominasi","Penyerapan"],p:6},
+  {n:60,t:"a+(a·b)=a merupakan hukum …",o:["Identitas","Komplemen","Idempoten","Dominasi","Penyerapan"],p:6},
+];
+
+// Kunci dari Anda (pertemuan 1..6; 10 soal masing-masing)
+const KEYS = {
+  1: "ABBEEDBBEA",
+  2: "CEABDDBBBC",
+  3: "BABCEABCAD",
+  4: "ABECDBEBCD",
+  5: "CADBCCBAED",
+  6: "EDBADBADCE"
+};
+// Bentuk map soal->huruf kunci
+const KEY_MAP = (() => {
+  const map = {};
+  for (let p=1;p<=6;p++){
+    const s = KEYS[p];
+    for(let i=0;i<s.length;i++){
+      const qNum = (p-1)*10 + (i+1);
+      map[qNum] = s[i];
+    }
+  }
+  return map;
+})();
+
+/* ======================= STATE ======================= */
+const NS = "sdiskrit_mcq_oneview_v1";
+let index = loadNumber(NS+"_index",0); // index array QUESTIONS (0-based)
+let answers = loadJSON(NS+"_answers") || {}; // { [qNumber]: "A" }
+let instantCheck = loadBool(NS+"_instant", false);
+
+/* ======================= INIT ======================= */
+$(function(){
+  $("#totalCount").text(QUESTIONS.length);
+  $("#toggleInstant").prop("checked", instantCheck);
+  applyThemeFromPref();
+
+  renderCurrent();
+
+  $("#btnPrev").on("click", ()=>{ gotoDelta(-1); });
+  $("#btnNext").on("click", ()=>{ gotoDelta(1); });
+  $("#btnCheck").on("click", ()=>{ checkCurrent(true); });
+  $("#btnExplain").on("click", toggleExplain);
+  $("#btnReset").on("click", function(){
+    const resetModal = new bootstrap.Modal(document.getElementById('resetModal'));
+    resetModal.show();
+  });
+  $("#confirmReset").on("click", resetAll);
+  $("#toggleInstant").on("change", function(){
+    instantCheck = this.checked; saveBool(NS+"_instant", instantCheck);
+  });
+  $("#btnCopy").on("click", copyQuestion);
+  $("#themeSwitch").on("change", toggleTheme);
+});
+
+/* ======================= RENDER ======================= */
+function renderCurrent(){
+  // clamp index
+  if(index<0) index = 0;
+  if(index>=QUESTIONS.length) index = QUESTIONS.length-1;
+  const q = QUESTIONS[index];
+  const qNum = q.n;
+  const sel = answers[qNum] || null;
+
+  // pertemuan themes mapping
+  const pertemuanThemes = {
+    1: "Definisi, Macam-macam, Operasi Himpunan",
+    2: "Relasi dan Fungsi",
+    3: "Kuantor dan Induksi Matematika",
+    4: "Kombinatorial: Permutasi dan Kombinasi",
+    5: "Logika Proposisi",
+    6: "Pendahuluan Aljabar Boolean: Definisi & Hukum-hukum"
+  };
+
+  // header
+  $("#qPos").text(index+1);
+  $("#qTotal").text(QUESTIONS.length);
+  $("#qNumber").text(qNum);
+  $("#badgeNumber").text("#"+qNum);
+  $("#topicTag").text(pertemuanThemes[q.p] || "Pertemuan "+q.p);
+  $("#qText").text(q.t);
+
+  // choices
+  const $choices = $("#choices").empty();
+  for(let i=0;i<q.o.length;i++){
+    const letter = String.fromCharCode(65+i);
+    const checked = sel===letter ? "checked" : "";
+    $choices.append(`
+      <div class="choice-item">
+        <input type="radio" name="choice" id="ch-${letter}" value="${letter}" ${checked}>
+        <label for="ch-${letter}">
+          <span class="fw-semibold">${letter}.</span> ${escapeHTML(q.o[i])}
+        </label>
+      </div>
+    `);
+  }
+  // bind change
+  $("input[name='choice']").on("change", function(){
+    const v = $(this).val();
+    answers[qNum] = v;
+    saveJSON(NS+"_answers", answers);
+    updateProgress();
+    if(instantCheck) checkCurrent(false);
+  });
+
+  // buttons state
+  $("#btnPrev").prop("disabled", index===0);
+  $("#btnNext").prop("disabled", index===QUESTIONS.length-1);
+
+  // hide result + explain
+  $("#resultBox").addClass("d-none").removeClass("alert-success alert-danger alert-warning").text("");
+  $("#explainBox").hide();
+  $("#explainText").text(buildExplain(q));
+
+  // after render, if already answered and instantCheck, show status subtly
+  if(answers[qNum] && instantCheck) checkCurrent(false);
+
+  // top metrics
+  updateProgress();
+}
+
+function gotoDelta(d){
+  index += d;
+  saveNumber(NS+"_index", index);
+  renderCurrent();
+}
+
+function checkCurrent(showToast){
+  const q = QUESTIONS[index];
+  const qNum = q.n;
+  const chosen = answers[qNum] || null;
+  const key = KEY_MAP[qNum] || null;
+
+  // reset marks
+  $("#choices label").removeClass("choice-correct choice-wrong");
+
+  const $box = $("#resultBox").removeClass("d-none alert-success alert-danger alert-warning");
+  if(!chosen){
+    $box.addClass("alert-warning").text("Belum memilih jawaban.");
+    return;
+  }
+  // mark labels
+  $("#choices .choice-item").each(function(){
+    const letter = $(this).find("input").val();
+    if(letter===key) $(this).find("label").addClass("choice-correct");
+    if(letter===chosen && chosen!==key) $(this).find("label").addClass("choice-wrong");
+  });
+
+  if(chosen===key){
+    $box.addClass("alert-success").html(`<i class="bi bi-check-circle"></i> Benar (Kunci: ${key})`);
+  } else {
+    $box.addClass("alert-danger").html(`<i class="bi bi-x-circle"></i> Salah (Pilihan: ${chosen}; Kunci: ${key})`);
+  }
+  if(showToast){ toast("Soal diperiksa."); }
+
+  // update score badge
+  updateProgress();
+}
+
+function toggleExplain(){
+  $("#explainBox").slideToggle(150);
+}
+
+function copyQuestion(){
+  const q = QUESTIONS[index];
+  const text = `(${q.n}) ${q.t}\n` + q.o.map((o,i)=>`${String.fromCharCode(65+i)}. ${o}`).join("\n");
+  navigator.clipboard.writeText(text);
+  toast("Soal disalin ke clipboard.");
+}
+
+function resetAll(){
+  // Close the modal
+  const resetModal = bootstrap.Modal.getInstance(document.getElementById('resetModal'));
+  if(resetModal) resetModal.hide();
+  
+  index = 0;
+  answers = {};
+  instantCheck = false;
+  saveNumber(NS+"_index", index);
+  saveJSON(NS+"_answers", answers);
+  saveBool(NS+"_instant", instantCheck);
+  $("#toggleInstant").prop("checked", instantCheck);
+  renderCurrent();
+  toast("Semua data direset.");
+}
+
+/* ======================= PROGRESS & SKOR ======================= */
+function updateProgress(){
+  const total = QUESTIONS.length;
+  const answered = Object.keys(answers).filter(k => !!answers[k]).length;
+  $("#answeredCount").text(answered);
+
+  // compute score only for answered ones
+  let correct = 0;
+  for (const k in answers){
+    const qn = parseInt(k,10);
+    if(KEY_MAP[qn] && answers[k]===KEY_MAP[qn]) correct++;
+  }
+  const pct = Math.round((answered/total)*100);
+  $("#progressBar").css("width", pct+"%").text(pct+"%");
+  $("#scoreBadge").text(answered>0 ? `Skor: ${correct}/${total} (${Math.round(correct/total*100)}%)` : "Skor: —");
+}
+
+/* ======================= EXPLANATION ======================= */
+function buildExplain(q){
+  const key = KEY_MAP[q.n];
+  const letterToText = (L)=> {
+    const idx = L.charCodeAt(0)-65;
+    return q.o[idx];
+  };
+  // generic by pertemuan
+  const base = {
+    1: "Materi Himpunan: gunakan definisi anggota (∈/∉), operasi (∪, ∩, −, komplement), hukum dasar, dan prinsip pencacahan gabungan: |A∪B|=|A|+|B|−|A∩B|.",
+    2: "Relasi & Fungsi: pahami sifat refleksif/simetris/transitif, operator relasional (π untuk proyek, σ untuk seleksi, τ untuk join), serta definisi one-to-one (injektif) dan onto (surjektif).",
+    3: "Kuantor & Induksi: ∀ (universal), ∃ (eksistensial), negasi kuantor (~∀=∃~, ~∃=∀~). Induksi: basis p(1) lalu langkah induksi p(n)⇒p(n+1).",
+    4: "Kombinatorial: rule of product/sum, permutasi nPr, kombinasi nCr, permutasi melingkar (n−1)!, dan penanganan elemen berulang (multiset).",
+    5: "Logika Proposisi: konektor (¬, ∧, ∨, →, ↔), tabel kebenaran, hukum aljabar proposisi, dan pola inferensi (modus ponens/tollens, syllogism, dll).",
+    6: "Aljabar Boolean: hukum identitas, dominasi, komplemen, idempoten, distribusi, De Morgan, dualitas; fungsi boolean dan komplemennya."
+  };
+
+  // specific tweaks by question number
+  let extra = "";
+  if (q.n===8) extra = " Gunakan inklusi–eksklusi: |J∪M|=|J|+|M|−|J∩M|. Diketahui total 30 dan 2 tidak menguasai keduanya ⇒ |J∪M|=28. Maka |J∩M|=25+20−28=17.";
+  if (q.n===9) extra = " Dari data soal sebelumnya: yang menguasai 'Java atau Matlab' adalah |J∪M|=28 (karena 2 tidak menguasai keduanya dari total 30).";
+  if (q.n===34) extra = " Permutasi P(8,3)=8×7×6=336.";
+  if (q.n===35) extra = " C(6,3)=20 dan C(4,2)=6, sehingga hasil kali=120.";
+  if (q.n===37) extra = " Permutasi melingkar 4 orang: (4−1)!=3!=6.";
+  if (q.n===38) extra = " Kata DATA memiliki huruf D,A,T,A (A ganda). Jumlah susunan = 4!/2!=12.";
+  if (q.n===45) extra = " Modus Ponens: p→q, p ⟹ q. Jadi jika rajin maka nilai bagus, dan faktanya rajin ⇒ nilai bagus.";
+  if (q.n===54) extra = " Untuk komplemen fungsi boolean, gunakan De Morgan & dualitas. Hati-hati: tidak semua opsi adalah komplemen yang ekuivalen aljabar.";
+  if (q.n===55) extra = " Bentuk dual: tukar '+' dengan '·' dan 0↔1, lalu struktur ekspresi disesuaikan (tanpa mengkomplemenkan literal).";
+
+  return `Kunci: ${key} → ${letterToText(key)}\n\n${base[q.p]}${extra}`;
+}
+
+/* ======================= THEME ======================= */
+function applyThemeFromPref(){
+  const saved = localStorage.getItem(NS+"_theme");
+  if(saved){ document.body.setAttribute("data-bs-theme", saved); $("#themeSwitch").prop("checked", saved==="dark"); }
+}
+function toggleTheme(){
+  const mode = this.checked ? "dark" : "light";
+  document.body.setAttribute("data-bs-theme", mode);
+  localStorage.setItem(NS+"_theme", mode);
+}
+
+/* ======================= HELPERS ======================= */
+function toast(msg){
+  const id = "toast-"+Date.now();
+  const html = `
+    <div class="toast align-items-center text-bg-dark border-0" id="${id}" role="status" aria-live="polite" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">${escapeHTML(msg)}</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>`;
+  let $ct = $("#toastContainer");
+  if(!$ct.length){ $("body").append('<div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>'); $ct=$("#toastContainer"); }
+  $ct.append(html);
+  const toastEl = document.getElementById(id);
+  new bootstrap.Toast(toastEl, {delay: 1500}).show();
+  setTimeout(()=>$(toastEl).remove(), 2000);
+}
+function escapeHTML(s){ return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
+function loadJSON(key){ try { return JSON.parse(localStorage.getItem(key)||"null"); } catch(e){ return null; } }
+function saveJSON(key, obj){ localStorage.setItem(key, JSON.stringify(obj)); }
+function saveNumber(key, n){ localStorage.setItem(key, String(n)); }
+function loadNumber(key, def){ const s = localStorage.getItem(key); const n = s===null ? def : parseInt(s,10); return Number.isFinite(n)?n:def; }
+function saveBool(key, v){ localStorage.setItem(key, v?"1":"0"); }
+function loadBool(key, def){ const s = localStorage.getItem(key); return s===null?def:(s==="1"); }
+</script>
+</body>
+</html>
