@@ -1,0 +1,1986 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Angry Birds - Aljabar Boolean</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', 'Arial', sans-serif;
+      overflow: hidden;
+      transition: background-color 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
+    .game-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .header {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+      }
+      
+      .title {
+        font-size: 18px;
+      }
+      
+      .controls {
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      
+      .reset-btn {
+        padding: 8px 14px;
+        font-size: 14px;
+      }
+      
+      .score-display {
+        font-size: 16px;
+        padding: 6px 12px;
+      }
+      
+      .animation-area {
+        padding: 15px 30px;
+      }
+      
+      .hammer {
+        width: 70px;
+        height: 90px;
+      }
+      
+      .hammer-head {
+        width: 45px;
+        height: 30px;
+      }
+      
+      .hammer-handle {
+        width: 10px;
+        height: 60px;
+      }
+      
+      .bird {
+        width: 50px;
+        height: 50px;
+        bottom: 95px;
+      }
+      
+      .pig-container {
+        width: 65px;
+        height: 65px;
+      }
+      
+      .block {
+        width: 70px;
+        height: 22px;
+      }
+      
+      .setup-card {
+        padding: 25px 30px;
+      }
+      
+      .setup-title {
+        font-size: 24px;
+      }
+      
+      .upload-label {
+        font-size: 15px;
+      }
+      
+      .upload-btn {
+        padding: 8px 14px;
+        font-size: 14px;
+      }
+      
+      .upload-preview {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .start-game-btn {
+        font-size: 18px;
+        padding: 12px;
+      }
+      
+      .options {
+        grid-template-columns: 1fr;
+      }
+      
+      .result-card {
+        padding: 30px;
+      }
+      
+      .result-title {
+        font-size: 28px;
+      }
+      
+      .result-score {
+        font-size: 48px;
+      }
+      
+      .result-message {
+        font-size: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 16px;
+      }
+      
+      .animation-area {
+        padding: 10px 20px;
+      }
+      
+      .hammer {
+        width: 60px;
+        height: 80px;
+      }
+      
+      .bird {
+        width: 40px;
+        height: 40px;
+        bottom: 80px;
+      }
+      
+      .pig-container {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .block {
+        width: 55px;
+        height: 18px;
+      }
+      
+      .question-card {
+        padding: 20px 25px;
+      }
+      
+      .result-card {
+        padding: 20px;
+      }
+      
+      .result-title {
+        font-size: 22px;
+      }
+      
+      .result-score {
+        font-size: 36px;
+        margin: 20px 0;
+      }
+    }
+
+    /* Setup Screen */
+    .setup-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      z-index: 300;
+    }
+
+    .setup-screen.hidden {
+      display: none;
+    }
+
+    .setup-card {
+      border-radius: 30px;
+      padding: 40px 50px;
+      border: 4px solid;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .setup-title {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .upload-section {
+      margin-bottom: 25px;
+    }
+
+    .upload-label {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .upload-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .upload-btn {
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 2px solid;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .upload-preview {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      border: 2px dashed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .upload-preview img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .upload-preview-text {
+      font-size: 14px;
+      opacity: 0.6;
+      text-align: center;
+      padding: 5px;
+    }
+
+    .start-game-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 20px;
+      border: none;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+
+    .start-game-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* Header */
+    .header {
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid;
+      z-index: 100;
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .reset-btn {
+      padding: 10px 20px;
+      border-radius: 15px;
+      border: 2px solid;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .reset-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .theme-toggle {
+      width: 50px;
+      height: 26px;
+      border-radius: 13px;
+      border: 2px solid;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle-ball {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle.active .theme-toggle-ball {
+      transform: translateX(24px);
+    }
+
+    .score-display {
+      font-size: 20px;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 2px solid;
+    }
+
+    /* Game Area - Animation Zone (Top 60%) */
+    .animation-area {
+      flex: 6;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 60px;
+      overflow: hidden;
+    }
+
+    /* Hammer Area */
+    .slingshot-area {
+      width: 30%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .slingshot {
+      width: 120px;
+      position: relative;
+    }
+
+    .hammer {
+      width: 100px;
+      height: 120px;
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%) rotate(180deg);
+      z-index: 15;
+      transition: all 0.3s ease;
+    }
+
+    .hammer.strike {
+      animation: hammerStrike 0.6s ease-out forwards;
+    }
+
+    @keyframes hammerStrike {
+      0% {
+        transform: translateX(-50%) translateY(0) rotate(160deg);
+      }
+      50% {
+        transform: translateX(-50%) translateY(120px) rotate(180deg);
+      }
+      100% {
+        transform: translateX(-50%) translateY(0) rotate(160deg);
+      }
+    }
+
+    .hammer-head {
+      width: 60px;
+      height: 40px;
+      border-radius: 8px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 3px solid;
+    }
+
+    .hammer-handle {
+      width: 12px;
+      height: 80px;
+      border-radius: 6px;
+      position: absolute;
+      top: 35px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .bird {
+      width: 70px;
+      height: 70px;
+      position: absolute;
+      bottom: 135px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.1s linear;
+      z-index: 10;
+      border-radius: 50%;
+    }
+
+    .bird img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .bird.default-bird {
+      position: relative;
+      bottom: -70px;
+    }
+
+    .bird.default-bird svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .bird.launching {
+      animation: none;
+    }
+
+    .bird.hit {
+      animation: birdHit 0.6s ease-out forwards;
+    }
+
+    .bird.egg {
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    }
+
+    @keyframes birdHit {
+      0% {
+        bottom: 140px;
+        transform: translateX(-50%) scale(1);
+      }
+      50% {
+        bottom: 90px;
+        transform: translateX(-50%) scale(0.9);
+      }
+      100% {
+        bottom: 140px;
+        transform: translateX(-50%) scale(1);
+      }
+    }
+
+    @keyframes birdEyeGlow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    @keyframes birdShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      75% { transform: translateX(2px); }
+    }
+
+    /* Target Area */
+    .target-area {
+      width: 30%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      position: relative;
+      padding-bottom: 50px;
+    }
+
+    .structure {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      position: relative;
+    }
+
+    .pig-container {
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .pig {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid;
+    }
+
+    .pig img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .pig.default-pig {
+      position: relative;
+    }
+
+    .pig.default-pig svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    @keyframes pigBlink {
+      0%, 90%, 100% { opacity: 1; }
+      95% { opacity: 0; }
+    }
+
+    @keyframes pigSnort {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .block-container {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .block {
+      width: 100px;
+      height: 30px;
+      border-radius: 4px;
+      border: 2px solid;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .block img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .structure.collapse .pig-container,
+    .structure.collapse .block-container {
+      animation: structureCollapse 0.8s ease-out forwards;
+    }
+
+    @keyframes structureCollapse {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(30px) rotate(10deg);
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(120px) rotate(25deg);
+        opacity: 0;
+      }
+    }
+
+    .pig.shake {
+      animation: pigShake 0.3s ease-in-out;
+    }
+
+    @keyframes pigShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px) rotate(-5deg); }
+      75% { transform: translateX(8px) rotate(5deg); }
+    }
+
+    .impact-effect {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 20;
+      animation: impactBurst 0.4s ease-out forwards;
+    }
+
+    @keyframes impactBurst {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    /* Ground */
+    .ground {
+      height: 40px;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border-top: 3px solid;
+    }
+
+    /* Question Area - Bottom 40% */
+    .question-area {
+      flex: 4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 40px;
+      border-top: 3px solid;
+      overflow-y: auto;
+    }
+
+    .question-card {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 20px;
+      padding: 30px 40px;
+      border: 3px solid;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .question-number {
+      font-size: 18px;
+      font-weight: bold;
+      opacity: 0.8;
+    }
+
+    .question-text {
+      font-size: 16px;
+      margin-bottom: 20px;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 2px solid;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      transform: translateX(5px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .option-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .option-btn.correct {
+      border-width: 3px;
+      font-weight: bold;
+    }
+
+    .option-btn.incorrect {
+      opacity: 0.5;
+    }
+
+    .next-btn {
+      width: 100%;
+      padding: 14px 28px;
+      border-radius: 20px;
+      border: none;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .next-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    /* Result Screen */
+    .result-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      z-index: 200;
+    }
+
+    .result-screen.show {
+      display: flex;
+    }
+
+    .result-card {
+      border-radius: 30px;
+      padding: 50px;
+      text-align: center;
+      border: 4px solid;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+      max-width: 600px;
+    }
+
+    .result-title {
+      font-size: 42px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .result-score {
+      font-size: 72px;
+      font-weight: bold;
+      margin: 30px 0;
+    }
+
+    .result-message {
+      font-size: 24px;
+      margin-bottom: 30px;
+      line-height: 1.4;
+    }
+
+    .restart-btn {
+      padding: 16px 36px;
+      border-radius: 30px;
+      border: none;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+
+    .restart-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+    /* Light Mode Colors */
+    body.light-mode {
+      background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+    }
+
+    .light-mode .setup-card {
+      background-color: #FFF;
+      border-color: #333;
+      color: #333;
+    }
+
+    .light-mode .upload-btn {
+      background-color: #FFD700;
+      border-color: #FFA500;
+      color: #333;
+    }
+
+    .light-mode .upload-btn:hover {
+      background-color: #FFA500;
+    }
+
+    .light-mode .upload-preview {
+      background-color: #F0F0F0;
+      border-color: #999;
+    }
+
+    .light-mode .start-game-btn {
+      background-color: #32CD32;
+      color: #FFF;
+    }
+
+    .light-mode .start-game-btn:hover {
+      background-color: #228B22;
+    }
+
+    .light-mode .header {
+      background-color: #FFD700;
+      border-bottom-color: #FFA500;
+      color: #333;
+    }
+
+    .light-mode .theme-toggle {
+      background-color: #FFF;
+      border-color: #333;
+    }
+
+    .light-mode .theme-toggle-ball {
+      background-color: #FFD700;
+    }
+
+    .light-mode .reset-btn {
+      background-color: #FFA500;
+      border-color: #FF8C00;
+      color: #FFF;
+    }
+
+    .light-mode .reset-btn:hover {
+      background-color: #FF8C00;
+    }
+
+    .light-mode .score-display {
+      background-color: #FFF;
+      border-color: #333;
+      color: #333;
+    }
+
+    .light-mode .hammer-head {
+      background-color: #696969;
+      border-color: #2F4F4F;
+    }
+
+    .light-mode .hammer-handle {
+      background-color: #8B4513;
+    }
+
+    .light-mode .bird {
+      background-color: transparent;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .light-mode .block {
+      background-color: #D2691E;
+      border-color: #8B4513;
+    }
+
+    .light-mode .pig {
+      background-color: transparent;
+      border-color: #FF1493;
+    }
+
+    .light-mode .question-area {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-top-color: #333;
+    }
+
+    .light-mode .question-card {
+      background-color: #FFF;
+      border-color: #333;
+      color: #333;
+    }
+
+    .light-mode .option-btn {
+      background-color: #F0F0F0;
+      border-color: #333;
+      color: #333;
+    }
+
+    .light-mode .option-btn:hover:not(:disabled) {
+      background-color: #FFD700;
+    }
+
+    .light-mode .option-btn.correct {
+      background-color: #90EE90;
+      border-color: #228B22;
+    }
+
+    .light-mode .option-btn.incorrect {
+      background-color: #FFB6C1;
+      border-color: #FF69B4;
+    }
+
+    .light-mode .next-btn {
+      background-color: #FF6347;
+      color: #FFF;
+    }
+
+    .light-mode .next-btn:hover {
+      background-color: #FF4500;
+    }
+
+    .light-mode .result-card {
+      background-color: #FFF;
+      border-color: #333;
+      color: #333;
+    }
+
+    .light-mode .restart-btn {
+      background-color: #32CD32;
+      color: #FFF;
+    }
+
+    .light-mode .restart-btn:hover {
+      background-color: #228B22;
+    }
+
+    .light-mode .ground {
+      background: linear-gradient(to bottom, #90EE90 0%, #228B22 100%);
+      border-top-color: #228B22;
+    }
+
+    .light-mode .impact-effect {
+      background: radial-gradient(circle, #FFD700 0%, #FF4500 100%);
+    }
+
+    /* Dark Mode Colors */
+    body.dark-mode {
+      background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 100%);
+    }
+
+    .dark-mode .setup-card {
+      background-color: #0f3460;
+      border-color: #e94560;
+      color: #FFF;
+    }
+
+    .dark-mode .upload-btn {
+      background-color: #533483;
+      border-color: #e94560;
+      color: #FFF;
+    }
+
+    .dark-mode .upload-btn:hover {
+      background-color: #e94560;
+    }
+
+    .dark-mode .upload-preview {
+      background-color: #16213e;
+      border-color: #533483;
+    }
+
+    .dark-mode .start-game-btn {
+      background-color: #4caf50;
+      color: #FFF;
+    }
+
+    .dark-mode .start-game-btn:hover {
+      background-color: #388e3c;
+    }
+
+    .dark-mode .header {
+      background-color: #0f3460;
+      border-bottom-color: #e94560;
+      color: #FFF;
+    }
+
+    .dark-mode .theme-toggle {
+      background-color: #533483;
+      border-color: #e94560;
+    }
+
+    .dark-mode .theme-toggle-ball {
+      background-color: #FFD700;
+    }
+
+    .dark-mode .reset-btn {
+      background-color: #FF6B35;
+      border-color: #e94560;
+      color: #FFF;
+    }
+
+    .dark-mode .reset-btn:hover {
+      background-color: #e94560;
+    }
+
+    .dark-mode .score-display {
+      background-color: #0f3460;
+      border-color: #e94560;
+      color: #FFF;
+    }
+
+    .dark-mode .hammer-head {
+      background-color: #A9A9A9;
+      border-color: #696969;
+    }
+
+    .dark-mode .hammer-handle {
+      background-color: #5d4037;
+    }
+
+    .dark-mode .bird {
+      background-color: transparent;
+      box-shadow: 0 4px 8px rgba(233, 69, 96, 0.5);
+    }
+
+    .dark-mode .block {
+      background-color: #6d4c41;
+      border-color: #4e342e;
+    }
+
+    .dark-mode .pig {
+      background-color: transparent;
+      border-color: #FF1493;
+    }
+
+    .dark-mode .question-area {
+      background-color: rgba(15, 52, 96, 0.95);
+      border-top-color: #e94560;
+    }
+
+    .dark-mode .question-card {
+      background-color: #0f3460;
+      border-color: #e94560;
+      color: #FFF;
+    }
+
+    .dark-mode .option-btn {
+      background-color: #16213e;
+      border-color: #533483;
+      color: #FFF;
+    }
+
+    .dark-mode .option-btn:hover:not(:disabled) {
+      background-color: #533483;
+      border-color: #e94560;
+    }
+
+    .dark-mode .option-btn.correct {
+      background-color: #2e7d32;
+      border-color: #4caf50;
+    }
+
+    .dark-mode .option-btn.incorrect {
+      background-color: #b71c1c;
+      border-color: #f44336;
+    }
+
+    .dark-mode .next-btn {
+      background-color: #e94560;
+      color: #FFF;
+    }
+
+    .dark-mode .next-btn:hover {
+      background-color: #c42847;
+    }
+
+    .dark-mode .result-card {
+      background-color: #0f3460;
+      border-color: #e94560;
+      color: #FFF;
+    }
+
+    .dark-mode .restart-btn {
+      background-color: #4caf50;
+      color: #FFF;
+    }
+
+    .dark-mode .restart-btn:hover {
+      background-color: #388e3c;
+    }
+
+    .dark-mode .ground {
+      background: linear-gradient(to bottom, #2e7d32 0%, #1b5e20 100%);
+      border-top-color: #1b5e20;
+    }
+
+    .dark-mode .impact-effect {
+      background: radial-gradient(circle, #e94560 0%, #533483 100%);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body class="light-mode">
+  <div class="game-container"><!-- Setup Screen -->
+   <div class="setup-screen" id="setupScreen">
+    <div class="setup-card">
+     <div class="setup-title">
+      ⚙️ Pengaturan Game
+     </div>
+     <div class="upload-section"><label class="upload-label">Upload Gambar Burung (Opsional)</label>
+      <div class="upload-container"><button class="upload-btn" onclick="document.getElementById('birdUpload').click()"> Pilih Gambar </button> <input type="file" id="birdUpload" accept="image/*">
+       <div class="upload-preview" id="birdPreview">
+        <div class="upload-preview-text">
+         🐦 Default
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="upload-section"><label class="upload-label">Upload Gambar Target (Opsional)</label>
+      <div class="upload-container"><button class="upload-btn" onclick="document.getElementById('pigUpload').click()"> Pilih Gambar </button> <input type="file" id="pigUpload" accept="image/*">
+       <div class="upload-preview" id="pigPreview">
+        <div class="upload-preview-text">
+         🎯 Default
+        </div>
+       </div>
+      </div>
+     </div><button class="start-game-btn" id="startGameBtn">Mulai Permainan</button>
+    </div>
+   </div><!-- Header -->
+   <div class="header">
+    <div class="title"><span>🎮</span> <span id="gameTitle">Angry Birds: Aljabar Boolean</span>
+    </div>
+    <div class="controls"><button class="reset-btn" id="resetBtn">🔄 Reset</button>
+     <div class="score-display">
+      Skor: <span id="scoreValue">0</span>/10
+     </div>
+     <div class="theme-toggle" id="themeToggle">
+      <div class="theme-toggle-ball"></div>
+     </div>
+    </div>
+   </div><!-- Animation Area (Top) -->
+   <div class="animation-area"><!-- Hammer Area -->
+    <div class="slingshot-area">
+     <div class="slingshot">
+      <div class="hammer" id="hammer">
+       <div class="hammer-head"></div>
+       <div class="hammer-handle"></div>
+      </div>
+      <div class="bird default-bird" id="bird">
+       <svg viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><!-- Bird body (angry red) --> <circle cx="50" cy="50" r="30" fill="#DC143C" stroke="#8B0000" stroke-width="2" /> <!-- Belly --> <ellipse cx="50" cy="58" rx="18" ry="15" fill="#FFB6C1" stroke="#DC143C" stroke-width="1" /> <!-- Angry eyebrows --> <path d="M 30 35 L 40 40" stroke="#000" stroke-width="3" stroke-linecap="round" /> <path d="M 70 35 L 60 40" stroke="#000" stroke-width="3" stroke-linecap="round" /> <!-- Eyes with angry glow --> <g style="animation: birdEyeGlow 0.8s infinite">
+         <circle cx="38" cy="45" r="6" fill="#FFF" />
+         <circle cx="62" cy="45" r="6" fill="#FFF" />
+         <circle cx="38" cy="45" r="3" fill="#000" />
+         <circle cx="62" cy="45" r="3" fill="#000" />
+        </g> <!-- Angry beak (open and shouting) --> <path d="M 50 52 L 45 58 L 50 60 L 55 58 Z" fill="#FFA500" stroke="#FF8C00" stroke-width="1.5" /> <path d="M 50 60 L 48 63 L 50 64 L 52 63 Z" fill="#FF4500" stroke="#FF8C00" stroke-width="1" /> <!-- Feather tuft on top (spiky when angry) --> <path d="M 45 22 L 48 15 L 50 20 L 52 15 L 55 22" fill="#8B0000" stroke="#000" stroke-width="1.5" /> <!-- Tail feathers (sharp) --> <g transform="translate(75, 50)">
+         <path d="M 0 0 L 8 -8 L 10 0 Z" fill="#8B0000" stroke="#000" stroke-width="1" />
+         <path d="M 0 0 L 10 0 L 8 8 Z" fill="#DC143C" stroke="#000" stroke-width="1" />
+        </g> <!-- Wing (raised in anger) --> <ellipse cx="28" cy="50" rx="12" ry="20" fill="#8B0000" stroke="#000" stroke-width="1.5" transform="rotate(-20 28 50)" /> <!-- Anger marks (shaking effect) --> <g style="animation: birdShake 0.3s infinite">
+         <path d="M 15 40 L 12 38 L 14 36" stroke="#8B0000" stroke-width="2" fill="none" stroke-linecap="round" />
+         <path d="M 85 40 L 88 38 L 86 36" stroke="#8B0000" stroke-width="2" fill="none" stroke-linecap="round" />
+        </g>
+       </svg>
+      </div>
+     </div>
+    </div><!-- Target Area -->
+    <div class="target-area">
+     <div class="structure" id="structure">
+      <div class="pig-container">
+       <div class="pig default-pig" id="pig">
+        <svg viewbox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><!-- Rainbow Background with animation --> <defs>
+          <lineargradient id="rainbowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+           <stop offset="0%" style="stop-color:#FF0000;stop-opacity:0.3">
+            <animate attributename="stop-color" values="#FF0000;#FF7F00;#FFFF00;#00FF00;#0000FF;#4B0082;#9400D3;#FF0000" dur="5s" repeatcount="indefinite" />
+           </stop>
+           <stop offset="25%" style="stop-color:#FFFF00;stop-opacity:0.3">
+            <animate attributename="stop-color" values="#FFFF00;#00FF00;#0000FF;#4B0082;#9400D3;#FF0000;#FF7F00;#FFFF00" dur="5s" repeatcount="indefinite" />
+           </stop>
+           <stop offset="50%" style="stop-color:#00FF00;stop-opacity:0.3">
+            <animate attributename="stop-color" values="#00FF00;#0000FF;#4B0082;#9400D3;#FF0000;#FF7F00;#FFFF00;#00FF00" dur="5s" repeatcount="indefinite" />
+           </stop>
+           <stop offset="75%" style="stop-color:#0000FF;stop-opacity:0.3">
+            <animate attributename="stop-color" values="#0000FF;#4B0082;#9400D3;#FF0000;#FF7F00;#FFFF00;#00FF00;#0000FF" dur="5s" repeatcount="indefinite" />
+           </stop>
+           <stop offset="100%" style="stop-color:#9400D3;stop-opacity:0.3">
+            <animate attributename="stop-color" values="#9400D3;#FF0000;#FF7F00;#FFFF00;#00FF00;#0000FF;#4B0082;#9400D3" dur="5s" repeatcount="indefinite" />
+           </stop>
+          </lineargradient>
+         </defs> <!-- Rainbow background circle --> <circle cx="60" cy="60" r="55" fill="url(#rainbowGradient)" /> <!-- Mama Pig (larger, carrying baby) --> <!-- Mama body --> <ellipse cx="60" cy="65" rx="32" ry="28" fill="#FFB6D9" stroke="#FF1493" stroke-width="2" /> <!-- Mama head --> <circle cx="60" cy="45" r="22" fill="#FFB6D9" stroke="#FF1493" stroke-width="2" /> <!-- Mama ears --> <ellipse cx="48" cy="32" rx="7" ry="11" fill="#FFB6D9" stroke="#FF1493" stroke-width="2" /> <ellipse cx="72" cy="32" rx="7" ry="11" fill="#FFB6D9" stroke="#FF1493" stroke-width="2" /> <!-- Mama eyes with blink --> <g style="animation: pigBlink 4s infinite">
+          <circle cx="53" cy="42" r="3.5" fill="#000" />
+          <circle cx="67" cy="42" r="3.5" fill="#000" />
+          <circle cx="54" cy="41" r="1.2" fill="#FFF" />
+          <circle cx="68" cy="41" r="1.2" fill="#FFF" />
+         </g> <!-- Mama snout with breathing --> <g style="animation: pigSnort 2s infinite ease-in-out">
+          <ellipse cx="60" cy="52" rx="11" ry="7" fill="#FFC0E0" stroke="#FF1493" stroke-width="2" />
+          <circle cx="56" cy="52" r="2" fill="#FF1493" />
+          <circle cx="64" cy="52" r="2" fill="#FF1493" />
+         </g> <!-- Mama smile --> <path d="M 52 56 Q 60 60 68 56" stroke="#FF1493" stroke-width="1.5" fill="none" /> <!-- Mama arms holding baby --> <ellipse cx="42" cy="60" rx="8" ry="15" fill="#FFB6D9" stroke="#FF1493" stroke-width="2" transform="rotate(-25 42 60)" /> <ellipse cx="78" cy="60" rx="8" ry="15" fill="#FFB6D9" stroke="#FF1493" stroke-width="2" transform="rotate(25 78 60)" /> <!-- Baby Pig (smaller, being carried) --> <!-- Baby body --> <ellipse cx="60" cy="72" rx="15" ry="12" fill="#FFC0E0" stroke="#FF69B4" stroke-width="1.5" /> <!-- Baby head --> <circle cx="60" cy="60" r="11" fill="#FFC0E0" stroke="#FF69B4" stroke-width="1.5" /> <!-- Baby ears --> <ellipse cx="54" cy="52" rx="4" ry="6" fill="#FFC0E0" stroke="#FF69B4" stroke-width="1.5" /> <ellipse cx="66" cy="52" rx="4" ry="6" fill="#FFC0E0" stroke="#FF69B4" stroke-width="1.5" /> <!-- Baby eyes --> <circle cx="57" cy="59" r="2" fill="#000" /> <circle cx="63" cy="59" r="2" fill="#000" /> <circle cx="57.5" cy="58.5" r="0.8" fill="#FFF" /> <circle cx="63.5" cy="58.5" r="0.8" fill="#FFF" /> <!-- Baby snout --> <ellipse cx="60" cy="64" rx="5" ry="3.5" fill="#FFD0E8" stroke="#FF69B4" stroke-width="1.5" /> <circle cx="58" cy="64" r="1" fill="#FF69B4" /> <circle cx="62" cy="64" r="1" fill="#FF69B4" /> <!-- Baby smile --> <path d="M 57 66 Q 60 68 63 66" stroke="#FF69B4" stroke-width="1" fill="none" /> <!-- Mama legs --> <rect x="45" y="88" width="7" height="11" rx="2" fill="#FFC0E0" stroke="#FF1493" stroke-width="1.5" /> <rect x="68" y="88" width="7" height="11" rx="2" fill="#FFC0E0" stroke="#FF1493" stroke-width="1.5" /> <!-- Mama tail --> <path d="M 88 65 Q 93 60 91 55 Q 89 52 93 50" stroke="#FF1493" stroke-width="2.5" fill="none" stroke-linecap="round" /> <!-- Hearts floating around (love effect) --> <g opacity="0.7">
+          <path d="M 25 40 Q 23 36 20 36 Q 17 36 17 39 Q 17 42 25 48 Q 33 42 33 39 Q 33 36 30 36 Q 27 36 25 40" fill="#FF1493">
+           <animatetransform attributename="transform" type="translate" values="0 0; -2 -5; 0 0" dur="2s" repeatcount="indefinite" />
+          </path>
+          <path d="M 95 75 Q 93 71 90 71 Q 87 71 87 74 Q 87 77 95 83 Q 103 77 103 74 Q 103 71 100 71 Q 97 71 95 75" fill="#FF69B4">
+           <animatetransform attributename="transform" type="translate" values="0 0; 2 -4; 0 0" dur="2.5s" repeatcount="indefinite" />
+          </path>
+         </g>
+        </svg>
+       </div>
+      </div>
+      <div class="block-container">
+       <div class="block" id="block1"></div>
+       <div class="block" id="block2"></div>
+       <div class="block" id="block3"></div>
+      </div>
+     </div>
+    </div><!-- Ground -->
+    <div class="ground"></div>
+   </div><!-- Question Area (Bottom) -->
+   <div class="question-area">
+    <div class="question-card">
+     <div class="question-header">
+      <div class="question-number" id="questionNumber">
+       Soal 1 dari 10
+      </div>
+     </div>
+     <div class="question-text" id="questionText"></div>
+     <div class="options" id="optionsContainer"></div><button class="next-btn" id="nextBtn" style="display: none;">Soal Selanjutnya</button>
+    </div>
+   </div><!-- Result Screen -->
+   <div class="result-screen" id="resultScreen">
+    <div class="result-card">
+     <div class="result-title">
+      🎉 Permainan Selesai! 🎉
+     </div>
+     <div class="result-score">
+      Skor: <span id="finalScore">0</span>/10
+     </div>
+     <div class="result-message" id="resultMessage"></div><button class="restart-btn" id="restartBtn">Main Lagi</button>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      game_title: "Angry Birds: Aljabar Boolean",
+      success_message_high: "Kamu ahli Aljabar Boolean!",
+      success_message_medium: "Bagus! Tinggal sedikit lagi!",
+      success_message_low: "Terus latihan, kamu pasti bisa!"
+    };
+
+    const questions = [
+      {
+        question: "Fungsi Boolean yang dinyatakan sebagai jumlah dari hasil kali, hasil kali dari jumlah dengan setiap suku mengandung literal yang lengkap disebut dengan�����",
+        options: ["Literal", "Suku/term", "Kanonik", "Komplemen", "Baku"],
+        correct: 2
+      },
+      {
+        question: "Di bawah ini yang merupakan jenis-jenis bentuk kanonik adalah……",
+        options: ["Minterm", "Maxterm", "SOP", "POS", "Benar semua"],
+        correct: 4
+      },
+      {
+        question: "Dalam aplikasi fungsi Boolean dalam jaringan pensaklaran operasi perkalian merupakan bentuk hubungan……",
+        options: ["Seri", "Paralel", "Seri-paralel", "Tertutup", "Terbuka"],
+        correct: 0
+      },
+      {
+        question: "Dalam aplikasi fungsi Boolean dalam rangkaian digital elektronik negasi dari perkalian disebut……",
+        options: ["AND", "NAND", "OR", "NOR", "XOR"],
+        correct: 1
+      },
+      {
+        question: "f(w,x,y,z) = wxy'z' + wxy'z + wx'y'z' + wx'y'z jika disederhanakan menjadi……",
+        options: ["wx", "xy'", "wy", "wy'", "yz"],
+        correct: 3
+      },
+      {
+        question: "f(x,y) = xy + x'y + xy' merupakan bentuk penyajian fungsi kanonik….",
+        options: ["SOP", "POS", "Dual", "Komplemen", "Baku"],
+        correct: 0
+      },
+      {
+        question: "f(x,y) = (x+y)(x'+y)(x+y') merupakan bentuk penyajian fungsi kanonik….",
+        options: ["SOP", "POS", "Dual", "Komplemen", "Baku"],
+        correct: 1
+      },
+      {
+        question: "f(x,y) = xy + x' + y merupakan bentuk penyajian fungsi kanonik….",
+        options: ["SOP", "POS", "Dual", "Komplemen", "Baku SOP"],
+        correct: 4
+      },
+      {
+        question: "Dalam pembuatan peta Karnaugh kita menggunakan nilai yang merepresentasikan……",
+        options: ["minterm/SOP", "maksterm/POS", "Dual", "Komplemen", "Baku"],
+        correct: 0
+      },
+      {
+        question: "Penyederhanaan fungsi Boolean menggunakan manipulasi hukum aljabar cut-and-try disebut metode……",
+        options: ["Dualitas", "Komplemen", "Aljabar", "Peta Karnaugh", "Quine Mc Cluskey"],
+        correct: 2
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let isDarkMode = false;
+    let birdImageUrl = null;
+    let pigImageUrl = null;
+
+    // Elements
+    const setupScreen = document.getElementById('setupScreen');
+    const startGameBtn = document.getElementById('startGameBtn');
+    const birdUpload = document.getElementById('birdUpload');
+    const pigUpload = document.getElementById('pigUpload');
+    const birdPreview = document.getElementById('birdPreview');
+    const pigPreview = document.getElementById('pigPreview');
+    const resetBtn = document.getElementById('resetBtn');
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    const questionNumber = document.getElementById('questionNumber');
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const nextBtn = document.getElementById('nextBtn');
+    const bird = document.getElementById('bird');
+    const hammer = document.getElementById('hammer');
+    const structure = document.getElementById('structure');
+    const pig = document.getElementById('pig');
+    const block1 = document.getElementById('block1');
+    const block2 = document.getElementById('block2');
+    const block3 = document.getElementById('block3');
+    const scoreValue = document.getElementById('scoreValue');
+    const resultScreen = document.getElementById('resultScreen');
+    const finalScore = document.getElementById('finalScore');
+    const resultMessage = document.getElementById('resultMessage');
+    const restartBtn = document.getElementById('restartBtn');
+    const gameTitle = document.getElementById('gameTitle');
+
+    // Audio Context
+    let audioContext;
+    let backgroundMusicGain;
+    let isPlayingMusic = false;
+
+    function initAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        backgroundMusicGain = audioContext.createGain();
+        backgroundMusicGain.gain.value = 0.08;
+        backgroundMusicGain.connect(audioContext.destination);
+        playBackgroundMusic();
+      }
+    }
+
+    function playBackgroundMusic() {
+      if (isPlayingMusic) return;
+      isPlayingMusic = true;
+      
+      const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
+      const melody = [0, 2, 4, 2, 0, 2, 4, 2, 4, 5, 6, 4, 5, 6];
+      let noteIndex = 0;
+      
+      function playNote() {
+        if (!isPlayingMusic) return;
+        
+        const oscillator = audioContext.createOscillator();
+        const noteGain = audioContext.createGain();
+        
+        oscillator.connect(noteGain);
+        noteGain.connect(backgroundMusicGain);
+        
+        oscillator.frequency.value = notes[melody[noteIndex % melody.length]];
+        oscillator.type = 'sine';
+        
+        noteGain.gain.setValueAtTime(0.3, audioContext.currentTime);
+        noteGain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.4);
+        
+        noteIndex++;
+        setTimeout(playNote, 400);
+      }
+      
+      playNote();
+    }
+
+    function playSuccessSound() {
+      if (!audioContext) return;
+      
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = 523.25;
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.3);
+    }
+
+    function playFailSound() {
+      if (!audioContext) return;
+      
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = 200;
+      oscillator.type = 'sawtooth';
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5);
+    }
+
+    function playImpactSound() {
+      if (!audioContext) return;
+      
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = 100;
+      oscillator.type = 'square';
+      
+      gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.2);
+    }
+
+    // Upload handlers
+    birdUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          birdImageUrl = event.target.result;
+          birdPreview.innerHTML = `<img src="${birdImageUrl}" alt="Bird">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    pigUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          pigImageUrl = event.target.result;
+          pigPreview.innerHTML = `<img src="${pigImageUrl}" alt="Target">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Start game
+    startGameBtn.addEventListener('click', () => {
+      setupScreen.classList.add('hidden');
+      applyCustomAssets();
+      loadQuestion();
+      initAudio();
+    });
+
+    // Apply custom assets
+    function applyCustomAssets() {
+      if (birdImageUrl) {
+        bird.innerHTML = `<img src="${birdImageUrl}" alt="Bird">`;
+        bird.classList.remove('default-bird');
+      } else {
+        // Keep the default animated angry bird SVG
+        bird.innerHTML = `
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="30" fill="#DC143C" stroke="#8B0000" stroke-width="2"/>
+            <ellipse cx="50" cy="58" rx="18" ry="15" fill="#FFB6C1" stroke="#DC143C" stroke-width="1"/>
+            <path d="M 30 35 L 40 40" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 70 35 L 60 40" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+            <g style="animation: birdEyeGlow 0.8s infinite">
+              <circle cx="38" cy="45" r="6" fill="#FFF"/>
+              <circle cx="62" cy="45" r="6" fill="#FFF"/>
+              <circle cx="38" cy="45" r="3" fill="#000"/>
+              <circle cx="62" cy="45" r="3" fill="#000"/>
+            </g>
+            <path d="M 50 52 L 45 58 L 50 60 L 55 58 Z" fill="#FFA500" stroke="#FF8C00" stroke-width="1.5"/>
+            <path d="M 50 60 L 48 63 L 50 64 L 52 63 Z" fill="#FF4500" stroke="#FF8C00" stroke-width="1"/>
+            <path d="M 45 22 L 48 15 L 50 20 L 52 15 L 55 22" fill="#8B0000" stroke="#000" stroke-width="1.5"/>
+            <g transform="translate(75, 50)">
+              <path d="M 0 0 L 8 -8 L 10 0 Z" fill="#8B0000" stroke="#000" stroke-width="1"/>
+              <path d="M 0 0 L 10 0 L 8 8 Z" fill="#DC143C" stroke="#000" stroke-width="1"/>
+            </g>
+            <ellipse cx="28" cy="50" rx="12" ry="20" fill="#8B0000" stroke="#000" stroke-width="1.5" transform="rotate(-20 28 50)"/>
+            <g style="animation: birdShake 0.3s infinite">
+              <path d="M 15 40 L 12 38 L 14 36" stroke="#8B0000" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M 85 40 L 88 38 L 86 36" stroke="#8B0000" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </g>
+          </svg>
+        `;
+      }
+      
+      if (pigImageUrl) {
+        pig.innerHTML = `<img src="${pigImageUrl}" alt="Target">`;
+        pig.classList.remove('default-pig');
+      } else {
+        // Keep the default animated SVG pig with rainbow and mama+baby
+        pig.innerHTML = `
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="rainbowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#FF0000;stop-opacity:0.3">
+                  <animate attributeName="stop-color" values="#FF0000;#FF7F00;#FFFF00;#00FF00;#0000FF;#4B0082;#9400D3;#FF0000" dur="5s" repeatCount="indefinite"/>
+                </stop>
+                <stop offset="25%" style="stop-color:#FFFF00;stop-opacity:0.3">
+                  <animate attributeName="stop-color" values="#FFFF00;#00FF00;#0000FF;#4B0082;#9400D3;#FF0000;#FF7F00;#FFFF00" dur="5s" repeatCount="indefinite"/>
+                </stop>
+                <stop offset="50%" style="stop-color:#00FF00;stop-opacity:0.3">
+                  <animate attributeName="stop-color" values="#00FF00;#0000FF;#4B0082;#9400D3;#FF0000;#FF7F00;#FFFF00;#00FF00" dur="5s" repeatCount="indefinite"/>
+                </stop>
+                <stop offset="75%" style="stop-color:#0000FF;stop-opacity:0.3">
+                  <animate attributeName="stop-color" values="#0000FF;#4B0082;#9400D3;#FF0000;#FF7F00;#FFFF00;#00FF00;#0000FF" dur="5s" repeatCount="indefinite"/>
+                </stop>
+                <stop offset="100%" style="stop-color:#9400D3;stop-opacity:0.3">
+                  <animate attributeName="stop-color" values="#9400D3;#FF0000;#FF7F00;#FFFF00;#00FF00;#0000FF;#4B0082;#9400D3" dur="5s" repeatCount="indefinite"/>
+                </stop>
+              </linearGradient>
+            </defs>
+            <circle cx="60" cy="60" r="55" fill="url(#rainbowGradient)"/>
+            <ellipse cx="60" cy="65" rx="32" ry="28" fill="#FFB6D9" stroke="#FF1493" stroke-width="2"/>
+            <circle cx="60" cy="45" r="22" fill="#FFB6D9" stroke="#FF1493" stroke-width="2"/>
+            <ellipse cx="48" cy="32" rx="7" ry="11" fill="#FFB6D9" stroke="#FF1493" stroke-width="2"/>
+            <ellipse cx="72" cy="32" rx="7" ry="11" fill="#FFB6D9" stroke="#FF1493" stroke-width="2"/>
+            <g style="animation: pigBlink 4s infinite">
+              <circle cx="53" cy="42" r="3.5" fill="#000"/>
+              <circle cx="67" cy="42" r="3.5" fill="#000"/>
+              <circle cx="54" cy="41" r="1.2" fill="#FFF"/>
+              <circle cx="68" cy="41" r="1.2" fill="#FFF"/>
+            </g>
+            <g style="animation: pigSnort 2s infinite ease-in-out">
+              <ellipse cx="60" cy="52" rx="11" ry="7" fill="#FFC0E0" stroke="#FF1493" stroke-width="2"/>
+              <circle cx="56" cy="52" r="2" fill="#FF1493"/>
+              <circle cx="64" cy="52" r="2" fill="#FF1493"/>
+            </g>
+            <path d="M 52 56 Q 60 60 68 56" stroke="#FF1493" stroke-width="1.5" fill="none"/>
+            <ellipse cx="42" cy="60" rx="8" ry="15" fill="#FFB6D9" stroke="#FF1493" stroke-width="2" transform="rotate(-25 42 60)"/>
+            <ellipse cx="78" cy="60" rx="8" ry="15" fill="#FFB6D9" stroke="#FF1493" stroke-width="2" transform="rotate(25 78 60)"/>
+            <ellipse cx="60" cy="72" rx="15" ry="12" fill="#FFC0E0" stroke="#FF69B4" stroke-width="1.5"/>
+            <circle cx="60" cy="60" r="11" fill="#FFC0E0" stroke="#FF69B4" stroke-width="1.5"/>
+            <ellipse cx="54" cy="52" rx="4" ry="6" fill="#FFC0E0" stroke="#FF69B4" stroke-width="1.5"/>
+            <ellipse cx="66" cy="52" rx="4" ry="6" fill="#FFC0E0" stroke="#FF69B4" stroke-width="1.5"/>
+            <circle cx="57" cy="59" r="2" fill="#000"/>
+            <circle cx="63" cy="59" r="2" fill="#000"/>
+            <circle cx="57.5" cy="58.5" r="0.8" fill="#FFF"/>
+            <circle cx="63.5" cy="58.5" r="0.8" fill="#FFF"/>
+            <ellipse cx="60" cy="64" rx="5" ry="3.5" fill="#FFD0E8" stroke="#FF69B4" stroke-width="1.5"/>
+            <circle cx="58" cy="64" r="1" fill="#FF69B4"/>
+            <circle cx="62" cy="64" r="1" fill="#FF69B4"/>
+            <path d="M 57 66 Q 60 68 63 66" stroke="#FF69B4" stroke-width="1" fill="none"/>
+            <rect x="45" y="88" width="7" height="11" rx="2" fill="#FFC0E0" stroke="#FF1493" stroke-width="1.5"/>
+            <rect x="68" y="88" width="7" height="11" rx="2" fill="#FFC0E0" stroke="#FF1493" stroke-width="1.5"/>
+            <path d="M 88 65 Q 93 60 91 55 Q 89 52 93 50" stroke="#FF1493" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <g opacity="0.7">
+              <path d="M 25 40 Q 23 36 20 36 Q 17 36 17 39 Q 17 42 25 48 Q 33 42 33 39 Q 33 36 30 36 Q 27 36 25 40" fill="#FF1493">
+                <animateTransform attributeName="transform" type="translate" values="0 0; -2 -5; 0 0" dur="2s" repeatCount="indefinite"/>
+              </path>
+              <path d="M 95 75 Q 93 71 90 71 Q 87 71 87 74 Q 87 77 95 83 Q 103 77 103 74 Q 103 71 100 71 Q 97 71 95 75" fill="#FF69B4">
+                <animateTransform attributeName="transform" type="translate" values="0 0; 2 -4; 0 0" dur="2.5s" repeatCount="indefinite"/>
+              </path>
+            </g>
+          </svg>
+        `;
+      }
+    }
+
+    // Reset Button
+    resetBtn.addEventListener('click', () => {
+      currentQuestion = 0;
+      score = 0;
+      scoreValue.textContent = score;
+      resultScreen.classList.remove('show');
+      bird.style.opacity = '1';
+      delete bird.dataset.impacted;
+      loadQuestion();
+    });
+
+    // Theme Toggle
+    themeToggle.addEventListener('click', () => {
+      isDarkMode = !isDarkMode;
+      body.className = isDarkMode ? 'dark-mode' : 'light-mode';
+      themeToggle.classList.toggle('active', isDarkMode);
+    });
+
+    // Load Question
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      questionNumber.textContent = `Soal ${currentQuestion + 1} dari 10`;
+      questionText.textContent = q.question;
+      
+      // Shuffle options
+      const optionsWithIndex = q.options.map((option, index) => ({
+        text: option,
+        originalIndex: index
+      }));
+      
+      // Fisher-Yates shuffle algorithm
+      for (let i = optionsWithIndex.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [optionsWithIndex[i], optionsWithIndex[j]] = [optionsWithIndex[j], optionsWithIndex[i]];
+      }
+      
+      optionsContainer.innerHTML = '';
+      optionsWithIndex.forEach((option, displayIndex) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = `${String.fromCharCode(97 + displayIndex)}. ${option.text}`;
+        btn.dataset.originalIndex = option.originalIndex;
+        btn.addEventListener('click', () => checkAnswer(option.originalIndex, btn, optionsWithIndex));
+        optionsContainer.appendChild(btn);
+      });
+      
+      nextBtn.style.display = 'none';
+      resetBirdAndStructure();
+    }
+
+    // Reset bird and structure
+    function resetBirdAndStructure() {
+      bird.style.transform = 'translateX(-50%)';
+      bird.style.left = '50%';
+      bird.style.bottom = '135px';
+      bird.style.top = 'auto';
+      bird.style.opacity = '1';
+      bird.classList.remove('launching');
+      bird.classList.remove('egg');
+      structure.classList.remove('collapse');
+      pig.classList.remove('shake');
+      delete bird.dataset.impacted;
+      
+      // Reset bird to default or custom image
+      if (birdImageUrl) {
+        bird.innerHTML = `<img src="${birdImageUrl}" alt="Bird">`;
+        bird.classList.remove('default-bird');
+      } else {
+        bird.classList.add('default-bird');
+        bird.innerHTML = `
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="30" fill="#DC143C" stroke="#8B0000" stroke-width="2"/>
+            <ellipse cx="50" cy="58" rx="18" ry="15" fill="#FFB6C1" stroke="#DC143C" stroke-width="1"/>
+            <path d="M 30 35 L 40 40" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 70 35 L 60 40" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+            <g style="animation: birdEyeGlow 0.8s infinite">
+              <circle cx="38" cy="45" r="6" fill="#FFF"/>
+              <circle cx="62" cy="45" r="6" fill="#FFF"/>
+              <circle cx="38" cy="45" r="3" fill="#000"/>
+              <circle cx="62" cy="45" r="3" fill="#000"/>
+            </g>
+            <path d="M 50 52 L 45 58 L 50 60 L 55 58 Z" fill="#FFA500" stroke="#FF8C00" stroke-width="1.5"/>
+            <path d="M 50 60 L 48 63 L 50 64 L 52 63 Z" fill="#FF4500" stroke="#FF8C00" stroke-width="1"/>
+            <path d="M 45 22 L 48 15 L 50 20 L 52 15 L 55 22" fill="#8B0000" stroke="#000" stroke-width="1.5"/>
+            <g transform="translate(75, 50)">
+              <path d="M 0 0 L 8 -8 L 10 0 Z" fill="#8B0000" stroke="#000" stroke-width="1"/>
+              <path d="M 0 0 L 10 0 L 8 8 Z" fill="#DC143C" stroke="#000" stroke-width="1"/>
+            </g>
+            <ellipse cx="28" cy="50" rx="12" ry="20" fill="#8B0000" stroke="#000" stroke-width="1.5" transform="rotate(-20 28 50)"/>
+            <g style="animation: birdShake 0.3s infinite">
+              <path d="M 15 40 L 12 38 L 14 36" stroke="#8B0000" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M 85 40 L 88 38 L 86 36" stroke="#8B0000" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </g>
+          </svg>
+        `;
+      }
+    }
+
+    // Check Answer
+    function checkAnswer(selectedIndex, selectedBtn, optionsWithIndex) {
+      const q = questions[currentQuestion];
+      const allButtons = optionsContainer.querySelectorAll('.option-btn');
+      
+      allButtons.forEach(btn => btn.disabled = true);
+      
+      if (selectedIndex === q.correct) {
+        selectedBtn.classList.add('correct');
+        score++;
+        scoreValue.textContent = score;
+        
+        launchBirdToTarget(true);
+        playSuccessSound();
+      } else {
+        selectedBtn.classList.add('incorrect');
+        // Find and highlight the correct answer button
+        allButtons.forEach(btn => {
+          if (parseInt(btn.dataset.originalIndex) === q.correct) {
+            btn.classList.add('correct');
+          }
+        });
+        
+        // Transform bird into egg for wrong answer
+        transformBirdToEgg();
+        
+        launchBirdToTarget(false);
+        playFailSound();
+      }
+      
+      nextBtn.style.display = 'block';
+    }
+
+    // Transform bird to egg
+    function transformBirdToEgg() {
+      bird.classList.add('egg');
+      bird.innerHTML = `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- Egg shape -->
+          <ellipse cx="50" cy="55" rx="28" ry="35" fill="#F5F5DC" stroke="#D3D3D3" stroke-width="2"/>
+          
+          <!-- Egg shine -->
+          <ellipse cx="40" cy="40" rx="8" ry="12" fill="#FFFFFF" opacity="0.6"/>
+          
+          <!-- Crack lines -->
+          <path d="M 50 30 L 48 35 L 52 38 L 50 42" stroke="#8B7355" stroke-width="1.5" fill="none"/>
+          <path d="M 50 42 L 45 45 L 50 50" stroke="#8B7355" stroke-width="1.5" fill="none"/>
+          <path d="M 50 42 L 55 45 L 50 50" stroke="#8B7355" stroke-width="1.5" fill="none"/>
+          
+          <!-- Egg spots -->
+          <circle cx="38" cy="50" r="3" fill="#D2B48C" opacity="0.4"/>
+          <circle cx="62" cy="55" r="2.5" fill="#D2B48C" opacity="0.4"/>
+          <circle cx="45" cy="65" r="2" fill="#D2B48C" opacity="0.4"/>
+          <circle cx="58" cy="48" r="2.5" fill="#D2B48C" opacity="0.4"/>
+        </svg>
+      `;
+    }
+
+    // Launch bird animation
+    function launchBirdToTarget(isCorrect) {
+      // Trigger hammer strike animation
+      hammer.classList.add('strike');
+      bird.classList.add('hit');
+      
+      // Wait for hammer to hit bird, then launch
+      setTimeout(() => {
+        bird.classList.remove('hit');
+        bird.classList.add('launching');
+        playImpactSound();
+        
+        const birdRect = bird.getBoundingClientRect();
+        const pigRect = pig.getBoundingClientRect();
+        
+        const startX = birdRect.left + birdRect.width / 2;
+        const startY = birdRect.top + birdRect.height / 2;
+        const targetX = pigRect.left + pigRect.width / 2;
+        const targetY = pigRect.top + pigRect.height / 2;
+        
+        const deltaX = targetX - startX;
+        const deltaY = targetY - startY;
+        
+        if (isCorrect) {
+          animateBirdFlight(deltaX, deltaY, true);
+        } else {
+          animateBirdFlightMiss(deltaX);
+        }
+        
+        // Reset hammer animation after strike
+        setTimeout(() => {
+          hammer.classList.remove('strike');
+        }, 600);
+      }, 300);
+    }
+
+    // Animate bird flight (correct answer)
+    function animateBirdFlight(deltaX, deltaY, hitTarget) {
+      const duration = 1200;
+      const startTime = Date.now();
+      
+      // Get starting position in pixels
+      const birdRect = bird.getBoundingClientRect();
+      const startX = birdRect.left + birdRect.width / 2;
+      const startY = birdRect.top + birdRect.height / 2;
+      
+      // Get target position in pixels
+      const pigRect = pig.getBoundingClientRect();
+      const targetX = pigRect.left + pigRect.width / 2;
+      const targetY = pigRect.top + pigRect.height / 2;
+      
+      function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        const easeProgress = progress < 0.5 
+          ? 2 * progress * progress 
+          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        
+        // Calculate current position in pixels
+        const currentX = startX + (targetX - startX) * easeProgress;
+        const currentY = startY + (targetY - startY) * easeProgress;
+        
+        // Add parabolic arc effect
+        const arc = Math.sin(progress * Math.PI) * 80;
+        const adjustedY = currentY - arc;
+        
+        const rotation = easeProgress * 360;
+        
+        // Use pixel positioning with top/left
+        bird.style.left = `${currentX}px`;
+        bird.style.top = `${adjustedY}px`;
+        bird.style.bottom = 'auto';
+        bird.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+        
+        if (progress >= 0.9 && hitTarget && !bird.dataset.impacted) {
+          bird.dataset.impacted = 'true';
+          createImpactEffect(pig);
+          playImpactSound();
+          
+          setTimeout(() => {
+            structure.classList.add('collapse');
+            pig.classList.add('shake');
+          }, 30);
+        }
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          setTimeout(() => {
+            bird.style.opacity = '0';
+          }, 200);
+        }
+      }
+      
+      animate();
+    }
+
+    // Animate bird flight miss (wrong answer)
+    function animateBirdFlightMiss(deltaX) {
+      const duration = 1000;
+      const startTime = Date.now();
+      const startBottom = 140;
+      const startLeft = 50;
+      
+      function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        const easeProgress = progress * progress;
+        
+        const currentX = startLeft + (deltaX / window.innerWidth * 50) * easeProgress;
+        const currentY = startBottom - 30 * Math.sin(progress * Math.PI) + progress * 40;
+        const rotation = easeProgress * 180;
+        
+        bird.style.left = `${currentX}%`;
+        bird.style.bottom = `${currentY}%`;
+        bird.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          setTimeout(() => {
+            pig.classList.add('shake');
+          }, 100);
+        }
+      }
+      
+      animate();
+    }
+
+    // Create impact effect
+    function createImpactEffect(target) {
+      const effect = document.createElement('div');
+      effect.className = 'impact-effect';
+      
+      const rect = target.getBoundingClientRect();
+      effect.style.left = `${rect.left + rect.width / 2 - 30}px`;
+      effect.style.top = `${rect.top + rect.height / 2 - 30}px`;
+      
+      document.body.appendChild(effect);
+      
+      setTimeout(() => {
+        effect.remove();
+      }, 400);
+    }
+
+    // Next Question
+    nextBtn.addEventListener('click', () => {
+      bird.style.opacity = '1';
+      delete bird.dataset.impacted;
+      
+      currentQuestion++;
+      
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    // Show Result
+    function showResult() {
+      finalScore.textContent = score;
+      
+      const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+      
+      if (score >= 8) {
+        resultMessage.textContent = config.success_message_high || defaultConfig.success_message_high;
+      } else if (score >= 5) {
+        resultMessage.textContent = config.success_message_medium || defaultConfig.success_message_medium;
+      } else {
+        resultMessage.textContent = config.success_message_low || defaultConfig.success_message_low;
+      }
+      
+      resultScreen.classList.add('show');
+    }
+
+    // Restart Game
+    restartBtn.addEventListener('click', () => {
+      currentQuestion = 0;
+      score = 0;
+      scoreValue.textContent = score;
+      resultScreen.classList.remove('show');
+      bird.style.opacity = '1';
+      delete bird.dataset.impacted;
+      loadQuestion();
+    });
+
+    // Element SDK Implementation
+    async function onConfigChange(config) {
+      gameTitle.textContent = config.game_title || defaultConfig.game_title;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig: defaultConfig,
+        onConfigChange: onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["game_title", config.game_title || defaultConfig.game_title],
+          ["success_message_high", config.success_message_high || defaultConfig.success_message_high],
+          ["success_message_medium", config.success_message_medium || defaultConfig.success_message_medium],
+          ["success_message_low", config.success_message_low || defaultConfig.success_message_low]
+        ])
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a0d5e90529cea86',t:'MTc2MzUzMDc5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
