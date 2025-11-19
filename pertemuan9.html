@@ -1,0 +1,1883 @@
+<!doctype any>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Materi Interaktif Fungsi Boolean</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+      overflow-x: hidden;
+      height: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    .light-mode {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #1a202c;
+    }
+
+    .dark-mode {
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      color: #e2e8f0;
+    }
+
+    .container {
+      min-height: 100%;
+      padding: 2rem 1.5rem;
+    }
+
+    .page {
+      display: none;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    .shake {
+      animation: shake 0.5s;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .light-mode .header {
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .dark-mode .header {
+      background: rgba(45, 55, 72, 0.95);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin: 0 0 0.5rem 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .dark-mode h1 {
+      background: linear-gradient(135deg, #90cdf4 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #667eea;
+    }
+
+    .dark-mode h2 {
+      color: #90cdf4;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      color: #764ba2;
+    }
+
+    .dark-mode h3 {
+      color: #a78bfa;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      margin-bottom: 1rem;
+    }
+
+    .description {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      opacity: 0.85;
+    }
+
+    .toggle-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1000;
+    }
+
+    .toggle-btn {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      color: white;
+    }
+
+    .toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .nav-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 2rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .dark-mode .nav-card {
+      background: rgba(45, 55, 72, 0.95);
+    }
+
+    .nav-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-card-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .nav-card-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #667eea;
+      margin-bottom: 0.5rem;
+    }
+
+    .dark-mode .nav-card-title {
+      color: #90cdf4;
+    }
+
+    .nav-card-desc {
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+
+    .content-box {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark-mode .content-box {
+      background: rgba(45, 55, 72, 0.95);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 0.875rem 2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      margin: 0.5rem;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+    }
+
+    .btn-secondary:hover {
+      box-shadow: 0 6px 20px rgba(240, 147, 251, 0.6);
+    }
+
+    .btn-back {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      box-shadow: none;
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+
+    th, td {
+      border: 2px solid #667eea;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .dark-mode th,
+    .dark-mode td {
+      border-color: #90cdf4;
+    }
+
+    th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+    }
+
+    .example-box {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      border-left: 4px solid #667eea;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 8px;
+    }
+
+    .dark-mode .example-box {
+      background: linear-gradient(135deg, rgba(144, 205, 244, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+      border-left-color: #90cdf4;
+    }
+
+    .logic-gate {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(102, 126, 234, 0.1);
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      margin: 0.5rem;
+    }
+
+    .bulb-demo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 15px;
+      margin: 1.5rem 0;
+    }
+
+    .dark-mode .bulb-demo {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .bulb {
+      font-size: 4rem;
+      transition: all 0.3s;
+    }
+
+    .bulb.on {
+      filter: drop-shadow(0 0 20px yellow);
+    }
+
+    .switch-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .switch {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .switch-btn {
+      width: 60px;
+      height: 30px;
+      background: #cbd5e0;
+      border-radius: 15px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .switch-btn.active {
+      background: #667eea;
+    }
+
+    .switch-btn::after {
+      content: '';
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: all 0.3s;
+    }
+
+    .switch-btn.active::after {
+      left: 32px;
+    }
+
+    .qr-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: center;
+      margin: 2rem 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark-mode .qr-section {
+      background: #2d3748;
+    }
+
+    .qr-code {
+      width: 200px;
+      height: 200px;
+      margin: 1rem auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    .game-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 2rem 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark-mode .game-container {
+      background: rgba(45, 55, 72, 0.95);
+    }
+
+    .game-option {
+      background: white;
+      border: 3px solid #667eea;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    .dark-mode .game-option {
+      background: #2d3748;
+      border-color: #90cdf4;
+    }
+
+    .game-option:hover {
+      background: #667eea;
+      color: white;
+      transform: scale(1.02);
+    }
+
+    .dark-mode .game-option:hover {
+      background: #90cdf4;
+      color: #1a202c;
+    }
+
+    .game-option.correct {
+      background: #48bb78;
+      border-color: #48bb78;
+      color: white;
+    }
+
+    .game-option.wrong {
+      background: #f56565;
+      border-color: #f56565;
+      color: white;
+    }
+
+    .score-display {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 1rem 0;
+      padding: 1rem;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      border-radius: 10px;
+    }
+
+    .comparison-table {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .comparison-card {
+      background: rgba(102, 126, 234, 0.1);
+      padding: 1.5rem;
+      border-radius: 10px;
+      border: 2px solid #667eea;
+    }
+
+    .dark-mode .comparison-card {
+      background: rgba(144, 205, 244, 0.1);
+      border-color: #90cdf4;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.5rem; }
+      h3 { font-size: 1.2rem; }
+      
+      .container { padding: 1rem; }
+      .header { padding: 1.5rem; }
+      .content-box { padding: 1.5rem; }
+      
+      .nav-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .comparison-table {
+        grid-template-columns: 1fr;
+      }
+      
+      .toggle-container {
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+      
+      .toggle-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .qr-code {
+        width: 150px;
+        height: 150px;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body class="light-mode">
+  <script src="/_sdk/element_sdk.js"></script>
+  <div class="toggle-container"><button class="toggle-btn" onclick="toggleDarkMode()">🌙 Mode Gelap</button>
+  </div>
+  <div class="container"><!-- HALAMAN UTAMA -->
+   <div id="home" class="page active">
+    <div class="header">
+     <h1 id="mainTitle">Fungsi Boolean, Bentuk Kanonik, dan Bentuk Baku</h1>
+     <p class="subtitle" id="subtitle">Materi Interaktif SI</p>
+     <p class="description" id="description">Pelajari konsep fundamental fungsi Boolean, bentuk kanonik, dan bentuk baku dalam sistem digital dengan cara yang interaktif dan menyenangkan!</p>
+    </div>
+    <div class="nav-grid">
+     <div class="nav-card" onclick="showPage('boolean')">
+      <div class="nav-card-icon">
+       ⚡
+      </div>
+      <div class="nav-card-title">
+       Fungsi Boolean
+      </div>
+      <p class="nav-card-desc">Pelajari operasi dasar AND, OR, NOT dan logika digital</p>
+     </div>
+     <div class="nav-card" onclick="showPage('kanonik')">
+      <div class="nav-card-icon">
+       📊
+      </div>
+      <div class="nav-card-title">
+       Bentuk Kanonik
+      </div>
+      <p class="nav-card-desc">Minterm &amp; Maxterm dengan literal lengkap</p>
+     </div>
+     <div class="nav-card" onclick="showPage('baku')">
+      <div class="nav-card-icon">
+       📐
+      </div>
+      <div class="nav-card-title">
+       Bentuk Baku
+      </div>
+      <p class="nav-card-desc">SOP &amp; POS standar dalam aljabar Boolean</p>
+     </div>
+     <div class="nav-card" onclick="showPage('simplifikasi')">
+      <div class="nav-card-icon">
+       🔧
+      </div>
+      <div class="nav-card-title">
+       Penyederhanaan
+      </div>
+      <p class="nav-card-desc">Metode simplifikasi ekspresi Boolean</p>
+     </div>
+     <div class="nav-card" onclick="window.open('https://faruq1997.github.io/struktur-diskrit/soal_pertemuan9.html', '_blank', 'noopener,noreferrer')">
+      <div class="nav-card-icon">
+       🎮
+      </div>
+      <div class="nav-card-title">
+       Latihan Interaktif
+      </div>
+      <p class="nav-card-desc">Uji pemahaman dengan soal latihan online</p>
+     </div>
+     <div class="nav-card" onclick="showPage('game')">
+      <div class="nav-card-icon">
+       🎯
+      </div>
+      <div class="nav-card-title">
+       Boolean Quiz
+      </div>
+      <p class="nav-card-desc">Game cepat tebak hasil operasi Boolean</p>
+     </div>
+    </div>
+   </div><!-- HALAMAN FUNGSI BOOLEAN -->
+   <div id="boolean" class="page">
+    <div class="header">
+     <h2>⚡ Fungsi Boolean</h2>
+    </div>
+    <div class="content-box">
+     <h3>📚 Pengertian</h3>
+     <p><strong>Fungsi Boolean</strong> adalah fungsi matematika yang hanya memiliki dua nilai: <strong>0 (False)</strong> dan <strong>1 (True)</strong>. Fungsi ini digunakan dalam sistem digital dan logika komputer.</p>
+     <div class="example-box"><strong>💡 Contoh dalam kehidupan sehari-hari:</strong><br>
+       Lampu: Menyala (1) atau Mati (0)<br>
+       Pintu: Terbuka (1) atau Tertutup (0)<br>
+       Saklar: ON (1) atau OFF (0)
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>🔌 Operasi Dasar Boolean</h3>
+     <div class="logic-gate"><strong>AND (∧)</strong>: Bernilai 1 jika SEMUA input 1
+     </div>
+     <div class="logic-gate"><strong>OR (∨)</strong>: Bernilai 1 jika SALAH SATU input 1
+     </div>
+     <div class="logic-gate"><strong>NOT (¬)</strong>: Membalik nilai (0→1, 1→0)
+     </div>
+     <h4>Tabel Kebenaran:</h4>
+     <table>
+      <tbody>
+       <tr>
+        <th>A</th>
+        <th>B</th>
+        <th>A AND B</th>
+        <th>A OR B</th>
+        <th>NOT A</th>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>1</td>
+        <td>1</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="content-box">
+     <h3>💡 Demo Interaktif: Operasi AND</h3>
+     <p>🚪 <strong>Pintu Brankas:</strong> Pintu hanya terbuka jika KEDUA kunci diaktifkan (AND)</p>
+     <div class="bulb-demo">
+      <div class="switch-group">
+       <div class="switch"><span><strong>Kunci A:</strong></span>
+        <div class="switch-btn" id="switchA" onclick="toggleSwitch('A')"></div><span id="statusA">OFF</span>
+       </div>
+       <div class="switch"><span><strong>Kunci B:</strong></span>
+        <div class="switch-btn" id="switchB" onclick="toggleSwitch('B')"></div><span id="statusB">OFF</span>
+       </div>
+      </div>
+      <div>
+       <div class="bulb" id="bulb">
+        🔒
+       </div>
+       <div>
+        <strong id="bulbStatus">Pintu Terkunci</strong>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>🔓 Demo Interaktif: Operasi OR</h3>
+     <p>🚨 <strong>Alarm Keamanan:</strong> Alarm berbunyi jika SALAH SATU sensor mendeteksi gerakan (OR)</p>
+     <div class="bulb-demo">
+      <div class="switch-group">
+       <div class="switch"><span><strong>Sensor Depan:</strong></span>
+        <div class="switch-btn" id="switchC" onclick="toggleSwitchOR('C')"></div><span id="statusC">OFF</span>
+       </div>
+       <div class="switch"><span><strong>Sensor Belakang:</strong></span>
+        <div class="switch-btn" id="switchD" onclick="toggleSwitchOR('D')"></div><span id="statusD">OFF</span>
+       </div>
+      </div>
+      <div>
+       <div class="bulb" id="alarmIcon">
+        🔕
+       </div>
+       <div>
+        <strong id="alarmStatus">Alarm Nonaktif</strong>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>🔄 Demo Interaktif: Operasi NOT</h3>
+     <p>🌡️ <strong>Sistem AC Otomatis:</strong> AC menyala saat tombol OFF, AC mati saat tombol ON (NOT/inverter)</p>
+     <div class="bulb-demo">
+      <div class="switch-group">
+       <div class="switch"><span><strong>Tombol Manual:</strong></span>
+        <div class="switch-btn" id="switchE" onclick="toggleSwitchNOT('E')"></div><span id="statusE">OFF</span>
+       </div>
+      </div>
+      <div>
+       <div class="bulb" id="acIcon">
+        ❄️
+       </div>
+       <div>
+        <strong id="acStatus">AC Menyala</strong>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>📝 Contoh Fungsi Boolean</h3>
+     <div class="example-box"><strong>Fungsi dengan 2 variabel:</strong><br><br>
+       f(x,y) = xy<br>
+       h(x,y) = (x + y)<br><br><strong>Fungsi dengan 3 variabel:</strong><br><br>
+       f(x,y,z) = xyz + x'y'z' + xy'z<br>
+       g(x,y,z) = (x+y+z)(x'+y+z)(x+y'+z)(x'+y'+z)(x+y+z')<br><br><strong>⭐ Perhatikan:</strong><br>
+       • Fungsi <strong>f</strong> muncul dalam bentuk <strong>penjumlahan dari perkalian</strong> (SOP)<br>
+       • Fungsi <strong>g</strong> muncul dalam bentuk <strong>perkalian dari hasil jumlah</strong> (POS)<br>
+       • Setiap suku (term) mengandung <strong>literal yang lengkap</strong> x, y, dan z<br>
+       • Kedua fungsi bisa sama secara logika meski bentuknya berbeda!
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>🔌 Analogi Saklar untuk Operasi Boolean</h3>
+     <p>Untuk memahami operasi Boolean lebih dalam dengan analogi rangkaian listrik:</p>
+     <div class="example-box"><strong>🔗 Kunjungi:</strong><br><a href="https://faruq1997.github.io/struktur-diskrit/aplikasi_aljabar_boolean.html" target="_blank" rel="noopener noreferrer" style="color: #667eea; font-weight: 600; text-decoration: underline;"> Aplikasi Aljabar Boolean - Analogi Saklar </a><br><br>
+       Pelajari bagaimana saklar seri dan paralel menggambarkan operasi AND dan OR!
+     </div>
+    </div>
+    <div class="button-group"><button class="btn btn-back" onclick="showPage('home')">🏠 Kembali</button> <button class="btn" onclick="showPage('kanonik')">Selanjutnya: Bentuk Kanonik →</button>
+    </div>
+   </div><!-- HALAMAN BENTUK KANONIK -->
+   <div id="kanonik" class="page">
+    <div class="header">
+     <h2>📊 Bentuk Kanonik (SOP &amp; POS)</h2>
+    </div>
+    <div class="content-box">
+     <h3>📚 Definisi Bentuk Kanonik</h3>
+     <p><strong>Bentuk Kanonik</strong> adalah bentuk standar fungsi Boolean di mana <strong>SETIAP SUKU mengandung SEMUA literal (variabel) secara lengkap</strong>.</p>
+     <div class="example-box"><strong>⭐ Kunci Penting:</strong><br>
+       Untuk 2 variabel (x, y): Setiap suku harus mengandung x DAN y<br>
+       Untuk 3 variabel (x, y, z): Setiap suku harus mengandung x DAN y DAN z
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>1️⃣ Sum of Products (SOP) / Minterm</h3>
+     <p><strong>SOP Kanonik</strong> = Jumlah dari hasil kali dengan literal lengkap</p>
+     <div class="example-box"><strong>Contoh SOP Kanonik (2 variabel):</strong><br>
+       f(x,y) = x'y' + x'y + xy<br><br>
+       ✅ SETIAP suku mengandung x DAN y (lengkap)<br>
+       ✅ Ini adalah <strong>BENTUK KANONIK SOP</strong>
+     </div>
+     <h4>Tabel Minterm (2 variabel):</h4>
+     <table>
+      <tbody>
+       <tr>
+        <th>x</th>
+        <th>y</th>
+        <th>Minterm</th>
+        <th>Notasi</th>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>0</td>
+        <td>x'y'</td>
+        <td>m₀</td>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>1</td>
+        <td>x'y</td>
+        <td>m₁</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>0</td>
+        <td>xy'</td>
+        <td>m₂</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>1</td>
+        <td>xy</td>
+        <td>m₃</td>
+       </tr>
+      </tbody>
+     </table>
+     <h4>Tabel Minterm (3 variabel):</h4>
+     <table>
+      <tbody>
+       <tr>
+        <th>x</th>
+        <th>y</th>
+        <th>z</th>
+        <th>Minterm</th>
+        <th>Notasi</th>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>x'y'z'</td>
+        <td>m₀</td>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>x'y'z</td>
+        <td>m₁</td>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>x'yz'</td>
+        <td>m₂</td>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>1</td>
+        <td>1</td>
+        <td>x'yz</td>
+        <td>m₃</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>xy'z'</td>
+        <td>m₄</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>0</td>
+        <td>1</td>
+        <td>xy'z</td>
+        <td>m₅</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+        <td>xyz'</td>
+        <td>m₆</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>xyz</td>
+        <td>m₇</td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="content-box">
+     <h3>2️⃣ Product of Sums (POS) / Maxterm</h3>
+     <p><strong>POS Kanonik</strong> = Hasil kali dari jumlah dengan literal lengkap</p>
+     <div class="example-box"><strong>Contoh POS Kanonik (2 variabel):</strong><br>
+       f(x,y) = (x+y)(x+y')(x'+y)<br><br>
+       ✅ SETIAP suku mengandung x DAN y (lengkap)<br>
+       ✅ Ini adalah <strong>BENTUK KANONIK POS</strong>
+     </div>
+     <h4>Tabel Maxterm (2 variabel):</h4>
+     <table>
+      <tbody>
+       <tr>
+        <th>x</th>
+        <th>y</th>
+        <th>Maxterm</th>
+        <th>Notasi</th>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>0</td>
+        <td>(x+y)</td>
+        <td>M₀</td>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>1</td>
+        <td>(x+y')</td>
+        <td>M₁</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>0</td>
+        <td>(x'+y)</td>
+        <td>M₂</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>1</td>
+        <td>(x'+y')</td>
+        <td>M₃</td>
+       </tr>
+      </tbody>
+     </table>
+     <h4>Tabel Maxterm (3 variabel):</h4>
+     <table>
+      <tbody>
+       <tr>
+        <th>x</th>
+        <th>y</th>
+        <th>z</th>
+        <th>Maxterm</th>
+        <th>Notasi</th>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>(x+y+z)</td>
+        <td>M₀</td>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>(x+y+z')</td>
+        <td>M₁</td>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>(x+y'+z)</td>
+        <td>M₂</td>
+       </tr>
+       <tr>
+        <td>0</td>
+        <td>1</td>
+        <td>1</td>
+        <td>(x+y'+z')</td>
+        <td>M₃</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>(x'+y+z)</td>
+        <td>M₄</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>0</td>
+        <td>1</td>
+        <td>(x'+y+z')</td>
+        <td>M₅</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+        <td>(x'+y'+z)</td>
+        <td>M₆</td>
+       </tr>
+       <tr>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>(x'+y'+z')</td>
+        <td>M₇</td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="comparison-table">
+     <div class="comparison-card">
+      <h4>📌 SOP Kanonik</h4>
+      <ul style="text-align: left;">
+       <li>Penjumlahan (+) dari suku-suku</li>
+       <li>Setiap suku = perkalian literal</li>
+       <li>Contoh: x'y + xy' + xy</li>
+       <li>Semua literal ada di tiap suku</li>
+      </ul>
+     </div>
+     <div class="comparison-card">
+      <h4>📌 POS Kanonik</h4>
+      <ul style="text-align: left;">
+       <li>Perkalian (·) dari suku-suku</li>
+       <li>Setiap suku = penjumlahan literal</li>
+       <li>Contoh: (x+y)(x'+y)(x+y')</li>
+       <li>Semua literal ada di tiap suku</li>
+      </ul>
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>🎯 Jawaban Soal Utama</h3>
+     <div class="example-box" style="background: linear-gradient(135deg, rgba(72, 187, 120, 0.2) 0%, rgba(56, 178, 172, 0.2) 100%); border-left-color: #48bb78;"><strong style="font-size: 1.2rem;">Fungsi Boolean yang dinyatakan sebagai jumlah dari hasil kali, hasil kali dari jumlah dengan setiap suku mengandung literal yang lengkap disebut dengan:</strong><br><br><strong style="font-size: 1.4rem; color: #48bb78;">✅ BENTUK KANONIK</strong><br><br><em>Penjelasan:</em><br>
+       ��� "Jumlah dari hasil kali" = SOP Kanonik<br>
+       • "Hasil kali dari jumlah" = POS Kanonik<br>
+       • "Setiap suku mengandung literal lengkap" = Ciri khas KANONIK
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>📚 Studi Kasus: Konversi ke Bentuk Kanonik</h3>
+     <div class="example-box" style="background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%); border-left-color: #f093fb;"><strong style="font-size: 1.1rem;">🎯 Soal:</strong><br>
+       Diketahui tabel kebenaran berikut untuk fungsi f(x,y,z):<br><br>
+      <table style="margin: 1rem auto;">
+       <tbody>
+        <tr>
+         <th>x</th>
+         <th>y</th>
+         <th>z</th>
+         <th>f(x,y,z)</th>
+        </tr>
+        <tr>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+        </tr>
+        <tr>
+         <td>0</td>
+         <td>0</td>
+         <td>1</td>
+         <td style="background: rgba(72, 187, 120, 0.3); font-weight: 600;">1</td>
+        </tr>
+        <tr>
+         <td>0</td>
+         <td>1</td>
+         <td>0</td>
+         <td style="background: rgba(72, 187, 120, 0.3); font-weight: 600;">1</td>
+        </tr>
+        <tr>
+         <td>0</td>
+         <td>1</td>
+         <td>1</td>
+         <td>0</td>
+        </tr>
+        <tr>
+         <td>1</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+        </tr>
+        <tr>
+         <td>1</td>
+         <td>0</td>
+         <td>1</td>
+         <td style="background: rgba(72, 187, 120, 0.3); font-weight: 600;">1</td>
+        </tr>
+        <tr>
+         <td>1</td>
+         <td>1</td>
+         <td>0</td>
+         <td>0</td>
+        </tr>
+        <tr>
+         <td>1</td>
+         <td>1</td>
+         <td>1</td>
+         <td style="background: rgba(72, 187, 120, 0.3); font-weight: 600;">1</td>
+        </tr>
+       </tbody>
+      </table><strong>Nyatakan fungsi tersebut dalam:</strong><br>
+       a) Bentuk Kanonik SOP<br>
+       b) Bentuk Kanonik POS
+     </div>
+     <div class="example-box" style="background: rgba(102, 126, 234, 0.05);"><strong style="font-size: 1.1rem;">✍️ Penyelesaian:</strong><br><br><strong>a) Bentuk Kanonik SOP (Sum of Products)</strong><br>
+       Ambil semua baris yang bernilai <strong>1</strong> (menggunakan minterm):<br><br>
+       • Baris 1: x=0, y=0, z=1 → minterm = <strong>x'y'z</strong> (m₁)<br>
+       • Baris 2: x=0, y=1, z=0 → minterm = <strong>x'yz'</strong> (m₂)<br>
+       • Baris 5: x=1, y=0, z=1 → minterm = <strong>xy'z</strong> (m₅)<br>
+       • Baris 7: x=1, y=1, z=1 → minterm = <strong>xyz</strong> (m₇)<br><br><strong style="color: #667eea; font-size: 1.1rem;">Jawaban SOP Kanonik:</strong><br><strong style="font-size: 1.2rem;">f(x,y,z) = x'y'z + x'yz' + xy'z + xyz</strong><br>
+       atau dalam notasi: <strong>f = Σm(1,2,5,7)</strong><br><br>
+      <hr style="margin: 1.5rem 0; border: none; border-top: 2px dashed rgba(102, 126, 234, 0.3);"><strong>b) Bentuk Kanonik POS (Product of Sums)</strong><br>
+       Ambil semua baris yang bernilai <strong>0</strong> (menggunakan maxterm):<br><br>
+       • Baris 0: x=0, y=0, z=0 → maxterm = <strong>(x+y+z)</strong> (M₀)<br>
+       • Baris 3: x=0, y=1, z=1 → maxterm = <strong>(x+y'+z')</strong> (M₃)<br>
+       • Baris 4: x=1, y=0, z=0 → maxterm = <strong>(x'+y+z)</strong> (M₄)<br>
+       • Baris 6: x=1, y=1, z=0 → maxterm = <strong>(x'+y'+z)</strong> (M₆)<br><br><strong style="color: #667eea; font-size: 1.1rem;">Jawaban POS Kanonik:</strong><br><strong style="font-size: 1.2rem;">f(x,y,z) = (x+y+z)(x+y'+z')(x'+y+z)(x'+y'+z)</strong><br>
+       atau dalam notasi: <strong>f = ΠM(0,3,4,6)</strong><br><br><strong>⭐ Catatan Penting:</strong><br>
+       • SOP: gunakan minterm dari baris f=<strong>1</strong><br>
+       • POS: gunakan maxterm dari baris f=<strong>0</strong><br>
+       • Kedua bentuk menghasilkan fungsi yang sama!<br>
+       • Setiap suku mengandung SEMUA literal (x, y, dan z)
+     </div>
+    </div>
+    <div class="button-group"><button class="btn btn-back" onclick="showPage('home')">🏠 Kembali</button> <button class="btn btn-secondary" onclick="showPage('boolean')">← Fungsi Boolean</button> <button class="btn" onclick="showPage('baku')">Selanjutnya: Bentuk Baku →</button>
+    </div>
+   </div><!-- HALAMAN BENTUK BAKU -->
+   <div id="baku" class="page">
+    <div class="header">
+     <h2>📐 Bentuk Baku (Standard SOP/POS)</h2>
+    </div>
+    <div class="content-box">
+     <h3>📚 Definisi Bentuk Baku</h3>
+     <p><strong>Bentuk Baku</strong> adalah bentuk standar fungsi Boolean di mana <strong>literal TIDAK HARUS lengkap</strong> dalam setiap suku.</p>
+     <div class="example-box"><strong>⭐ Perbedaan Utama:</strong><br><strong>KANONIK:</strong> Setiap suku HARUS mengandung SEMUA literal<br><strong>BAKU:</strong> Literal boleh tidak lengkap, lebih sederhana
+     </div>
+    </div>
+    <div class="comparison-table">
+     <div class="comparison-card">
+      <h4>📊 BENTUK KANONIK</h4>
+      <div class="example-box"><strong>SOP Kanonik:</strong><br>
+        f = x'y' + x'y + xy<br><br>
+        ✅ Setiap suku: 2 literal (lengkap)
+      </div>
+     </div>
+     <div class="comparison-card">
+      <h4>📐 BENTUK BAKU</h4>
+      <div class="example-box"><strong>SOP Baku:</strong><br>
+        f = x' + y<br><br>
+        ✅ Suku pertama: 1 literal<br>
+        ✅ Suku kedua: 1 literal<br>
+        (Lebih sederhana!)
+      </div>
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>1️⃣ SOP Baku (Standard SOP)</h3>
+     <p><strong>SOP Baku</strong> = Jumlah dari hasil kali, tapi literal boleh tidak lengkap</p>
+     <div class="example-box"><strong>Contoh SOP Baku:</strong><br><br>
+       1. f(x,y) = x + y<br>
+       ��� Setiap suku hanya 1 literal (tidak lengkap) ✅ BAKU<br><br>
+       2. f(x,y,z) = xy + z<br>
+       → Suku pertama: 2 literal, Suku kedua: 1 literal ✅ BAKU<br><br>
+       3. f(x,y) = x'y' + xy' + xy<br>
+       → Setiap suku: 2 literal (lengkap) ✅ INI KANONIK, BUKAN BAKU SAJA
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>2️⃣ POS Baku (Standard POS)</h3>
+     <p><strong>POS Baku</strong> = Hasil kali dari jumlah, tapi literal boleh tidak lengkap</p>
+     <div class="example-box"><strong>Contoh POS Baku:</strong><br><br>
+       1. f(x,y) = x · y<br>
+       → Setiap suku hanya 1 literal ✅ BAKU<br><br>
+       2. f(x,y,z) = (x+y) · z<br>
+       → Suku pertama: 2 literal, Suku kedua: 1 literal ✅ BAKU<br><br>
+       3. f(x,y) = (x+y)(x'+y)(x+y')<br>
+       → Setiap suku: 2 literal (lengkap) ✅ INI KANONIK
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>🔍 Perbandingan Detail</h3>
+     <table>
+      <tbody>
+       <tr>
+        <th>Aspek</th>
+        <th>Bentuk Kanonik</th>
+        <th>Bentuk Baku</th>
+       </tr>
+       <tr>
+        <td><strong>Literal</strong></td>
+        <td>Harus lengkap di setiap suku</td>
+        <td>Boleh tidak lengkap</td>
+       </tr>
+       <tr>
+        <td><strong>Kesederhanaan</strong></td>
+        <td>Lebih panjang</td>
+        <td>Lebih sederhana</td>
+       </tr>
+       <tr>
+        <td><strong>Kegunaan</strong></td>
+        <td>Untuk K-map, standarisasi</td>
+        <td>Untuk implementasi praktis</td>
+       </tr>
+       <tr>
+        <td><strong>Contoh SOP</strong></td>
+        <td>x'y + xy' + xy</td>
+        <td>x + y</td>
+       </tr>
+       <tr>
+        <td><strong>Contoh POS</strong></td>
+        <td>(x+y)(x'+y)</td>
+        <td>x · y</td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="content-box">
+     <h3>💡 Kapan Dipakai?</h3>
+     <div class="example-box"><strong>Bentuk Kanonik:</strong><br>
+       • Saat mengisi K-map (Karnaugh Map)<br>
+       • Untuk standarisasi fungsi Boolean<br>
+       • Dalam analisis formal sistem digital<br><br><strong>Bentuk Baku:</strong><br>
+       • Implementasi rangkaian digital praktis<br>
+       • Setelah penyederhanaan aljabar<br>
+       • Untuk efisiensi hardware (lebih sedikit gerbang logika)
+     </div>
+    </div>
+    <div class="button-group"><button class="btn btn-back" onclick="showPage('home')">🏠 Kembali</button> <button class="btn btn-secondary" onclick="showPage('kanonik')">← Bentuk Kanonik</button> <button class="btn" onclick="showPage('simplifikasi')">Selanjutnya: Penyederhanaan →</button>
+    </div>
+   </div><!-- HALAMAN PENYEDERHANAAN -->
+   <div id="simplifikasi" class="page">
+    <div class="header">
+     <h2>🔧 Penyederhanaan Boolean</h2>
+    </div>
+    <div class="content-box">
+     <h3>📚 Tujuan Penyederhanaan</h3>
+     <p>Mengubah fungsi Boolean menjadi bentuk yang <strong>lebih sederhana</strong> dengan jumlah literal dan operasi yang <strong>minimal</strong>, namun tetap <strong>ekuivalen</strong> secara logika.</p>
+     <div class="example-box"><strong>💡 Manfaat:</strong><br>
+       • Mengurangi jumlah gerbang logika dalam rangkaian<br>
+       • Menghemat biaya hardware<br>
+       • Meningkatkan kecepatan pemrosesan<br>
+       • Memudahkan implementasi
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>1️⃣ Metode Aljabar (Cut-and-Try)</h3>
+     <p>Menggunakan <strong>hukum-hukum aljabar Boolean</strong> untuk menyederhanakan ekspresi.</p>
+     <h4>Hukum-Hukum Penting:</h4>
+     <div class="example-box"><strong>Hukum Identitas:</strong><br>
+       • x + 0 = x<br>
+       • x · 1 = x<br><br><strong>Hukum Null:</strong><br>
+       • x + 1 = 1<br>
+       • x · 0 = 0<br><br><strong>Hukum Komplemen:</strong><br>
+       • x + x' = 1<br>
+       • x · x' = 0<br><br><strong>Hukum Absorpsi:</strong><br>
+       • x + xy = x<br>
+       • x(x + y) = x
+     </div>
+     <h4>📝 Contoh Penyederhanaan:</h4>
+     <div class="example-box"><strong>Contoh 1:</strong><br>
+       f = x + x'y<br>
+       = (x + x')(x + y) → Distributif<br>
+       = 1 · (x + y) → Komplemen<br>
+       = x + y ✅ Hasil sederhana<br><br><strong>Contoh 2:</strong><br>
+       f = xy + xy' + x'y<br>
+       = x(y + y') + x'y → Faktorisasi<br>
+       = x · 1 + x'y → Komplemen<br>
+       = x + x'y → Identitas<br>
+       = x + y ✅ Hasil sederhana
+     </div>
+     <h4>📚 Studi Kasus Metode Aljabar:</h4>
+     <div class="example-box" style="background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%); border-left-color: #f093fb;"><strong style="font-size: 1.1rem;">🎯 Soal:</strong><br>
+       Sederhanakan fungsi Boolean berikut menggunakan hukum aljabar:<br><strong style="font-size: 1.2rem;">f(x,y,z) = x'yz + xyz + xy'z + xyz'</strong><br><br><strong style="font-size: 1.1rem;">✍️ Penyelesaian:</strong><br><br><strong>Langkah 1:</strong> Identifikasi suku yang mirip<br>
+       f = x'yz + xyz + xy'z + xyz'<br><br><strong>Langkah 2:</strong> Kelompokkan suku yang mengandung xyz<br>
+       f = (x'yz + xyz) + (xy'z + xyz')<br><br><strong>Langkah 3:</strong> Faktorkan kelompok pertama<br>
+       (x'yz + xyz) = yz(x' + x)<br>
+       = yz(1) → Hukum Komplemen<br>
+       = yz<br><br><strong>Langkah 4:</strong> Faktorkan kelompok kedua<br>
+       (xy'z + xyz') = x(y'z + yz')<br><br><strong>Langkah 5:</strong> Gabungkan hasil<br>
+       f = yz + x(y'z + yz')<br><br><strong>Langkah 6:</strong> Ekspansi untuk cek<br>
+       f = yz + xy'z + xyz'<br><br><strong style="color: #667eea; font-size: 1.2rem;">✅ Hasil Akhir:</strong><br><strong style="font-size: 1.3rem;">f = yz + x(y'z + yz')</strong><br>
+       atau<br><strong style="font-size: 1.3rem;">f = yz + xy'z + xyz'</strong><br><br><strong>💡 Kesimpulan:</strong><br>
+       Dari 4 suku literal menjadi 3 suku → lebih sederhana!
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>2️⃣ Karnaugh Map (K-Map)</h3>
+     <p><strong>K-Map</strong> adalah metode grafis untuk menyederhanakan fungsi Boolean dengan mengelompokkan minterm.</p>
+     <div class="example-box"><strong>Langkah K-Map:</strong><br>
+       1. Gambar tabel K-Map sesuai jumlah variabel<br>
+       2. Isi nilai 1 pada sel sesuai minterm<br>
+       3. Kelompokkan sel berisi 1 (ukuran 1, 2, 4, 8...)<br>
+       4. Baca hasil dari kelompok yang terbentuk<br>
+       5. Suku dengan literal yang berubah dihilangkan
+     </div>
+     <h4>Contoh K-Map (2 variabel):</h4>
+     <table>
+      <tbody>
+       <tr>
+        <th></th>
+        <th>y=0</th>
+        <th>y=1</th>
+       </tr>
+       <tr>
+        <th>x=0</th>
+        <td style="background: rgba(102, 126, 234, 0.3);">1</td>
+        <td style="background: rgba(102, 126, 234, 0.3);">1</td>
+       </tr>
+       <tr>
+        <th>x=1</th>
+        <td>0</td>
+        <td style="background: rgba(102, 126, 234, 0.3);">1</td>
+       </tr>
+      </tbody>
+     </table>
+     <p><strong>Hasil:</strong> f = x' + y (dari pengelompokan)</p>
+     <h4>📚 Studi Kasus K-Map (3 variabel):</h4>
+     <div class="example-box" style="background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%); border-left-color: #f093fb;"><strong style="font-size: 1.1rem;">🎯 Soal:</strong><br>
+       Sederhanakan fungsi berikut menggunakan K-Map:<br><strong style="font-size: 1.2rem;">f(x,y,z) = Σm(1,2,5,7)</strong><br>
+       atau: f = x'y'z + x'yz' + xy'z + xyz<br><br><strong style="font-size: 1.1rem;">✍️ Penyelesaian:</strong><br><br><strong>Langkah 1:</strong> Buat K-Map 3 variabel<br>
+      <table style="margin: 1rem auto;">
+       <tbody>
+        <tr>
+         <th rowspan="2" colspan="2" style="border: none; background: transparent;"></th>
+         <th colspan="2">yz</th>
+        </tr>
+        <tr>
+         <th>00</th>
+         <th>01</th>
+         <th>11</th>
+         <th>10</th>
+        </tr>
+        <tr>
+         <th rowspan="2" style="writing-mode: vertical-lr; transform: rotate(180deg);">x</th>
+         <th>0</th>
+         <td>0</td>
+         <td style="background: rgba(72, 187, 120, 0.3); font-weight: 600;">1</td>
+         <td>0</td>
+         <td style="background: rgba(240, 147, 251, 0.3); font-weight: 600;">1</td>
+        </tr>
+        <tr>
+         <th>1</th>
+         <td>0</td>
+         <td style="background: rgba(72, 187, 120, 0.3); font-weight: 600;">1</td>
+         <td style="background: rgba(245, 87, 108, 0.3); font-weight: 600;">1</td>
+         <td style="background: rgba(240, 147, 251, 0.3); font-weight: 600;">1</td>
+        </tr>
+       </tbody>
+      </table><br><strong>Langkah 2:</strong> Identifikasi kelompok<br>
+       • <span style="background: rgba(72, 187, 120, 0.3); padding: 2px 8px; border-radius: 4px; font-weight: 600;">Kelompok 1 (hijau):</span> m₁ dan m₅ (vertikal) → eliminasi x<br>
+       &nbsp;&nbsp;Variabel tetap: y=0, z=1 → <strong>y'z</strong><br><br>
+       • <span style="background: rgba(240, 147, 251, 0.3); padding: 2px 8px; border-radius: 4px; font-weight: 600;">Kelompok 2 (pink):</span> m₂ dan m₆ (wrap around) → eliminasi x<br>
+       &nbsp;&nbsp;Variabel tetap: y=1, z=0 → <strong>yz'</strong><br><br>
+       • <span style="background: rgba(245, 87, 108, 0.3); padding: 2px 8px; border-radius: 4px; font-weight: 600;">Sel tunggal (merah):</span> m₇ → <strong>xyz</strong><br>
+       &nbsp;&nbsp;(Tidak bisa digabung dengan yang lain)<br><br><strong style="color: #667eea; font-size: 1.2rem;">✅ Hasil Akhir:</strong><br><strong style="font-size: 1.3rem;">f = y'z + yz' + xyz</strong><br><br><strong>💡 Verifikasi:</strong><br>
+       • y'z mencakup: x'y'z (m₁) dan xy'z (m₅) ✓<br>
+       • yz' mencakup: x'yz' (m₂) dan xyz' (m₆) ✓<br>
+       • xyz mencakup: xyz (m₇) ✓<br><br><strong>🎯 Kesimpulan:</strong><br>
+       Dari bentuk kanonik 4 suku → menjadi 3 suku yang lebih sederhana!
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>3️⃣ Quine-McCluskey</h3>
+     <p><strong>Metode Quine-McCluskey</strong> adalah metode tabulasi sistematis untuk fungsi Boolean dengan banyak variabel.</p>
+     <div class="example-box"><strong>Keunggulan:</strong><br>
+       • Lebih sistematis dari metode aljabar<br>
+       • Cocok untuk fungsi dengan banyak variabel (&gt;4)<br>
+       • Dapat dikomputerisasi<br>
+       • Selalu menghasilkan bentuk minimal<br><br><strong>Kekurangan:</strong><br>
+       • Lebih rumit untuk fungsi sederhana<br>
+       • Memerlukan banyak langkah tabulasi
+     </div>
+     <h4>📚 Studi Kasus Quine-McCluskey:</h4>
+     <div class="example-box" style="background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%); border-left-color: #f093fb;"><strong style="font-size: 1.1rem;">🎯 Soal:</strong><br>
+       Sederhanakan menggunakan metode Quine-McCluskey:<br><strong style="font-size: 1.2rem;">f(x,y,z) = Σm(1,3,5,7)</strong><br><br><strong style="font-size: 1.1rem;">✍️ Penyelesaian:</strong><br><br><strong>Langkah 1:</strong> Tuliskan minterm dalam biner dan kelompokkan berdasarkan jumlah 1<br>
+      <table style="margin: 1rem auto;">
+       <tbody>
+        <tr>
+         <th>Minterm</th>
+         <th>x</th>
+         <th>y</th>
+         <th>z</th>
+         <th>Kelompok</th>
+        </tr>
+        <tr>
+         <td>m₁</td>
+         <td>0</td>
+         <td>0</td>
+         <td>1</td>
+         <td>1 (satu '1')</td>
+        </tr>
+        <tr>
+         <td>m₃</td>
+         <td>0</td>
+         <td>1</td>
+         <td>1</td>
+         <td>2 (dua '1')</td>
+        </tr>
+        <tr>
+         <td>m₅</td>
+         <td>1</td>
+         <td>0</td>
+         <td>1</td>
+         <td>2 (dua '1')</td>
+        </tr>
+        <tr>
+         <td>m₇</td>
+         <td>1</td>
+         <td>1</td>
+         <td>1</td>
+         <td>3 (tiga '1')</td>
+        </tr>
+       </tbody>
+      </table><br><strong>Langkah 2:</strong> Gabungkan minterm yang berbeda 1 bit<br>
+       • m₁(001) + m₃(011) = 0-1 → <strong>x'y'z + x'yz = x'z</strong> ✓<br>
+       • m₁(001) + m₅(101) = -01 → <strong>x'y'z + xy'z = y'z</strong> ✓<br>
+       • m₃(011) + m₇(111) = -11 → <strong>x'yz + xyz = yz</strong> ✓<br>
+       • m₅(101) + m₇(111) = 1-1 → <strong>xy'z + xyz = xz</strong> ✓<br><br><strong>Langkah 3:</strong> Gabungkan lagi hasil Langkah 2 jika memungkinkan<br>
+       • x'z(0-1) + xz(1-1) = z (berbeda di posisi x) ✓<br>
+       • y'z(-01) + yz(-11) = z (berbeda di posisi y) ✓<br><br>
+       Semua menghasilkan: <strong>z</strong><br><br><strong>Langkah 4:</strong> Buat tabel prime implicant<br>
+      <table style="margin: 1rem auto;">
+       <tbody>
+        <tr>
+         <th></th>
+         <th>m₁</th>
+         <th>m₃</th>
+         <th>m₅</th>
+         <th>m₇</th>
+        </tr>
+        <tr>
+         <th>z</th>
+         <td>✓</td>
+         <td>✓</td>
+         <td>✓</td>
+         <td>✓</td>
+        </tr>
+       </tbody>
+      </table><br><strong style="color: #667eea; font-size: 1.2rem;">✅ Hasil Akhir:</strong><br><strong style="font-size: 1.3rem;">f = z</strong><br><br><strong>💡 Kesimpulan:</strong><br>
+       • Fungsi yang awalnya 4 minterm disederhanakan menjadi hanya <strong>z</strong><br>
+       • Ini adalah bentuk paling minimal!<br>
+       • Metode ini sistematis dan pasti menghasilkan bentuk minimal
+     </div>
+    </div>
+    <div class="content-box">
+     <h3>📊 Perbandingan Metode</h3>
+     <table>
+      <tbody>
+       <tr>
+        <th>Metode</th>
+        <th>Kelebihan</th>
+        <th>Kekurangan</th>
+        <th>Cocok Untuk</th>
+       </tr>
+       <tr>
+        <td><strong>Aljabar</strong></td>
+        <td>Sederhana, langsung</td>
+        <td>Butuh intuisi, trial-error</td>
+        <td>Fungsi sederhana</td>
+       </tr>
+       <tr>
+        <td><strong>K-Map</strong></td>
+        <td>Visual, mudah dipahami</td>
+        <td>Terbatas ≤6 variabel</td>
+        <td>2-4 variabel</td>
+       </tr>
+       <tr>
+        <td><strong>Quine-McCluskey</strong></td>
+        <td>Sistematis, banyak variabel</td>
+        <td>Rumit, banyak langkah</td>
+        <td>&gt;4 variabel</td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="button-group"><button class="btn btn-back" onclick="showPage('home')">🏠 Kembali</button> <button class="btn btn-secondary" onclick="showPage('baku')">← Bentuk Baku</button> <button class="btn" onclick="window.open('https://faruq1997.github.io/struktur-diskrit/soal_pertemuan9.html', '_blank', 'noopener,noreferrer')">Latihan Interaktif →</button>
+    </div>
+   </div><!-- HALAMAN GAME BOOLEAN QUIZ -->
+   <div id="game" class="page">
+    <div class="header">
+     <h2>🎯 Boolean Quiz Game</h2>
+     <p>Tebak hasil operasi Boolean dengan cepat!</p>
+    </div>
+    <div class="score-display"><span>Skor: <span id="gameScore">0</span></span> | <span>Waktu: <span id="gameTimer">30</span>s</span>
+    </div>
+    <div class="game-container">
+     <div id="gameQuestion" style="text-align: center; padding: 2rem; background: rgba(102, 126, 234, 0.1); border-radius: 15px; margin: 2rem 0;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;" id="gameOperationDisplay">
+       0 AND 1
+      </div>
+      <div style="font-size: 1.2rem; opacity: 0.8;">
+       Apa hasilnya?
+      </div>
+     </div>
+     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 400px; margin: 0 auto;"><button class="btn" style="font-size: 2rem; padding: 2rem;" onclick="answerGame(0)">0</button> <button class="btn btn-secondary" style="font-size: 2rem; padding: 2rem;" onclick="answerGame(1)">1</button>
+     </div>
+     <div id="gameFeedback" style="margin-top: 2rem; font-size: 1.3rem; font-weight: 600; text-align: center; min-height: 40px;"></div>
+     <div id="gameOverScreen" style="display: none; text-align: center; padding: 2rem; background: rgba(102, 126, 234, 0.1); border-radius: 15px; margin: 2rem 0;">
+      <h3 style="font-size: 2rem; margin-bottom: 1rem;">🎮 Game Selesai!</h3>
+      <div style="font-size: 3rem; font-weight: 600; margin: 1rem 0;" id="finalScore">
+       0
+      </div>
+      <p style="font-size: 1.2rem; opacity: 0.9;" id="gameMessage"></p><button class="btn" onclick="startGame()" style="margin-top: 1rem;">🔄 Main Lagi</button>
+     </div>
+    </div>
+    <div class="button-group"><button class="btn btn-back" onclick="showPage('home')">🏠 Kembali ke Beranda</button>
+    </div>
+   </div><!-- HALAMAN LATIHAN INTERAKTIF -->
+   <div id="latihan" class="page">
+    <div class="header">
+     <h2>🎮 Latihan Interaktif</h2>
+    </div>
+    <div class="score-display"><span>Skor: <span id="score">0</span> / <span id="totalQuestions">5</span></span>
+    </div>
+    <div class="game-container">
+     <h3 id="questionTitle">Pertanyaan 1</h3>
+     <p id="questionText" style="font-size: 1.2rem; margin: 1.5rem 0;"></p>
+     <div id="optionsContainer"></div>
+     <div id="feedback" style="margin-top: 1.5rem; font-size: 1.1rem; font-weight: 600; text-align: center;"></div><button class="btn" id="nextBtn" style="display: none; margin-top: 1rem;" onclick="nextQuestion()">Pertanyaan Berikutnya →</button>
+    </div>
+    <div class="button-group"><button class="btn btn-back" onclick="showPage('home')">🏠 Kembali ke Beranda</button> <button class="btn btn-secondary" onclick="resetQuiz()">🔄 Ulangi Latihan</button>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      main_title: "Fungsi Boolean, Bentuk Kanonik, dan Bentuk Baku",
+      subtitle: "Materi Interaktif SI",
+      description: "Pelajari konsep fundamental fungsi Boolean, bentuk kanonik, dan bentuk baku dalam sistem digital dengan cara yang interaktif dan menyenangkan!"
+    };
+
+    let isDarkMode = false;
+    let switchStates = { A: false, B: false, C: false, D: false, E: false };
+    
+    let currentQuestion = 0;
+    let score = 0;
+    
+    let gameScore = 0;
+    let gameTimer = 30;
+    let gameInterval = null;
+    let currentGameOperation = null;
+    
+    const questions = [
+      {
+        question: "Fungsi Boolean yang dinyatakan sebagai jumlah dari hasil kali dengan setiap suku mengandung literal yang lengkap disebut:",
+        options: ["Literal", "Bentuk Kanonik", "Bentuk Baku", "Minterm"],
+        correct: 1
+      },
+      {
+        question: "Bentuk kanonik yang menggunakan minterm (m) disebut:",
+        options: ["POS", "SOP", "K-Map", "Aljabar Boolean"],
+        correct: 1
+      },
+      {
+        question: "Operasi Boolean yang bernilai 1 jika SEMUA input bernilai 1 adalah:",
+        options: ["OR", "NOT", "AND", "XOR"],
+        correct: 2
+      },
+      {
+        question: "Bentuk f = x + y termasuk dalam kategori:",
+        options: ["SOP Kanonik", "SOP Baku", "POS Kanonik", "Bukan SOP atau POS"],
+        correct: 1
+      },
+      {
+        question: "Metode penyederhanaan Boolean yang menggunakan tabel grafis adalah:",
+        options: ["Aljabar", "Cut-and-Try", "Karnaugh Map", "Quine-McCluskey"],
+        correct: 2
+      }
+    ];
+
+    function toggleDarkMode() {
+      isDarkMode = !isDarkMode;
+      const body = document.body;
+      const btn = document.querySelector('.toggle-btn');
+      
+      if (isDarkMode) {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        btn.textContent = '☀️ Mode Terang';
+      } else {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        btn.textContent = '🌙 Mode Gelap';
+      }
+    }
+
+    function showPage(pageId) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(page => page.classList.remove('active'));
+      
+      const targetPage = document.getElementById(pageId);
+      targetPage.classList.add('active');
+      
+      window.scrollTo(0, 0);
+      
+      if (pageId === 'latihan') {
+        initQuiz();
+      } else if (pageId === 'game') {
+        startGame();
+      }
+    }
+
+    function toggleSwitch(switchId) {
+      switchStates[switchId] = !switchStates[switchId];
+      
+      const switchBtn = document.getElementById(`switch${switchId}`);
+      const status = document.getElementById(`status${switchId}`);
+      
+      if (switchStates[switchId]) {
+        switchBtn.classList.add('active');
+        status.textContent = 'ON';
+      } else {
+        switchBtn.classList.remove('active');
+        status.textContent = 'OFF';
+      }
+      
+      updateBulb();
+    }
+
+    function updateBulb() {
+      const bulb = document.getElementById('bulb');
+      const bulbStatus = document.getElementById('bulbStatus');
+      
+      const isOn = switchStates.A && switchStates.B;
+      
+      if (isOn) {
+        bulb.classList.add('on');
+        bulb.textContent = '🔓';
+        bulbStatus.textContent = 'Pintu Terbuka';
+        bulbStatus.style.color = '#48bb78';
+      } else {
+        bulb.classList.remove('on');
+        bulb.textContent = '🔒';
+        bulbStatus.textContent = 'Pintu Terkunci';
+        bulbStatus.style.color = '';
+      }
+    }
+
+    function toggleSwitchOR(switchId) {
+      switchStates[switchId] = !switchStates[switchId];
+      
+      const switchBtn = document.getElementById(`switch${switchId}`);
+      const status = document.getElementById(`status${switchId}`);
+      
+      if (switchStates[switchId]) {
+        switchBtn.classList.add('active');
+        status.textContent = 'ON';
+      } else {
+        switchBtn.classList.remove('active');
+        status.textContent = 'OFF';
+      }
+      
+      updateAlarm();
+    }
+
+    function updateAlarm() {
+      const alarmIcon = document.getElementById('alarmIcon');
+      const alarmStatus = document.getElementById('alarmStatus');
+      
+      const isOn = switchStates.C || switchStates.D;
+      
+      if (isOn) {
+        alarmIcon.classList.add('on');
+        alarmIcon.textContent = '🚨';
+        alarmStatus.textContent = 'Alarm Berbunyi!';
+        alarmStatus.style.color = '#f56565';
+      } else {
+        alarmIcon.classList.remove('on');
+        alarmIcon.textContent = '🔕';
+        alarmStatus.textContent = 'Alarm Nonaktif';
+        alarmStatus.style.color = '';
+      }
+    }
+
+    function toggleSwitchNOT(switchId) {
+      switchStates[switchId] = !switchStates[switchId];
+      
+      const switchBtn = document.getElementById(`switch${switchId}`);
+      const status = document.getElementById(`status${switchId}`);
+      
+      if (switchStates[switchId]) {
+        switchBtn.classList.add('active');
+        status.textContent = 'ON';
+      } else {
+        switchBtn.classList.remove('active');
+        status.textContent = 'OFF';
+      }
+      
+      updateAC();
+    }
+
+    function updateAC() {
+      const acIcon = document.getElementById('acIcon');
+      const acStatus = document.getElementById('acStatus');
+      
+      const isOn = !switchStates.E;
+      
+      if (isOn) {
+        acIcon.classList.add('on');
+        acIcon.textContent = '❄️';
+        acStatus.textContent = 'AC Menyala';
+        acStatus.style.color = '#4299e1';
+      } else {
+        acIcon.classList.remove('on');
+        acIcon.textContent = '🔥';
+        acStatus.textContent = 'AC Mati';
+        acStatus.style.color = '#f56565';
+      }
+    }
+
+    function initQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      updateScore();
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      if (currentQuestion >= questions.length) {
+        showResults();
+        return;
+      }
+      
+      const q = questions[currentQuestion];
+      document.getElementById('questionTitle').textContent = `Pertanyaan ${currentQuestion + 1} dari ${questions.length}`;
+      document.getElementById('questionText').textContent = q.question;
+      
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+      
+      q.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'game-option';
+        optionDiv.textContent = option;
+        optionDiv.onclick = () => checkAnswer(index);
+        container.appendChild(optionDiv);
+      });
+      
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+
+    function checkAnswer(selected) {
+      const q = questions[currentQuestion];
+      const options = document.querySelectorAll('.game-option');
+      const feedback = document.getElementById('feedback');
+      
+      options.forEach(opt => opt.onclick = null);
+      
+      if (selected === q.correct) {
+        options[selected].classList.add('correct');
+        feedback.textContent = '✅ Benar! Jawaban Anda tepat!';
+        feedback.style.color = '#48bb78';
+        score++;
+        updateScore();
+      } else {
+        options[selected].classList.add('wrong');
+        options[selected].classList.add('shake');
+        options[q.correct].classList.add('correct');
+        feedback.textContent = '❌ Kurang tepat. Jawaban yang benar telah ditandai.';
+        feedback.style.color = '#f56565';
+      }
+      
+      document.getElementById('nextBtn').style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      loadQuestion();
+    }
+
+    function updateScore() {
+      document.getElementById('score').textContent = score;
+      document.getElementById('totalQuestions').textContent = questions.length;
+    }
+
+    function showResults() {
+      const percentage = (score / questions.length) * 100;
+      let message = '';
+      
+      if (percentage === 100) {
+        message = '🎉 Sempurna! Anda menguasai materi dengan sangat baik!';
+      } else if (percentage >= 80) {
+        message = '👏 Bagus sekali! Pemahaman Anda sangat baik!';
+      } else if (percentage >= 60) {
+        message = '👍 Cukup baik! Terus belajar untuk hasil lebih optimal!';
+      } else {
+        message = '💪 Tetap semangat! Ulangi materi dan coba lagi!';
+      }
+      
+      document.getElementById('questionTitle').textContent = 'Hasil Latihan';
+      document.getElementById('questionText').textContent = message;
+      document.getElementById('optionsContainer').innerHTML = `
+        <div style="text-align: center; padding: 2rem; background: rgba(102, 126, 234, 0.1); border-radius: 10px; margin: 2rem 0;">
+          <h3 style="font-size: 3rem; margin: 1rem 0;">${score} / ${questions.length}</h3>
+          <p style="font-size: 1.5rem;">Skor Anda: ${percentage.toFixed(0)}%</p>
+        </div>
+      `;
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+
+    function resetQuiz() {
+      initQuiz();
+    }
+
+    function startGame() {
+      gameScore = 0;
+      gameTimer = 30;
+      document.getElementById('gameScore').textContent = gameScore;
+      document.getElementById('gameTimer').textContent = gameTimer;
+      document.getElementById('gameOverScreen').style.display = 'none';
+      document.getElementById('gameQuestion').style.display = 'block';
+      document.getElementById('gameFeedback').textContent = '';
+      
+      generateGameQuestion();
+      
+      if (gameInterval) clearInterval(gameInterval);
+      gameInterval = setInterval(() => {
+        gameTimer--;
+        document.getElementById('gameTimer').textContent = gameTimer;
+        if (gameTimer <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function generateGameQuestion() {
+      const operations = [
+        { a: 0, b: 0, op: 'AND', result: 0 },
+        { a: 0, b: 1, op: 'AND', result: 0 },
+        { a: 1, b: 0, op: 'AND', result: 0 },
+        { a: 1, b: 1, op: 'AND', result: 1 },
+        { a: 0, b: 0, op: 'OR', result: 0 },
+        { a: 0, b: 1, op: 'OR', result: 1 },
+        { a: 1, b: 0, op: 'OR', result: 1 },
+        { a: 1, b: 1, op: 'OR', result: 1 },
+        { a: 0, b: null, op: 'NOT', result: 1 },
+        { a: 1, b: null, op: 'NOT', result: 0 }
+      ];
+      
+      currentGameOperation = operations[Math.floor(Math.random() * operations.length)];
+      
+      const display = document.getElementById('gameOperationDisplay');
+      if (currentGameOperation.op === 'NOT') {
+        display.textContent = `NOT ${currentGameOperation.a}`;
+      } else {
+        display.textContent = `${currentGameOperation.a} ${currentGameOperation.op} ${currentGameOperation.b}`;
+      }
+    }
+
+    function answerGame(answer) {
+      const feedback = document.getElementById('gameFeedback');
+      
+      if (answer === currentGameOperation.result) {
+        gameScore++;
+        document.getElementById('gameScore').textContent = gameScore;
+        feedback.textContent = '✅ Benar!';
+        feedback.style.color = '#48bb78';
+      } else {
+        feedback.textContent = '❌ Salah!';
+        feedback.style.color = '#f56565';
+      }
+      
+      setTimeout(() => {
+        feedback.textContent = '';
+        generateGameQuestion();
+      }, 500);
+    }
+
+    function endGame() {
+      clearInterval(gameInterval);
+      document.getElementById('gameQuestion').style.display = 'none';
+      document.getElementById('gameOverScreen').style.display = 'block';
+      document.getElementById('finalScore').textContent = `Skor: ${gameScore}`;
+      
+      let message = '';
+      if (gameScore >= 20) {
+        message = '🏆 Luar biasa! Anda master Boolean!';
+      } else if (gameScore >= 15) {
+        message = '🌟 Hebat! Pemahaman Anda sangat baik!';
+      } else if (gameScore >= 10) {
+        message = '👍 Bagus! Terus berlatih!';
+      } else {
+        message = '💪 Jangan menyerah! Coba lagi!';
+      }
+      
+      document.getElementById('gameMessage').textContent = message;
+    }
+
+    async function onConfigChange(config) {
+      const mainTitle = document.getElementById('mainTitle');
+      const subtitle = document.getElementById('subtitle');
+      const description = document.getElementById('description');
+      
+      if (mainTitle) {
+        mainTitle.textContent = config.main_title || defaultConfig.main_title;
+      }
+      if (subtitle) {
+        subtitle.textContent = config.subtitle || defaultConfig.subtitle;
+      }
+      if (description) {
+        description.textContent = config.description || defaultConfig.description;
+      }
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig: defaultConfig,
+        onConfigChange: onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["main_title", config.main_title || defaultConfig.main_title],
+          ["subtitle", config.subtitle || defaultConfig.subtitle],
+          ["description", config.description || defaultConfig.description]
+        ])
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a0dab35c6821c0e',t:'MTc2MzUzMzkzMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
