@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analogi Saklar untuk Operasi Boolean</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .light-mode {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1a1a2e;
+        }
+
+        .dark-mode {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin: 20px 0 10px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .light-mode .header h1 {
+            color: #ffffff;
+        }
+
+        .dark-mode .header h1 {
+            color: #00d4ff;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .light-mode .theme-toggle {
+            color: #ffffff;
+        }
+
+        .dark-mode .theme-toggle {
+            color: #00d4ff;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            background: rgba(255,255,255,0.3);
+        }
+
+        .panels-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .panels-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+
+        .light-mode .panel {
+            background: rgba(255,255,255,0.95);
+        }
+
+        .dark-mode .panel {
+            background: rgba(30,30,50,0.95);
+        }
+
+        .panel:hover {
+            transform: translateY(-5px);
+        }
+
+        .panel-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .light-mode .panel-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .dark-mode .panel-title {
+            background: linear-gradient(135deg, #00d4ff 0%, #0066ff 100%);
+            color: white;
+        }
+
+        .circuit-container {
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .series-circuit {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .parallel-circuit {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .parallel-switches {
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            position: relative;
+        }
+
+        .switch-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .switch {
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
+            border: 4px solid;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .switch.off {
+            background: #e74c3c;
+            border-color: #c0392b;
+            color: white;
+        }
+
+        .switch.on {
+            background: #2ecc71;
+            border-color: #27ae60;
+            color: white;
+            box-shadow: 0 0 20px rgba(46,204,113,0.6);
+        }
+
+        .switch:hover {
+            transform: scale(1.1);
+        }
+
+        .switch-label {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .light-mode .switch-label {
+            color: #2c3e50;
+        }
+
+        .dark-mode .switch-label {
+            color: #00d4ff;
+        }
+
+        .bulb {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            transition: all 0.5s;
+            position: relative;
+        }
+
+        .bulb.off {
+            background: #95a5a6;
+            border-color: #7f8c8d;
+            color: #34495e;
+        }
+
+        .bulb.on {
+            background: #f1c40f;
+            border-color: #f39c12;
+            color: #ffffff;
+            box-shadow: 0 0 40px rgba(241,196,15,0.8), 0 0 80px rgba(241,196,15,0.4);
+            animation: glow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 40px rgba(241,196,15,0.8), 0 0 80px rgba(241,196,15,0.4); }
+            50% { box-shadow: 0 0 60px rgba(241,196,15,1), 0 0 120px rgba(241,196,15,0.6); }
+        }
+
+        .wire {
+            height: 4px;
+            background: #34495e;
+            width: 40px;
+            position: relative;
+        }
+
+        .light-mode .wire {
+            background: #34495e;
+        }
+
+        .dark-mode .wire {
+            background: #7f8c8d;
+        }
+
+        .wire.active {
+            background: #27ae60;
+            box-shadow: 0 0 10px rgba(39,174,96,0.6);
+        }
+
+        .explanation {
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            font-size: 1.1em;
+            line-height: 1.6;
+            border: 3px solid;
+        }
+
+        .light-mode .explanation {
+            background: rgba(52,152,219,0.1);
+            border-color: #3498db;
+            color: #2c3e50;
+        }
+
+        .dark-mode .explanation {
+            background: rgba(0,212,255,0.1);
+            border-color: #00d4ff;
+            color: #e0e0e0;
+        }
+
+        .info-box {
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .light-mode .info-box {
+            background: rgba(255,255,255,0.95);
+        }
+
+        .dark-mode .info-box {
+            background: rgba(30,30,50,0.95);
+        }
+
+        .info-box h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .light-mode .info-box h2 {
+            color: #2c3e50;
+        }
+
+        .dark-mode .info-box h2 {
+            color: #00d4ff;
+        }
+
+        .info-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .info-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-item {
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid;
+            font-size: 1.1em;
+        }
+
+        .light-mode .info-item {
+            background: rgba(52,152,219,0.1);
+            border-color: #3498db;
+            color: #2c3e50;
+        }
+
+        .dark-mode .info-item {
+            background: rgba(0,212,255,0.1);
+            border-color: #00d4ff;
+            color: #e0e0e0;
+        }
+
+        .challenge-section {
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .light-mode .challenge-section {
+            background: rgba(255,255,255,0.95);
+        }
+
+        .dark-mode .challenge-section {
+            background: rgba(30,30,50,0.95);
+        }
+
+        .challenge-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(231,76,60,0.4);
+            margin: 10px;
+        }
+
+        .challenge-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(231,76,60,0.6);
+        }
+
+        .challenge-btn.active {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            box-shadow: 0 5px 15px rgba(46,204,113,0.4);
+        }
+
+        .challenge-text {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 15px;
+            display: none;
+        }
+
+        .light-mode .challenge-text {
+            background: rgba(52,152,219,0.2);
+            color: #2c3e50;
+        }
+
+        .dark-mode .challenge-text {
+            background: rgba(0,212,255,0.2);
+            color: #00d4ff;
+        }
+
+        .challenge-text.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feedback {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 15px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .feedback.correct {
+            background: rgba(46,204,113,0.2);
+            color: #27ae60;
+            border: 3px solid #27ae60;
+        }
+
+        .feedback.incorrect {
+            background: rgba(231,76,60,0.2);
+            color: #e74c3c;
+            border: 3px solid #e74c3c;
+        }
+
+        .parallel-wire-container {
+            position: relative;
+            width: 40px;
+            height: 180px;
+        }
+
+        .parallel-wire-vertical {
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .parallel-wire-branch-top,
+        .parallel-wire-branch-bottom {
+            position: absolute;
+            width: 4px;
+            height: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .parallel-wire-branch-top {
+            top: 0;
+        }
+
+        .parallel-wire-branch-bottom {
+            bottom: 0;
+        }
+
+        .parallel-wire-horizontal-top,
+        .parallel-wire-horizontal-bottom {
+            position: absolute;
+            height: 4px;
+            width: 20px;
+            right: 0;
+        }
+
+        .parallel-wire-horizontal-top {
+            top: 60px;
+        }
+
+        .parallel-wire-horizontal-bottom {
+            bottom: 60px;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body class="light-mode">
+  <div class="container">
+   <div class="header"><button class="theme-toggle" onclick="toggleTheme()">🌓 Mode Gelap/Terang</button>
+    <h1 id="main-title">Analogi Saklar untuk Operasi Boolean</h1>
+   </div>
+   <div class="panels-container"><!-- Panel SERI (AND) -->
+    <div class="panel">
+     <div class="panel-title" id="series-label">
+      HUBUNGAN SERI (AND)
+     </div>
+     <div class="circuit-container">
+      <div class="series-circuit">
+       <div class="switch-container">
+        <div class="switch off" id="switchA" onclick="toggleSwitch('A')"><span>OFF</span>
+        </div>
+        <div class="switch-label">
+         Saklar A
+        </div>
+       </div>
+       <div class="wire" id="wireAB"></div>
+       <div class="switch-container">
+        <div class="switch off" id="switchB" onclick="toggleSwitch('B')"><span>OFF</span>
+        </div>
+        <div class="switch-label">
+         Saklar B
+        </div>
+       </div>
+       <div class="wire" id="wireBulb1"></div>
+       <div class="bulb off" id="bulb1">
+        💡
+       </div>
+      </div>
+     </div>
+     <div class="explanation"><strong>Hubungan SERI mewakili operasi AND.</strong><br>
+       Lampu menyala hanya jika <strong>semua saklar tertutup (ON)</strong>.<br>
+       A AND B = 1 hanya jika A=1 DAN B=1
+     </div>
+    </div><!-- Panel PARALEL (OR) -->
+    <div class="panel">
+     <div class="panel-title" id="parallel-label">
+      HUBUNGAN PARALEL (OR)
+     </div>
+     <div class="circuit-container">
+      <div class="parallel-circuit">
+       <div class="parallel-switches">
+        <div class="switch-container">
+         <div class="switch off" id="switchC" onclick="toggleSwitch('C')"><span>OFF</span>
+         </div>
+         <div class="switch-label">
+          Saklar C
+         </div>
+        </div>
+        <div class="switch-container">
+         <div class="switch off" id="switchD" onclick="toggleSwitch('D')"><span>OFF</span>
+         </div>
+         <div class="switch-label">
+          Saklar D
+         </div>
+        </div>
+       </div>
+       <div class="parallel-wire-container">
+        <div class="wire parallel-wire-vertical" id="wireParallelMain"></div>
+        <div class="wire parallel-wire-branch-top" id="wireC"></div>
+        <div class="wire parallel-wire-branch-bottom" id="wireD"></div>
+       </div>
+       <div class="bulb off" id="bulb2">
+        💡
+       </div>
+      </div>
+     </div>
+     <div class="explanation"><strong>Hubungan PARALEL mewakili operasi OR.</strong><br>
+       Lampu menyala jika <strong>setidaknya satu saklar tertutup (ON)</strong>.<br>
+       C OR D = 1 jika C=1 ATAU D=1 (atau keduanya)
+     </div>
+    </div>
+   </div><!-- Info Box -->
+   <div class="info-box">
+    <h2>Hubungan Saklar dan Logika Boolean</h2>
+    <div class="info-list">
+     <div class="info-item"><strong>✓</strong> Saklar Tertutup (ON) = 1 (True)
+     </div>
+     <div class="info-item"><strong>✗</strong> Saklar Terbuka (OFF) = 0 (False)
+     </div>
+     <div class="info-item"><strong>SERI → AND</strong> Semua harus True
+     </div>
+     <div class="info-item"><strong>PARALEL → OR</strong> Salah satu True sudah cukup
+     </div>
+    </div>
+   </div><!-- Challenge Section -->
+   <div class="challenge-section">
+    <h2 style="margin-top: 0;">🎯 Mode Latihan</h2><button class="challenge-btn" id="challengeBtn" onclick="startChallenge()">Coba Tantangan!</button>
+    <div class="challenge-text" id="challengeText"></div>
+    <div class="feedback" id="feedback"></div>
+   </div>
+  </div>
+  <script>
+        const defaultConfig = {
+            main_title: "Analogi Saklar untuk Operasi Boolean",
+            series_label: "HUBUNGAN SERI (AND)",
+            parallel_label: "HUBUNGAN PARALEL (OR)"
+        };
+
+        let switchStates = {
+            A: false,
+            B: false,
+            C: false,
+            D: false
+        };
+
+        let challengeActive = false;
+        let currentChallenge = null;
+
+        const challenges = [
+            { text: "🎯 Buat lampu SERI menyala!", check: () => switchStates.A && switchStates.B, panel: 'series' },
+            { text: "🎯 Buat lampu PARALEL menyala!", check: () => switchStates.C || switchStates.D, panel: 'parallel' },
+            { text: "🎯 Buat lampu SERI mati dengan A=ON!", check: () => switchStates.A && !switchStates.B, panel: 'series' },
+            { text: "🎯 Buat lampu PARALEL mati!", check: () => !switchStates.C && !switchStates.D, panel: 'parallel' },
+            { text: "🎯 Buat kedua lampu menyala!", check: () => (switchStates.A && switchStates.B) && (switchStates.C || switchStates.D), panel: 'both' }
+        ];
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function toggleSwitch(switchId) {
+            switchStates[switchId] = !switchStates[switchId];
+            updateCircuits();
+            
+            if (challengeActive && currentChallenge) {
+                checkChallenge();
+            }
+        }
+
+        function updateCircuits() {
+            // Update Series Circuit (AND)
+            const switchA = document.getElementById('switchA');
+            const switchB = document.getElementById('switchB');
+            const bulb1 = document.getElementById('bulb1');
+            const wireAB = document.getElementById('wireAB');
+            const wireBulb1 = document.getElementById('wireBulb1');
+
+            updateSwitchDisplay(switchA, switchStates.A);
+            updateSwitchDisplay(switchB, switchStates.B);
+
+            const seriesActive = switchStates.A && switchStates.B;
+            
+            if (switchStates.A) {
+                wireAB.classList.add('active');
+            } else {
+                wireAB.classList.remove('active');
+            }
+
+            if (seriesActive) {
+                wireBulb1.classList.add('active');
+                bulb1.classList.remove('off');
+                bulb1.classList.add('on');
+            } else {
+                wireBulb1.classList.remove('active');
+                bulb1.classList.remove('on');
+                bulb1.classList.add('off');
+            }
+
+            // Update Parallel Circuit (OR)
+            const switchC = document.getElementById('switchC');
+            const switchD = document.getElementById('switchD');
+            const bulb2 = document.getElementById('bulb2');
+            const wireC = document.getElementById('wireC');
+            const wireD = document.getElementById('wireD');
+            const wireParallelMain = document.getElementById('wireParallelMain');
+
+            updateSwitchDisplay(switchC, switchStates.C);
+            updateSwitchDisplay(switchD, switchStates.D);
+
+            const parallelActive = switchStates.C || switchStates.D;
+
+            if (switchStates.C) {
+                wireC.classList.add('active');
+            } else {
+                wireC.classList.remove('active');
+            }
+
+            if (switchStates.D) {
+                wireD.classList.add('active');
+            } else {
+                wireD.classList.remove('active');
+            }
+
+            if (parallelActive) {
+                wireParallelMain.classList.add('active');
+                bulb2.classList.remove('off');
+                bulb2.classList.add('on');
+            } else {
+                wireParallelMain.classList.remove('active');
+                bulb2.classList.remove('on');
+                bulb2.classList.add('off');
+            }
+        }
+
+        function updateSwitchDisplay(element, isOn) {
+            if (isOn) {
+                element.classList.remove('off');
+                element.classList.add('on');
+                element.querySelector('span').textContent = 'ON';
+            } else {
+                element.classList.remove('on');
+                element.classList.add('off');
+                element.querySelector('span').textContent = 'OFF';
+            }
+        }
+
+        function startChallenge() {
+            challengeActive = !challengeActive;
+            const btn = document.getElementById('challengeBtn');
+            const challengeText = document.getElementById('challengeText');
+            const feedback = document.getElementById('feedback');
+
+            if (challengeActive) {
+                btn.classList.add('active');
+                btn.textContent = '🛑 Hentikan Tantangan';
+                
+                currentChallenge = challenges[Math.floor(Math.random() * challenges.length)];
+                challengeText.textContent = currentChallenge.text;
+                challengeText.classList.add('show');
+                feedback.classList.remove('show');
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = 'Coba Tantangan!';
+                challengeText.classList.remove('show');
+                feedback.classList.remove('show');
+                currentChallenge = null;
+            }
+        }
+
+        function checkChallenge() {
+            if (!currentChallenge) return;
+
+            const feedback = document.getElementById('feedback');
+            
+            if (currentChallenge.check()) {
+                feedback.textContent = '✅ Benar! Hebat!';
+                feedback.className = 'feedback correct show';
+                
+                setTimeout(() => {
+                    currentChallenge = challenges[Math.floor(Math.random() * challenges.length)];
+                    document.getElementById('challengeText').textContent = currentChallenge.text;
+                    feedback.classList.remove('show');
+                }, 2000);
+            } else {
+                feedback.textContent = '❌ Coba lagi!';
+                feedback.className = 'feedback incorrect show';
+                
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 1500);
+            }
+        }
+
+        async function onConfigChange(config) {
+            const titleElement = document.getElementById('main-title');
+            const seriesLabelElement = document.getElementById('series-label');
+            const parallelLabelElement = document.getElementById('parallel-label');
+
+            titleElement.textContent = config.main_title || defaultConfig.main_title;
+            seriesLabelElement.textContent = config.series_label || defaultConfig.series_label;
+            parallelLabelElement.textContent = config.parallel_label || defaultConfig.parallel_label;
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [],
+                    borderables: [],
+                    fontEditable: undefined,
+                    fontSizeable: undefined
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["main_title", config.main_title || defaultConfig.main_title],
+                    ["series_label", config.series_label || defaultConfig.series_label],
+                    ["parallel_label", config.parallel_label || defaultConfig.parallel_label]
+                ])
+            });
+        }
+
+        updateCircuits();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a0d56bff415ea86',t:'MTc2MzUzMDQ3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
