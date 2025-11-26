@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritma Pencarian Beruntun - Tutorial Interaktif</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .definition {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .definition h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .example {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #4dabf7;
+        }
+
+        .example h4 {
+            color: #1971c2;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .comparison-table tr:hover {
+            background: #e7f3ff;
+        }
+
+        .interactive-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .interactive-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .game-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+        }
+
+        .game-title {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .search-visualization {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #28a745;
+        }
+
+        .array-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .array-element {
+            background: #667eea;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .array-element.current {
+            background: #ffc107;
+            color: #333;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+
+        .array-element.found {
+            background: #28a745;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+        }
+
+        .array-element.checked {
+            background: #6c757d;
+            opacity: 0.7;
+        }
+
+        .search-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+            margin: 5px;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .game-controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-display {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .key-point {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-point h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .math-formula {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        .animation-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .status-display {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .step-counter {
+            background: #17a2b8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Algoritma Pencarian Beruntun</h1>
+            <p>Tutorial Interaktif Linear Search dengan Visualisasi</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Linear Search Basics Section -->
+            <div class="card">
+                <h2>🚶 Apa itu Pencarian Beruntun?</h2>
+                
+                <div class="definition">
+                    <h3>Definisi</h3>
+                    <p>Algoritma Pencarian Beruntun (Linear Search) adalah cara yang paling sederhana dan paling dasar untuk mencari sebuah item dalam daftar (atau array).</p>
+                </div>
+
+                <div class="definition">
+                    <h3>Analoginya</h3>
+                    <p>Bayangkan Anda sedang mencari kaus kaki hitam tertentu di dalam laci yang berisi banyak kaus kaki yang tidak diurutkan.</p>
+                </div>
+
+                <div class="example">
+                    <h4>🎯 Cara Kerja Pencarian Beruntun</h4>
+                    <p>Algoritma ini bekerja dengan cara:</p>
+                    <ol>
+                        <li><strong>Mulai dari Awal:</strong> Dari item pertama dalam daftar</li>
+                        <li><strong>Cek Satu Per Satu:</strong> Bandingkan item yang dicari dengan item saat ini</li>
+                        <li><strong>Terus Maju:</strong> Jika tidak cocok, pindah ke item berikutnya</li>
+                        <li><strong>Berhenti:</strong> Ketika item ditemukan atau daftar habis</li>
+                    </ol>
+                </div>
+
+                <div class="example">
+                    <h4>📊 Contoh: Mencari Nama "Budi"</h4>
+                    <p>Daftar: [Andi, Siti, Dewi, <strong>Budi</strong>, Rina, Eko]</p>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Langkah</th>
+                                <th>Item yang Dicek</th>
+                                <th>Perbandingan</th>
+                                <th>Hasil</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Andi</td>
+                                <td>Andi == Budi?</td>
+                                <td>Salah</td>
+                                <td>Pindah ke berikutnya</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Siti</td>
+                                <td>Siti == Budi?</td>
+                                <td>Salah</td>
+                                <td>Pindah ke berikutnya</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Dewi</td>
+                                <td>Dewi == Budi?</td>
+                                <td>Salah</td>
+                                <td>Pindah ke berikutnya</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Budi</td>
+                                <td>Budi == Budi?</td>
+                                <td>Benar!</td>
+                                <td>Pencarian Selesai</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="key-point">
+                    <h4>💡 Intinya:</h4>
+                    <p>Pencarian beruntun adalah algoritma pencarian paling dasar yang memeriksa setiap elemen secara berurutan hingga item ditemukan atau daftar habis.</p>
+                </div>
+            </div>
+
+            <!-- Array Types Section -->
+            <div class="card">
+                <h2>📏 Array Berurut vs Tidak Berurut</h2>
+                
+                <div class="definition">
+                    <h3>Perbedaan Utama</h3>
+                    <p>Pencarian beruntun bekerja pada array berurut dan tidak berurut, tetapi ada optimasi khusus untuk array berurut.</p>
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Fitur</th>
+                            <th>Array Tidak Berurut</th>
+                            <th>Array Berurut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Susunan Data</strong></td>
+                            <td>Elemen data acak, tidak ada pola</td>
+                            <td>Elemen data tersusun (misalnya, dari terkecil ke terbesar)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cara Kerja</strong></td>
+                            <td>Harus memeriksa semua elemen hingga item ditemukan atau daftar habis</td>
+                            <td>Dapat berhenti lebih awal jika item yang dicari lebih kecil dari elemen yang sedang diperiksa</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Waktu Terburuk</strong></td>
+                            <td>O(N)</td>
+                            <td>O(N) (sama-sama harus memeriksa N elemen jika item ada di akhir)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Optimasi</strong></td>
+                            <td>Tidak ada optimasi yang bisa dilakukan</td>
+                            <td>Bisa dioptimasi (early exit) untuk kasus item tidak ada di tengah</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example">
+                    <h4>🎯 Penghentian Awal (Early Exit)</h4>
+                    <p>Pada array berurut, kita bisa berhenti lebih awal. Misalnya mencari angka 15 di [5, 10, 20, 25]:</p>
+                    <ul>
+                        <li>Cek 5 (15 > 5) → Lanjut</li>
+                        <li>Cek 10 (15 > 10) → Lanjut</li>
+                        <li>Cek 20 (15 < 20) → <strong>STOP!</strong></li>
+                    </ul>
+                    <p>Karena 20 lebih besar dari 15, dan array sudah berurut, maka 15 pasti tidak ada di daftar ini.</p>
+                </div>
+
+                <div class="key-point">
+                    <h4>💡 Intinya:</h4>
+                    <p>Array berurut memungkinkan penghentian awal yang menghemat waktu perbandingan pada kasus gagal pencarian.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Games Section -->
+        <div class="interactive-section">
+            <h2>🎮 Game Interaktif</h2>
+            
+            <!-- Search Visualization -->
+            <div class="search-visualization">
+                <div class="game-title">🔍 Visualisasi Pencarian Beruntun</div>
+                <p>Lihat bagaimana algoritma pencarian beruntun bekerja langkah demi langkah!</p>
+                
+                <div class="input-group">
+                    <label for="searchTarget">Target yang dicari:</label>
+                    <input type="text" id="searchTarget" placeholder="Masukkan nilai yang ingin dicari" value="Budi">
+                </div>
+                
+                <div class="input-group">
+                    <label for="arrayType">Tipe Array:</label>
+                    <select id="arrayType" onchange="generateArray()">
+                        <option value="unsorted">Tidak Berurut</option>
+                        <option value="sorted">Berurut</option>
+                    </select>
+                </div>
+                
+                <div class="array-container" id="arrayContainer">
+                    <!-- Array elements will be generated here -->
+                </div>
+                
+                <div class="status-display" id="searchStatus">Siap untuk memulai pencarian...</div>
+                <div class="step-counter">Langkah: <span id="stepCount">0</span></div>
+                
+                <div class="search-controls">
+                    <button class="btn btn-success" onclick="startSearch()">▶️ Mulai Pencarian</button>
+                    <button class="btn btn-warning" onclick="nextStep()">⏭️ Langkah Berikutnya</button>
+                    <button class="btn" onclick="resetSearch()">🔄 Reset</button>
+                </div>
+            </div>
+
+            <!-- Code Examples -->
+            <div class="game-container">
+                <div class="game-title">📝 Contoh Kode Pencarian Beruntun</div>
+                <p>Berikut adalah implementasi algoritma pencarian beruntun dalam berbagai bahasa pemrograman:</p>
+                
+                <div class="example">
+                    <h4>🐍 Python - Array Tidak Berurut</h4>
+                    <div class="code-block">
+def linear_search_unsorted(arr, target):
+    for i in range(len(arr)):
+        if arr[i] == target:
+            return i  # Item ditemukan
+    return -1  # Item tidak ditemukan
+
+# Contoh penggunaan
+names = ["Andi", "Siti", "Dewi", "Budi", "Rina"]
+result = linear_search_unsorted(names, "Budi")
+print(f"Budi ditemukan di indeks: {result}")
+                    </div>
+                </div>
+
+                <div class="example">
+                    <h4>🐍 Python - Array Berurut (Early Exit)</h4>
+                    <div class="code-block">
+def linear_search_sorted(arr, target):
+    for i in range(len(arr)):
+        if arr[i] == target:
+            return i  # Item ditemukan
+        elif arr[i] > target:
+            return -1  # Early exit - item pasti tidak ada
+    return -1  # Item tidak ditemukan
+
+# Contoh penggunaan
+numbers = [5, 10, 20, 25, 30]
+result = linear_search_sorted(numbers, 15)
+print(f"15 ditemukan di indeks: {result}")
+                    </div>
+                </div>
+
+                <div class="example">
+                    <h4>☕ Java - Array Tidak Berurut</h4>
+                    <div class="code-block">
+public static int linearSearchUnsorted(int[] arr, int target) {
+    for (int i = 0; i < arr.length; i++) {
+        if (arr[i] == target) {
+            return i;  // Item ditemukan
+        }
+    }
+    return -1;  // Item tidak ditemukan
+}
+
+// Contoh penggunaan
+int[] numbers = {5, 2, 8, 1, 9};
+int result = linearSearchUnsorted(numbers, 8);
+System.out.println("8 ditemukan di indeks: " + result);
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complexity Analysis -->
+            <div class="game-container">
+                <div class="game-title">📊 Analisis Kompleksitas</div>
+                <p>Pencarian beruntun memiliki kompleksitas waktu yang sederhana:</p>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Kasus</th>
+                            <th>Kompleksitas Waktu</th>
+                            <th>Penjelasan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Terbaik</strong></td>
+                            <td>O(1)</td>
+                            <td>Item ditemukan di posisi pertama</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rata-rata</strong></td>
+                            <td>O(N)</td>
+                            <td>Item ditemukan di tengah array</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Terburuk</strong></td>
+                            <td>O(N)</td>
+                            <td>Item tidak ada atau di posisi terakhir</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="key-point">
+                    <h4>💡 Intinya:</h4>
+                    <p>Pencarian beruntun sangat cocok untuk array kecil atau array yang sering berubah. Untuk array besar yang sudah berurut, gunakan Binary Search (O(log N)).</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 Tutorial Algoritma Pencarian Beruntun | Belajar algoritma dengan cara yang menyenangkan! 🎯</p>
+        </footer>
+    </div>
+
+    <script>
+        // Global variables for search simulation
+        let currentArray = [];
+        let currentIndex = 0;
+        let searchTarget = "";
+        let isSearching = false;
+        let stepCount = 0;
+
+        // Generate initial array
+        function generateArray() {
+            const arrayType = document.getElementById('arrayType').value;
+            const container = document.getElementById('arrayContainer');
+            container.innerHTML = '';
+            
+            if (arrayType === 'unsorted') {
+                currentArray = ["Andi", "Siti", "Dewi", "Budi", "Rina", "Eko"];
+            } else {
+                currentArray = ["Andi", "Budi", "Dewi", "Eko", "Rina", "Siti"];
+            }
+            
+            currentArray.forEach((item, index) => {
+                const element = document.createElement('div');
+                element.className = 'array-element';
+                element.textContent = item;
+                element.id = `element-${index}`;
+                container.appendChild(element);
+            });
+            
+            resetSearch();
+        }
+
+        // Start search simulation
+        function startSearch() {
+            searchTarget = document.getElementById('searchTarget').value.trim();
+            if (!searchTarget) {
+                alert('Masukkan target yang ingin dicari!');
+                return;
+            }
+            
+            isSearching = true;
+            currentIndex = 0;
+            stepCount = 0;
+            document.getElementById('stepCount').textContent = stepCount;
+            document.getElementById('searchStatus').textContent = 'Pencarian dimulai...';
+            
+            // Reset all elements
+            currentArray.forEach((_, index) => {
+                const element = document.getElementById(`element-${index}`);
+                element.className = 'array-element';
+            });
+            
+            nextStep();
+        }
+
+        // Perform next step in search
+        function nextStep() {
+            if (!isSearching) return;
+            
+            const arrayType = document.getElementById('arrayType').value;
+            const isSorted = arrayType === 'sorted';
+            
+            // Reset current element
+            if (currentIndex > 0) {
+                const prevElement = document.getElementById(`element-${currentIndex - 1}`);
+                if (prevElement && !prevElement.classList.contains('found')) {
+                    prevElement.classList.add('checked');
+                    prevElement.classList.remove('current');
+                }
+            }
+            
+            // Check if we've reached the end
+            if (currentIndex >= currentArray.length) {
+                document.getElementById('searchStatus').textContent = `"${searchTarget}" tidak ditemukan dalam array!`;
+                isSearching = false;
+                return;
+            }
+            
+            // Highlight current element
+            const currentElement = document.getElementById(`element-${currentIndex}`);
+            currentElement.classList.add('current');
+            
+            stepCount++;
+            document.getElementById('stepCount').textContent = stepCount;
+            
+            // Check for match
+            if (currentArray[currentIndex] === searchTarget) {
+                currentElement.classList.remove('current');
+                currentElement.classList.add('found');
+                document.getElementById('searchStatus').textContent = `"${searchTarget}" ditemukan di indeks ${currentIndex}!`;
+                isSearching = false;
+                return;
+            }
+            
+            // Check for early exit in sorted array
+            if (isSorted && currentArray[currentIndex] > searchTarget) {
+                document.getElementById('searchStatus').textContent = `"${searchTarget}" tidak ditemukan (early exit di indeks ${currentIndex})!`;
+                currentElement.classList.add('checked');
+                isSearching = false;
+                return;
+            }
+            
+            // Continue to next element
+            document.getElementById('searchStatus').textContent = `Memeriksa "${currentArray[currentIndex]}" di indeks ${currentIndex}...`;
+            currentIndex++;
+        }
+
+        // Reset search simulation
+        function resetSearch() {
+            isSearching = false;
+            currentIndex = 0;
+            stepCount = 0;
+            document.getElementById('stepCount').textContent = stepCount;
+            document.getElementById('searchStatus').textContent = 'Siap untuk memulai pencarian...';
+            
+            // Reset all elements
+            currentArray.forEach((_, index) => {
+                const element = document.getElementById(`element-${index}`);
+                element.className = 'array-element';
+            });
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            generateArray();
+            
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
