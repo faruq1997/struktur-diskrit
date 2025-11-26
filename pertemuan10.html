@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ringkasan Algoritma & Struktur Data - Pertemuan 10</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .summary-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .summary-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .part-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .part-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .part-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .part-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .part-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .quiz-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .quiz-question {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #4dabf7;
+        }
+
+        .quiz-options {
+            margin: 10px 0;
+        }
+
+        .quiz-option {
+            margin: 8px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border: 2px solid #e9ecef;
+        }
+
+        .quiz-option:hover {
+            background: #e7f3ff;
+            border-color: #4dabf7;
+        }
+
+        .quiz-option.selected {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .quiz-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .quiz-option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .score-display {
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 20px 0;
+            font-size: 1.2rem;
+        }
+
+        .game-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .game-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+        }
+
+        .array-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .array-element {
+            background: #667eea;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .array-element.current {
+            background: #ffc107;
+            color: #333;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+
+        .array-element.comparing {
+            background: #dc3545;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+        }
+
+        .array-element.sorted {
+            background: #28a745;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+        }
+
+        .status-display {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .step-counter {
+            background: #17a2b8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .key-point {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-point h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        .definition {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .definition h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .example {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #4dabf7;
+        }
+
+        .example h4 {
+            color: #1971c2;
+            margin-bottom: 10px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Ringkasan Algoritma & Struktur Data</h1>
+            <p>Pertemuan 10 - Review Komprehensif dengan Quiz Interaktif</p>
+        </header>
+
+        <!-- Summary Section -->
+        <div class="summary-section">
+            <h2>🎯 Ringkasan Materi</h2>
+            
+            <div class="part-grid">
+                <!-- Part 1 -->
+                <div class="part-card">
+                    <h3>📝 Part 1: Algoritma & Hubungan Referensi</h3>
+                    <p><strong>Konsep Utama:</strong> Definisi algoritma, perbedaan value vs reference, contoh implementasi</p>
+                    <p><strong>Kompleksitas:</strong> O(1) untuk operasi dasar</p>
+                    <a href="./pertemuan/part1.html" target="_blank" class="btn">Buka Part 1</a>
+                </div>
+
+                <!-- Part 2 -->
+                <div class="part-card">
+                    <h3>📊 Part 2: Big O Notation & Teorema</h3>
+                    <p><strong>Konsep Utama:</strong> Analisis kompleksitas waktu, notasi O-besar, teorema rekurensi</p>
+                    <p><strong>Kompleksitas:</strong> O(1), O(n), O(n²), O(log n), O(n log n)</p>
+                    <a href="./pertemuan/part2.html" target="_blank" class="btn">Buka Part 2</a>
+                </div>
+
+                <!-- Part 3 -->
+                <div class="part-card">
+                    <h3>🔍 Part 3: Algoritma Pencarian</h3>
+                    <p><strong>Konsep Utama:</strong> Linear Search, Binary Search, perbandingan efisiensi</p>
+                    <p><strong>Kompleksitas:</strong> O(n) untuk Linear, O(log n) untuk Binary</p>
+                    <a href="./pertemuan/part3.html" target="_blank" class="btn">Buka Part 3</a>
+                </div>
+
+                <!-- Part 4 -->
+                <div class="part-card">
+                    <h3>🔄 Part 4: Algoritma Pengurutan</h3>
+                    <p><strong>Konsep Utama:</strong> Bubble Sort, Selection Sort, Insertion Sort, Merge Sort, Quick Sort</p>
+                    <p><strong>Kompleksitas:</strong> O(n²) untuk sederhana, O(n log n) untuk advanced</p>
+                    <a href="./pertemuan/part4.html" target="_blank" class="btn">Buka Part 4</a>
+                </div>
+
+                <!-- Part 5 -->
+                <div class="part-card">
+                    <h3>🌳 Part 5: Algoritma Lanjutan</h3>
+                    <p><strong>Konsep Utama:</strong> Rekursi, struktur data pohon, graf, maze solving</p>
+                    <p><strong>Kompleksitas:</strong> Bervariasi berdasarkan algoritma</p>
+                    <a href="./pertemuan/part5.html" target="_blank" class="btn">Buka Part 5</a>
+                </div>
+            </div>
+
+            <div class="key-point">
+                <h4>💡 Poin Penting Keseluruhan</h4>
+                <p><strong>Algoritma:</strong> Langkah-langkah sistematis untuk menyelesaikan masalah</p>
+                <p><strong>Kompleksitas:</strong> Mengukur efisiensi algoritma berdasarkan input size</p>
+                <p><strong>Rekursi:</strong> Teknik memanggil diri sendiri dengan parameter berbeda</p>
+                <p><strong>Struktur Data:</strong> Cara mengorganisir data untuk operasi efisien</p>
+            </div>
+        </div>
+
+        <!-- Mini Game Section -->
+        <div class="game-section">
+            <h2>🎮 Mini Game: Binary Search Challenge</h2>
+            <p>Tebak angka antara 1-100 dengan hints dari algoritma Binary Search!</p>
+            
+            <div class="game-container">
+                <div class="status-display" id="gameStatus">Saya memikirkan angka antara 1-100. Tebak!</div>
+                <div class="step-counter">Tebakan: <span id="guessCount">0</span></div>
+                <div class="step-counter">Rentang: <span id="rangeDisplay">1-100</span></div>
+                
+                <div class="input-group" style="margin: 20px 0;">
+                    <input type="number" id="guessInput" min="1" max="100" placeholder="Masukkan tebakan (1-100)" style="padding: 10px; width: 200px; margin-right: 10px;">
+                    <button class="btn btn-success" onclick="makeGuess()">Tebak!</button>
+                </div>
+                
+                <button class="btn" onclick="resetGame()">🔄 Game Baru</button>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="quiz-section">
+            <h2>📝 Quiz Interaktif</h2>
+            <p>Uji pemahaman Anda tentang algoritma dan struktur data!</p>
+            
+            <div class="score-display" id="quizScore">Skor: 0/10</div>
+            
+            <div id="quizContainer">
+                <!-- Quiz questions will be dynamically generated -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-success" onclick="submitQuiz()">📤 Submit Jawaban</button>
+                <button class="btn" onclick="resetQuiz()">🔄 Ulang Quiz</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 Tutorial Algoritma & Struktur Data | Belajar dengan cara yang menyenangkan! 🎯</p>
+        </footer>
+    </div>
+
+    <script>
+        // Quiz data - All 10 questions
+        const quizData = [
+            {
+                question: "Langkah-langkah logis untuk menyelesaikan masalah disebut dengan…",
+                options: ["Algoritma", "Notasi O-besar", "Rekurensi", "Fungsi", "Relasi"],
+                correct: 0
+            },
+            {
+                question: "Permasalahan pencarian biner akan optimal jika menggunakan algoritma waktu…",
+                options: ["O(1)", "O(n!)", "O(log n)", "O(n log n)", "O(n)"],
+                correct: 2
+            },
+            {
+                question: "Jenis cara pencarian data ada…..",
+                options: ["1", "2", "4", "5", "6"],
+                correct: 1
+            },
+            {
+                question: "Data 27 80 02 46 16 12 50 jika diurutkan dengan metode seleksi maka pada langkah ke-3 diperoleh urutan……",
+                options: [
+                    "02 80 27 46 16 12 50",
+                    "02 12 27 46 16 80 50", 
+                    "02 12 16 46 27 80 50",
+                    "02 12 16 27 46 80 50",
+                    "02 12 16 27 46 80 50"
+                ],
+                correct: 2
+            },
+            {
+                question: "Kemampuan memanggil dirinya sendiri dengan parameter berbeda sampai pengulangan berhenti disebut……",
+                options: ["Algoritma", "Notasi O-besar", "Relasi", "Fungsi", "Rekurensi"],
+                correct: 4
+            },
+            {
+                question: "Dibawah ini contoh algoritma yang menggunakan waktu kompleksitas O(log n)",
+                options: [
+                    "linier search",
+                    "Binary search",
+                    "merge, bubble sort",
+                    "bubble, selection, insertion sort",
+                    "merge, quick, heap sort"
+                ],
+                correct: 1
+            },
+            {
+                question: "Dibawah ini contoh algoritma yang menggunakan waktu kompleksitas O(n)",
+                options: [
+                    "linier search",
+                    "Binary search", 
+                    "merge, bubble sort",
+                    "bubble, selection, insertion sort",
+                    "merge, quick, heap sort"
+                ],
+                correct: 0
+            },
+            {
+                question: "Dibawah ini contoh algoritma yang menggunakan waktu kompleksitas O(n²)",
+                options: [
+                    "linier search",
+                    "Binary search",
+                    "merge, bubble sort",
+                    "bubble, selection, insertion sort",
+                    "merge, quick, heap sort"
+                ],
+                correct: 3
+            },
+            {
+                question: "Dibawah ini contoh algoritma yang menggunakan waktu kompleksitas O(n log n)",
+                options: [
+                    "linier search",
+                    "Binary search",
+                    "Merge, bubble sort",
+                    "Bubble, selection, insertion sort",
+                    "Merge, quick, heap sort"
+                ],
+                correct: 4
+            },
+            {
+                question: "Dibawah ini merupakan contoh penerapan rekurensi kecuali……",
+                options: [
+                    "Faktorial",
+                    "Menara Hanoi",
+                    "Fibonacci",
+                    "Quik dan binary",
+                    "Faktorial, menara hanoi, Fibonacci"
+                ],
+                correct: 3
+            }
+        ];
+
+        // Game variables
+        let targetNumber = Math.floor(Math.random() * 100) + 1;
+        let guessCount = 0;
+        let low = 1;
+        let high = 100;
+        let userAnswers = Array(quizData.length).fill(-1);
+
+        // Initialize quiz
+        function initializeQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            
+            quizData.forEach((question, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'quiz-question';
+                questionElement.innerHTML = `
+                    <h4>${index + 1}. ${question.question}</h4>
+                    <div class="quiz-options">
+                        ${question.options.map((option, optIndex) => `
+                            <div class="quiz-option" onclick="selectAnswer(${index}, ${optIndex})">
+                                ${String.fromCharCode(97 + optIndex)}. ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(questionElement);
+            });
+        }
+
+        // Quiz functions
+        function selectAnswer(questionIndex, optionIndex) {
+            userAnswers[questionIndex] = optionIndex;
+            
+            // Update UI
+            const questionElement = document.querySelectorAll('.quiz-question')[questionIndex];
+            const options = questionElement.querySelectorAll('.quiz-option');
+            
+            options.forEach((option, index) => {
+                option.classList.remove('selected');
+                if (index === optionIndex) {
+                    option.classList.add('selected');
+                }
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            
+            quizData.forEach((question, index) => {
+                const questionElement = document.querySelectorAll('.quiz-question')[index];
+                const options = questionElement.querySelectorAll('.quiz-option');
+                
+                if (userAnswers[index] === question.correct) {
+                    score++;
+                    options[userAnswers[index]].classList.add('correct');
+                } else if (userAnswers[index] !== -1) {
+                    options[userAnswers[index]].classList.add('incorrect');
+                    options[question.correct].classList.add('correct');
+                } else {
+                    options[question.correct].classList.add('correct');
+                }
+            });
+            
+            document.getElementById('quizScore').textContent = `Skor: ${score}/${quizData.length}`;
+            
+            // Show result message
+            let message = '';
+            if (score === quizData.length) {
+                message = '🎉 Excellent! Perfect score!';
+            } else if (score >= quizData.length * 0.7) {
+                message = '👍 Good job! You understand the concepts well.';
+            } else if (score >= quizData.length * 0.5) {
+                message = '📚 Not bad! Keep practicing.';
+            } else {
+                message = '📖 Review the materials and try again!';
+            }
+            
+            alert(`${message}\n\nSkor Anda: ${score}/${quizData.length}`);
+        }
+
+        function resetQuiz() {
+            userAnswers = Array(quizData.length).fill(-1);
+            document.getElementById('quizScore').textContent = 'Skor: 0/10';
+            initializeQuiz();
+        }
+
+        // Game functions
+        function makeGuess() {
+            const guessInput = document.getElementById('guessInput');
+            const guess = parseInt(guessInput.value);
+            
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                alert('Masukkan angka antara 1-100!');
+                return;
+            }
+            
+            guessCount++;
+            document.getElementById('guessCount').textContent = guessCount;
+            
+            if (guess === targetNumber) {
+                document.getElementById('gameStatus').textContent = 
+                    `🎉 Selamat! Anda menebak angka ${targetNumber} dalam ${guessCount} tebakan!`;
+                document.getElementById('gameStatus').style.background = '#28a745';
+            } else if (guess < targetNumber) {
+                low = Math.max(low, guess + 1);
+                document.getElementById('gameStatus').textContent = 
+                    `📈 Terlalu rendah! Coba angka antara ${low}-${high}`;
+                document.getElementById('rangeDisplay').textContent = `${low}-${high}`;
+            } else {
+                high = Math.min(high, guess - 1);
+                document.getElementById('gameStatus').textContent = 
+                    `📉 Terlalu tinggi! Coba angka antara ${low}-${high}`;
+                document.getElementById('rangeDisplay').textContent = `${low}-${high}`;
+            }
+            
+            guessInput.value = '';
+            guessInput.focus();
+        }
+
+        function resetGame() {
+            targetNumber = Math.floor(Math.random() * 100) + 1;
+            guessCount = 0;
+            low = 1;
+            high = 100;
+            
+            document.getElementById('guessCount').textContent = '0';
+            document.getElementById('rangeDisplay').textContent = '1-100';
+            document.getElementById('gameStatus').textContent = 'Saya memikirkan angka antara 1-100. Tebak!';
+            document.getElementById('gameStatus').style.background = '#667eea';
+            document.getElementById('guessInput').value = '';
+            document.getElementById('guessInput').focus();
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeQuiz();
+            resetGame();
+            
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.part-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
