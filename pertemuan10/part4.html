@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritma Pengurutan - Game Interaktif</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .definition {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .definition h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .example {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #4dabf7;
+        }
+
+        .example h4 {
+            color: #1971c2;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .comparison-table tr:hover {
+            background: #e7f3ff;
+        }
+
+        .interactive-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .interactive-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .game-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+        }
+
+        .game-title {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .sorting-visualization {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #28a745;
+        }
+
+        .array-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .array-element {
+            background: #667eea;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .array-element.current {
+            background: #ffc107;
+            color: #333;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+
+        .array-element.comparing {
+            background: #dc3545;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+        }
+
+        .array-element.sorted {
+            background: #28a745;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+        }
+
+        .array-element.swapped {
+            background: #fd7e14;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(253, 126, 20, 0.5);
+        }
+
+        .sort-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+            margin: 5px;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .game-controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-display {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .key-point {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-point h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .math-formula {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        .animation-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .status-display {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .step-counter {
+            background: #17a2b8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .algorithm-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .algorithm-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .algorithm-btn:hover {
+            background: #5a6268;
+        }
+
+        .algorithm-btn.active {
+            background: #667eea;
+            transform: scale(1.05);
+        }
+
+        .bar-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 200px;
+            gap: 5px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .bar {
+            background: #667eea;
+            width: 30px;
+            transition: all 0.3s ease;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .bar.current {
+            background: #ffc107;
+        }
+
+        .bar.comparing {
+            background: #dc3545;
+        }
+
+        .bar.sorted {
+            background: #28a745;
+        }
+
+        .bar.swapped {
+            background: #fd7e14;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔄 Algoritma Pengurutan</h1>
+            <p>Game Interaktif Visualisasi Sorting Algorithms</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Bubble Sort Section -->
+            <div class="card">
+                <h2>🫧 Bubble Sort (Pengurutan Gelembung)</h2>
+                
+                <div class="definition">
+                    <h3>Definisi</h3>
+                    <p>Bubble Sort adalah algoritma pengurutan sederhana yang berulang kali membandingkan dan menukar pasangan elemen yang berdekatan jika urutannya salah.</p>
+                </div>
+
+                <div class="definition">
+                    <h3>Analoginya</h3>
+                    <p>Seperti gelembung udara yang naik ke permukaan air, elemen terbesar "menggelembung" ke posisi akhirnya.</p>
+                </div>
+
+                <div class="example">
+                    <h4>🎯 Cara Kerja Bubble Sort</h4>
+                    <p>Algoritma ini bekerja dalam beberapa lintasan:</p>
+                    <ol>
+                        <li><strong>Perbandingan Berpasangan:</strong> Bandingkan setiap pasangan elemen yang berdekatan</li>
+                        <li><strong>Penukaran:</strong> Jika urutan salah, tukar posisi elemen</li>
+                        <li><strong>Pengulangan:</strong> Ulangi hingga tidak ada lagi penukaran yang diperlukan</li>
+                    </ol>
+                </div>
+
+                <div class="example">
+                    <h4>📊 Contoh: Mengurutkan [5, 1, 4, 2, 8]</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Lintasan</th>
+                                <th>Perbandingan</th>
+                                <th>Tindakan</th>
+                                <th>Hasil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>(5,1), (5,4), (5,2), (5,8)</td>
+                                <td>Tukar, Tukar, Tukar, Tetap</td>
+                                <td>[1, 4, 2, 5, 8]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>(4,2), (4,5), (5,8)</td>
+                                <td>Tukar, Tetap, Tetap</td>
+                                <td>[1, 2, 4, 5, 8]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>(1,2), (2,4), (4,5)</td>
+                                <td>Tetap, Tetap, Tetap</td>
+                                <td>[1, 2, 4, 5, 8]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="key-point">
+                    <h4>⚡ Kompleksitas Waktu</h4>
+                    <p><strong>Terbaik:</strong> O(N) - Jika array sudah terurut</p>
+                    <p><strong>Rata-rata & Terburuk:</strong> O(N²) - Untuk array acak atau terbalik</p>
+                </div>
+            </div>
+
+            <!-- Selection Sort Section -->
+            <div class="card">
+                <h2>🎯 Selection Sort (Pengurutan Seleksi)</h2>
+                
+                <div class="definition">
+                    <h3>Definisi</h3>
+                    <p>Selection Sort berulang kali menemukan elemen minimum dari bagian yang belum terurut dan menempatkannya di posisi yang benar.</p>
+                </div>
+
+                <div class="definition">
+                    <h3>Analoginya</h3>
+                    <p>Seperti memilih kartu terendah dari tumpukan dan meletakkannya di urutan yang benar.</p>
+                </div>
+
+                <div class="example">
+                    <h4>🎯 Cara Kerja Selection Sort</h4>
+                    <p>Algoritma ini membagi array menjadi dua bagian:</p>
+                    <ol>
+                        <li><strong>Bagian Terurut:</strong> Di sebelah kiri (awalnya kosong)</li>
+                        <li><strong>Bagian Belum Terurut:</strong> Di sebelah kanan (seluruh array)</li>
+                        <li><strong>Pencarian Minimum:</strong> Cari elemen terkecil di bagian belum terurut</li>
+                        <li><strong>Penukaran:</strong> Tukar dengan elemen pertama di bagian belum terurut</li>
+                    </ol>
+                </div>
+
+                <div class="example">
+                    <h4>📊 Contoh: Mengurutkan [64, 25, 12, 22, 11]</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Iterasi</th>
+                                <th>Minimum</th>
+                                <th>Tindakan</th>
+                                <th>Hasil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>11</td>
+                                <td>Tukar 11 dengan 64</td>
+                                <td>[11, 25, 12, 22, 64]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>12</td>
+                                <td>Tukar 12 dengan 25</td>
+                                <td>[11, 12, 25, 22, 64]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>22</td>
+                                <td>Tukar 22 dengan 25</td>
+                                <td>[11, 12, 22, 25, 64]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="key-point">
+                    <h4>⚡ Kompleksitas Waktu</h4>
+                    <p><strong>Selalu:</strong> O(N²) - Di semua kasus karena selalu mencari minimum</p>
+                    <p><strong>Keunggulan:</strong> Minim jumlah penukaran (hanya N-1 penukaran)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Games Section -->
+        <div class="interactive-section">
+            <h2>🎮 Game Interaktif Visualisasi Pengurutan</h2>
+            
+            <!-- Sorting Visualization -->
+            <div class="sorting-visualization">
+                <div class="game-title">🔄 Visualisasi Algoritma Pengurutan</div>
+                <p>Lihat bagaimana algoritma pengurutan bekerja langkah demi langkah!</p>
+                
+                <div class="algorithm-selector">
+                    <button class="algorithm-btn active" onclick="selectAlgorithm('bubble')">🫧 Bubble Sort</button>
+                    <button class="algorithm-btn" onclick="selectAlgorithm('selection')">🎯 Selection Sort</button>
+                    <button class="algorithm-btn" onclick="selectAlgorithm('insertion')">🃏 Insertion Sort</button>
+                </div>
+                
+                <div class="input-group">
+                    <label for="arrayInput">Array yang akan diurutkan:</label>
+                    <input type="text" id="arrayInput" placeholder="Masukkan angka dipisahkan koma" value="5,1,4,2,8">
+                </div>
+                
+                <div class="array-container" id="arrayContainer">
+                    <!-- Array elements will be generated here -->
+                </div>
+                
+                <div class="status-display" id="sortStatus">Siap untuk memulai pengurutan...</div>
+                <div class="step-counter">Langkah: <span id="stepCount">0</span></div>
+                <div class="step-counter">Perbandingan: <span id="comparisonCount">0</span></div>
+                <div class="step-counter">Penukaran: <span id="swapCount">0</span></div>
+                
+                <div class="sort-controls">
+                    <button class="btn btn-success" onclick="startSort()">▶️ Mulai Pengurutan</button>
+                    <button class="btn btn-warning" onclick="nextStep()">⏭️ Langkah Berikutnya</button>
+                    <button class="btn" onclick="resetSort()">🔄 Reset</button>
+                    <button class="btn btn-danger" onclick="generateRandomArray()">🎲 Array Acak</button>
+                </div>
+            </div>
+
+            <!-- Bar Chart Visualization -->
+            <div class="game-container">
+                <div class="game-title">📊 Visualisasi Bar Chart</div>
+                <p>Lihat pengurutan dalam bentuk grafik batang yang lebih visual!</p>
+                
+                <div class="bar-container" id="barContainer">
+                    <!-- Bars will be generated here -->
+                </div>
+                
+                <div class="sort-controls">
+                    <button class="btn btn-success" onclick="startBarSort()">▶️ Mulai Visualisasi</button>
+                    <button class="btn" onclick="resetBarSort()">🔄 Reset</button>
+                </div>
+            </div>
+
+            <!-- Speed Challenge Game -->
+            <div class="game-container">
+                <div class="game-title">⚡ Tantangan Kecepatan</div>
+                <p>Urutkan array secepat mungkin! Coba gunakan algoritma yang berbeda dan lihat mana yang tercepat.</p>
+                
+                <div class="score-display">Waktu: <span id="timeDisplay">0.00</span> detik</div>
+                <div class="score-display">Skor: <span id="scoreDisplay">0</span></div>
+                
+                <div class="array-container" id="challengeArray">
+                    <!-- Challenge array will be generated here -->
+                </div>
+                
+                <div class="sort-controls">
+                    <button class="btn btn-success" onclick="startChallenge()">🎯 Mulai Tantangan</button>
+                    <button class="btn btn-warning" onclick="autoSort()">🤖 Auto Sort</button>
+                    <button class="btn" onclick="resetChallenge()">🔄 Tantangan Baru</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 Tutorial Algoritma Pengurutan | Belajar algoritma dengan cara yang menyenangkan! 🎯</p>
+        </footer>
+    </div>
+
+    <script>
+        // Global variables for sorting simulation
+        let currentArray = [];
+        let currentAlgorithm = 'bubble';
+        let isSorting = false;
+        let stepCount = 0;
+        let comparisonCount = 0;
+        let swapCount = 0;
+        let startTime = 0;
+        let challengeScore = 0;
+
+        // Algorithm selection
+        function selectAlgorithm(algo) {
+            currentAlgorithm = algo;
+            document.querySelectorAll('.algorithm-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            resetSort();
+        }
+
+        // Generate array from input
+        function generateArray() {
+            const input = document.getElementById('arrayInput').value;
+            currentArray = input.split(',').map(num => parseInt(num.trim()));
+            const container = document.getElementById('arrayContainer');
+            container.innerHTML = '';
+            
+            currentArray.forEach((item, index) => {
+                const element = document.createElement('div');
+                element.className = 'array-element';
+                element.textContent = item;
+                element.id = `element-${index}`;
+                container.appendChild(element);
+            });
+            
+            generateBars();
+            resetSort();
+        }
+
+        // Generate bar chart visualization
+        function generateBars() {
+            const container = document.getElementById('barContainer');
+            container.innerHTML = '';
+            
+            const maxValue = Math.max(...currentArray);
+            currentArray.forEach((item, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${(item / maxValue) * 150}px`;
+                bar.id = `bar-${index}`;
+                container.appendChild(bar);
+            });
+        }
+
+        // Start sorting
+        function startSort() {
+            if (currentArray.length === 0) {
+                alert('Masukkan array terlebih dahulu!');
+                return;
+            }
+            
+            isSorting = true;
+            stepCount = 0;
+            comparisonCount = 0;
+            swapCount = 0;
+            document.getElementById('stepCount').textContent = stepCount;
+            document.getElementById('comparisonCount').textContent = comparisonCount;
+            document.getElementById('swapCount').textContent = swapCount;
+            document.getElementById('sortStatus').textContent = 'Pengurutan dimulai...';
+            
+            // Reset all elements
+            currentArray.forEach((_, index) => {
+                const element = document.getElementById(`element-${index}`);
+                element.className = 'array-element';
+                const bar = document.getElementById(`bar-${index}`);
+                if (bar) bar.className = 'bar';
+            });
+            
+            nextStep();
+        }
+
+        // Perform next step in sorting
+        function nextStep() {
+            if (!isSorting) return;
+            
+            stepCount++;
+            document.getElementById('stepCount').textContent = stepCount;
+            
+            // Reset previous highlights
+            currentArray.forEach((_, index) => {
+                const element = document.getElementById(`element-${index}`);
+                if (!element.classList.contains('sorted')) {
+                    element.classList.remove('current', 'comparing', 'swapped');
+                }
+                const bar = document.getElementById(`bar-${index}`);
+                if (bar && !bar.classList.contains('sorted')) {
+                    bar.classList.remove('current', 'comparing', 'swapped');
+                }
+            });
+            
+            // Simulate algorithm steps
+            switch(currentAlgorithm) {
+                case 'bubble':
+                    simulateBubbleSort();
+                    break;
+                case 'selection':
+                    simulateSelectionSort();
+                    break;
+                case 'insertion':
+                    simulateInsertionSort();
+                    break;
+            }
+        }
+
+        // Simulate Bubble Sort
+        function simulateBubbleSort() {
+            // Simplified simulation - in real implementation, this would track state
+            const sorted = [...currentArray].sort((a, b) => a - b);
+            const isSorted = JSON.stringify(currentArray) === JSON.stringify(sorted);
+            
+            if (isSorted) {
+                document.getElementById('sortStatus').textContent = 'Array sudah terurut!';
+                isSorting = false;
+                currentArray.forEach((_, index) => {
+                    const element = document.getElementById(`element-${index}`);
+                    element.classList.add('sorted');
+                    const bar = document.getElementById(`bar-${index}`);
+                    if (bar) bar.classList.add('sorted');
+                });
+                return;
+            }
+            
+            // Simulate comparison
+            comparisonCount++;
+            document.getElementById('comparisonCount').textContent = comparisonCount;
+            
+            // Highlight random elements for demonstration
+            const i = Math.floor(Math.random() * (currentArray.length - 1));
+            const element1 = document.getElementById(`element-${i}`);
+            const element2 = document.getElementById(`element-${i + 1}`);
+            const bar1 = document.getElementById(`bar-${i}`);
+            const bar2 = document.getElementById(`bar-${i + 1}`);
+            
+            element1.classList.add('comparing');
+            element2.classList.add('comparing');
+            if (bar1) bar1.classList.add('comparing');
+            if (bar2) bar2.classList.add('comparing');
+            
+            document.getElementById('sortStatus').textContent = 
+                `Membandingkan ${currentArray[i]} dan ${currentArray[i + 1]}...`;
+            
+            // Simulate swap if needed
+            if (currentArray[i] > currentArray[i + 1]) {
+                setTimeout(() => {
+                    [currentArray[i], currentArray[i + 1]] = [currentArray[i + 1], currentArray[i]];
+                    swapCount++;
+                    document.getElementById('swapCount').textContent = swapCount;
+                    
+                    element1.textContent = currentArray[i];
+                    element2.textContent = currentArray[i + 1];
+                    element1.classList.add('swapped');
+                    element2.classList.add('swapped');
+                    if (bar1) {
+                        bar1.style.height = `${(currentArray[i] / Math.max(...currentArray)) * 150}px`;
+                        bar1.classList.add('swapped');
+                    }
+                    if (bar2) {
+                        bar2.style.height = `${(currentArray[i + 1] / Math.max(...currentArray)) * 150}px`;
+                        bar2.classList.add('swapped');
+                    }
+                    
+                    document.getElementById('sortStatus').textContent = 
+                        `Menukar ${currentArray[i + 1]} dan ${currentArray[i]}...`;
+                }, 500);
+            }
+        }
+
+        // Simulate Selection Sort
+        function simulateSelectionSort() {
+            // Similar simplified simulation for selection sort
+            const sorted = [...currentArray].sort((a, b) => a - b);
+            const isSorted = JSON.stringify(currentArray) === JSON.stringify(sorted);
+            
+            if (isSorted) {
+                document.getElementById('sortStatus').textContent = 'Array sudah terurut!';
+                isSorting = false;
+                currentArray.forEach((_, index) => {
+                    const element = document.getElementById(`element-${index}`);
+                    element.classList.add('sorted');
+                    const bar = document.getElementById(`bar-${index}`);
+                    if (bar) bar.classList.add('sorted');
+                });
+                return;
+            }
+            
+            comparisonCount++;
+            document.getElementById('comparisonCount').textContent = comparisonCount;
+            
+            // Simplified selection sort simulation
+            const minIndex = Math.floor(Math.random() * currentArray.length);
+            const element = document.getElementById(`element-${minIndex}`);
+            const bar = document.getElementById(`bar-${minIndex}`);
+            
+            element.classList.add('current');
+            if (bar) bar.classList.add('current');
+            
+            document.getElementById('sortStatus').textContent = 
+                `Mencari minimum: ${currentArray[minIndex]}...`;
+        }
+
+        // Simulate Insertion Sort
+        function simulateInsertionSort() {
+            // Similar simplified simulation for insertion sort
+            const sorted = [...currentArray].sort((a, b) => a - b);
+            const isSorted = JSON.stringify(currentArray) === JSON.stringify(sorted);
+            
+            if (isSorted) {
+                document.getElementById('sortStatus').textContent = 'Array sudah terurut!';
+                isSorting = false;
+                currentArray.forEach((_, index) => {
+                    const element = document.getElementById(`element-${index}`);
+                    element.classList.add('sorted');
+                    const bar = document.getElementById(`bar-${index}`);
+                    if (bar) bar.classList.add('sorted');
+                });
+                return;
+            }
+            
+            comparisonCount++;
+            document.getElementById('comparisonCount').textContent = comparisonCount;
+            
+            // Simplified insertion sort simulation
+            const currentIndex = Math.floor(Math.random() * currentArray.length);
+            const element = document.getElementById(`element-${currentIndex}`);
+            const bar = document.getElementById(`bar-${currentIndex}`);
+            
+            element.classList.add('current');
+            if (bar) bar.classList.add('current');
+            
+            document.getElementById('sortStatus').textContent = 
+                `Menyisipkan ${currentArray[currentIndex]} ke posisi yang benar...`;
+        }
+
+        // Reset sorting simulation
+        function resetSort() {
+            isSorting = false;
+            stepCount = 0;
+            comparisonCount = 0;
+            swapCount = 0;
+            document.getElementById('stepCount').textContent = stepCount;
+            document.getElementById('comparisonCount').textContent = comparisonCount;
+            document.getElementById('swapCount').textContent = swapCount;
+            document.getElementById('sortStatus').textContent = 'Siap untuk memulai pengurutan...';
+            
+            currentArray.forEach((_, index) => {
+                const element = document.getElementById(`element-${index}`);
+                if (element) {
+                    element.className = 'array-element';
+                }
+                const bar = document.getElementById(`bar-${index}`);
+                if (bar) {
+                    bar.className = 'bar';
+                }
+            });
+        }
+
+        // Generate random array
+        function generateRandomArray() {
+            const randomArray = [];
+            for (let i = 0; i < 8; i++) {
+                randomArray.push(Math.floor(Math.random() * 50) + 1);
+            }
+            document.getElementById('arrayInput').value = randomArray.join(',');
+            generateArray();
+        }
+
+        // Bar chart sorting
+        function startBarSort() {
+            generateRandomArray();
+            startSort();
+        }
+
+        function resetBarSort() {
+            resetSort();
+        }
+
+        // Speed challenge game
+        function startChallenge() {
+            generateRandomArray();
+            startTime = Date.now();
+            challengeScore = 0;
+            updateChallengeDisplay();
+            startSort();
+        }
+
+        function autoSort() {
+            // Auto complete the sort for demonstration
+            currentArray.sort((a, b) => a - b);
+            generateArray();
+            const endTime = Date.now();
+            const timeTaken = (endTime - startTime) / 1000;
+            challengeScore = Math.max(0, 1000 - Math.floor(timeTaken * 100));
+            updateChallengeDisplay();
+            document.getElementById('sortStatus').textContent = `Auto sort selesai! Waktu: ${timeTaken.toFixed(2)}s`;
+        }
+
+        function resetChallenge() {
+            resetSort();
+            challengeScore = 0;
+            updateChallengeDisplay();
+        }
+
+        function updateChallengeDisplay() {
+            document.getElementById('timeDisplay').textContent = startTime ? ((Date.now() - startTime) / 1000).toFixed(2) : '0.00';
+            document.getElementById('scoreDisplay').textContent = challengeScore;
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            generateArray();
+            
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
