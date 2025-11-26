@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notasi O Besar & Teorema - Tutorial Interaktif</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .definition {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .definition h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .example {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #4dabf7;
+        }
+
+        .example h4 {
+            color: #1971c2;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .comparison-table tr:hover {
+            background: #e7f3ff;
+        }
+
+        .interactive-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .interactive-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .game-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+        }
+
+        .game-title {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .complexity-chart {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #28a745;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .chart-line {
+            position: absolute;
+            height: 2px;
+            transition: width 2s ease;
+        }
+
+        .chart-label {
+            position: absolute;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .complexity-game {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #dc3545;
+        }
+
+        .complexity-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .complexity-option {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .complexity-option:hover {
+            background: #d0e7ff;
+            transform: scale(1.05);
+        }
+
+        .complexity-option.correct {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+
+        .complexity-option.incorrect {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+            margin: 5px;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .game-controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-display {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .key-point {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-point h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .math-formula {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        .animation-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .input-slider {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .result-display {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .complexity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .complexity-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .complexity-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .complexity-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .complexity-table tr:hover {
+            background: #e7f3ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Notasi O Besar & Teorema</h1>
+            <p>Analisis Algoritma dan Fondasi Ilmu Komputer</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Big O Notation Section -->
+            <div class="card">
+                <h2>📈 Notasi O Besar (Big O)</h2>
+                
+                <div class="definition">
+                    <h3>Definisi</h3>
+                    <p>Notasi O Besar adalah cara untuk mengukur seberapa baik kinerja sebuah algoritma saat ukuran input (data yang diproses) bertambah besar.</p>
+                </div>
+
+                <div class="definition">
+                    <h3>Pertanyaan Utama</h3>
+                    <p>"Seberapa cepat waktu yang dibutuhkan algoritma ini jika datanya menjadi <span class="highlight">10×</span> atau <span class="highlight">1.000×</span> lebih besar?"</p>
+                </div>
+
+                <div class="example">
+                    <h4>🎯 Kenapa Kita Membutuhkan Notasi O Besar?</h4>
+                    <p>Kita tidak bisa hanya mengukur waktu dalam detik, karena:</p>
+                    <ul>
+                        <li><strong>Bergantung pada Komputer:</strong> Algoritma yang sama akan berjalan lebih cepat di komputer yang canggih</li>
+                        <li><strong>Bergantung pada Input:</strong> Waktu eksekusi tergantung pada berapa banyak data yang harus diproses</li>
+                    </ul>
+                    <p>Notasi O Besar mengabaikan detail mesin dan fokus pada <span class="highlight">tingkat pertumbuhan</span> waktu eksekusi.</p>
+                </div>
+
+                <div class="example">
+                    <h4>🧠 Konsep Kunci: Tingkat Pertumbuhan</h4>
+                    <p>Bayangkan dua algoritma untuk mengurutkan daftar nama:</p>
+                    <div class="math-formula">
+                        Algoritma A: N² + 5N + 10 operasi → O(N²)<br>
+                        Algoritma B: N + 100 operasi → O(N)
+                    </div>
+                    <p>Ketika N = 1.000.000:</p>
+                    <ul>
+                        <li>Algoritma A: N² mendominasi → O(N²)</li>
+                        <li>Algoritma B: N mendominasi → O(N)</li>
+                    </ul>
+                    <p>Jelas bahwa O(N) akan jauh lebih cepat!</p>
+                </div>
+
+                <div class="key-point">
+                    <h4>💡 Intinya:</h4>
+                    <p>Notasi O Besar mengukur skalabilitas algoritma dengan fokus pada komponen yang paling dominan dalam waktu eksekusi.</p>
+                </div>
+            </div>
+
+            <!-- Theorems Section -->
+            <div class="card">
+                <h2>🧠 Teorema (Theorem)</h2>
+                
+                <div class="definition">
+                    <h3>Definisi</h3>
+                    <p>Teorema adalah pernyataan yang telah <span class="highlight">dibuktikan kebenarannya</span> secara logis berdasarkan aksioma (asumsi dasar) atau teorema lain yang sudah terbukti sebelumnya.</p>
+                </div>
+
+                <div class="definition">
+                    <h3>Sederhananya</h3>
+                    <p>Teorema adalah fakta yang sudah pasti benar karena kita bisa menunjukkan langkah-langkah pembuktian yang tidak terbantahkan.</p>
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Konsep</th>
+                            <th>Penjelasan Singkat</th>
+                            <th>Contoh (Ilmu Komputer)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Aksioma</strong></td>
+                            <td>Pernyataan dasar yang diasumsikan benar tanpa perlu pembuktian</td>
+                            <td>"Setiap program bisa direpresentasikan sebagai mesin Turing"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Algoritma</strong></td>
+                            <td>Serangkaian langkah untuk menyelesaikan masalah</td>
+                            <td>Langkah-langkah dalam Quick Sort untuk mengurutkan daftar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Teorema</strong></td>
+                            <td>Pernyataan yang harus dibuktikan kebenarannya</td>
+                            <td>Teorema Ketidaklengkapan Gödel, Teorema Master</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example">
+                    <h4>🎯 Teorema Penting dalam Ilmu Komputer</h4>
+                    <p><strong>Teorema Master:</strong> Berguna untuk menganalisis kompleksitas waktu algoritma divide and conquer seperti Merge Sort.</p>
+                    <p><strong>Teorema Church-Turing:</strong> Menetapkan batas teoritis dari apa yang dapat dilakukan komputer.</p>
+                    <p><strong>Teorema Ketidaklengkapan Gödel:</strong> Menunjukkan bahwa dalam sistem formal yang kompleks, akan selalu ada pernyataan yang benar tetapi tidak dapat dibuktikan.</p>
+                </div>
+
+                <div class="key-point">
+                    <h4>💡 Intinya:</h4>
+                    <p>Teorema memberikan jaminan matematis. Jika kita bisa membuktikan bahwa sebuah algoritma akan selalu selesai dalam waktu O(N log N), maka kita punya jaminan bahwa algoritma itu efisien.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Games Section -->
+        <div class="interactive-section">
+            <h2>🎮 Game Interaktif</h2>
+            
+            <!-- Complexity Chart -->
+            <div class="complexity-chart">
+                <div class="game-title">📊 Visualisasi Kompleksitas</div>
+                <p>Lihat bagaimana berbagai kompleksitas algoritma tumbuh seiring bertambahnya input!</p>
+                
+                <div class="chart-container" id="complexityChart">
+                    <div class="chart-line" id="lineO1" style="background: #28a745; bottom: 50px; width: 0%;"></div>
+                    <div class="chart-line" id="lineOlogN" style="background: #17a2b8; bottom: 100px; width: 0%;"></div>
+                    <div class="chart-line" id="lineON" style="background: #ffc107; bottom: 150px; width: 0%;"></div>
+                    <div class="chart-line" id="lineONlogN" style="background: #fd7e14; bottom: 200px; width: 0%;"></div>
+                    <div class="chart-line" id="lineON2" style="background: #dc3545; bottom: 250px; width: 0%;"></div>
+                    
+                    <div class="chart-label" style="bottom: 45px; left: 10px;">O(1)</div>
+                    <div class="chart-label" style="bottom: 95px; left: 10px;">O(log N)</div>
+                    <div class="chart-label" style="bottom: 145px; left: 10px;">O(N)</div>
+                    <div class="chart-label" style="bottom: 195px; left: 10px;">O(N log N)</div>
+                    <div class="chart-label" style="bottom: 245px; left: 10px;">O(N²)</div>
+                </div>
+                
+                <input type="range" min="1" max="100" value="1" class="input-slider" id="complexitySlider" oninput="updateComplexityChart()">
+                <div class="result-display" id="complexityResult">Input Size: 1</div>
+                
+                <div class="game-controls">
+                    <button class="btn" onclick="animateComplexityChart()">🎬 Lihat Animasi</button>
+                </div>
+            </div>
+
+            <!-- Complexity Matching Game -->
+            <div class="complexity-game">
+                <div class="game-title">🎯 Game: Cocokkan Kompleksitas</div>
+                <p>Pilih kompleksitas yang tepat untuk setiap algoritma!</p>
+                
+                <div id="gameQuestion" class="example">
+                    <h4>Pertanyaan 1:</h4>
+                    <p>Algoritma untuk mengakses elemen pertama dalam array</p>
+                </div>
+                
+                <div class="complexity-options" id="complexityOptions">
+                    <div class="complexity-option" onclick="checkAnswer(1, 'O(1)')">O(1)</div>
+                    <div class="complexity-option" onclick="checkAnswer(1, 'O(N)')">O(N)</div>
+                    <div class="complexity-option" onclick="checkAnswer(1, 'O(log N)')">O(log N)</div>
+                    <div class="complexity-option" onclick="checkAnswer(1, 'O(N²)')">O(N²)</div>
+                </div>
+                
+                <div class="game-controls">
+                    <div class="score-display">Skor: <span id="score">0</span>/5</div>
+                    <button class="btn" onclick="nextQuestion()">➡️ Pertanyaan Berikutnya</button>
+                </div>
+            </div>
+
+            <!-- Big O Table -->
+            <div class="game-container">
+                <div class="game-title">📋 Tabel Kompleksitas Algoritma</div>
+                <p>Berikut adalah notasi O Besar yang paling sering ditemui, diurutkan dari TERBAIK hingga TERBURUK:</p>
+                
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>Notasi</th>
+                            <th>Nama</th>
+                            <th>Penjelasan Bahasa Awam</th>
+                            <th>Contoh Operasi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>O(1)</strong></td>
+                            <td>Kompleksitas Konstan</td>
+                            <td>Waktu eksekusi selalu sama, tidak peduli seberapa besar inputnya</td>
+                            <td>Mengakses elemen pertama dalam array</td>
+                        </tr>
+                        <tr>
+                            <td><strong>O(log N)</strong></td>
+                            <td>Kompleksitas Logaritmik</td>
+                            <td>Input bisa bertambah besar dua kali lipat, tetapi waktu hanya bertambah sedikit sekali</td>
+                            <td>Mencari buku dalam kamus (Binary Search)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>O(N)</strong></td>
+                            <td>Kompleksitas Linear</td>
+                            <td>Waktu eksekusi berbanding lurus dengan ukuran input</td>
+                            <td>Mencari satu item dalam daftar secara berurutan</td>
+                        </tr>
+                        <tr>
+                            <td><strong>O(N log N)</strong></td>
+                            <td>Kompleksitas Linearitma</td>
+                            <td>Sedikit lebih buruk dari O(N), tapi masih dianggap sangat efisien untuk pengurutan</td>
+                            <td>Mengurutkan daftar (Merge Sort, Quick Sort)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>O(N²)</strong></td>
+                            <td>Kompleksitas Kuadratik</td>
+                            <td>Waktu eksekusi bertambah sangat cepat. Jika input 2× lipat, waktu 4× lipat</td>
+                            <td>Membandingkan setiap item dengan setiap item lainnya (dua loop bersarang)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>O(2^N)</strong></td>
+                            <td>Kompleksitas Eksponensial</td>
+                            <td>Sangat lambat dan hanya bisa digunakan untuk input yang sangat kecil</td>
+                            <td>Algoritma yang mencoba semua kemungkinan sub-himpunan</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 Tutorial Notasi O Besar & Teorema | Belajar analisis algoritma dengan cara yang menyenangkan! 🎯</p>
+        </footer>
+    </div>
+
+    <script>
+        // Complexity Chart
+        function updateComplexityChart() {
+            const slider = document.getElementById('complexitySlider');
+            const n = parseInt(slider.value);
+            document.getElementById('complexityResult').textContent = `Input Size: ${n}`;
+            
+            // Calculate widths based on complexity functions
+            const maxWidth = 80; // Maximum width percentage
+            
+            // O(1) - constant
+            document.getElementById('lineO1').style.width = '10%';
+            
+            // O(log N) - logarithmic
+            const logWidth = Math.min(maxWidth, Math.log2(n) * 10);
+            document.getElementById('lineOlogN').style.width = `${logWidth}%`;
+            
+            // O(N) - linear
+            const linearWidth = Math.min(maxWidth, n);
+            document.getElementById('lineON').style.width = `${linearWidth}%`;
+            
+            // O(N log N) - linearithmic
+            const nLogWidth = Math.min(maxWidth, n * Math.log2(n) / 10);
+            document.getElementById('lineONlogN').style.width = `${nLogWidth}%`;
+            
+            // O(N²) - quadratic
+            const quadraticWidth = Math.min(maxWidth, (n * n) / 100);
+            document.getElementById('lineON2').style.width = `${quadraticWidth}%`;
+        }
+
+        function animateComplexityChart() {
+            const slider = document.getElementById('complexitySlider');
+            let n = 1;
+            
+            const animation = setInterval(() => {
+                n++;
+                if (n > 100) {
+                    clearInterval(animation);
+                    return;
+                }
+                slider.value = n;
+                updateComplexityChart();
+            }, 50);
+        }
+
+        // Complexity Matching Game
+        let currentQuestion = 1;
+        let score = 0;
+        
+        const questions = [
+            {
+                question: "Algoritma untuk mengakses elemen pertama dalam array",
+                correct: "O(1)",
+                options: ["O(1)", "O(N)", "O(log N)", "O(N²)"]
+            },
+            {
+                question: "Mencari item dalam daftar terurut menggunakan Binary Search",
+                correct: "O(log N)",
+                options: ["O(1)", "O(N)", "O(log N)", "O(N log N)"]
+            },
+            {
+                question: "Mencari item dalam daftar tidak terurut secara berurutan",
+                correct: "O(N)",
+                options: ["O(1)", "O(N)", "O(log N)", "O(N²)"]
+            },
+            {
+                question: "Algoritma Merge Sort untuk mengurutkan daftar",
+                correct: "O(N log N)",
+                options: ["O(N)", "O(N log N)", "O(N²)", "O(2^N)"]
+            },
+            {
+                question: "Algoritma Bubble Sort untuk mengurutkan daftar",
+                correct: "O(N²)",
+                options: ["O(N)", "O(N log N)", "O(N²)", "O(log N)"]
+            }
+        ];
+
+        function loadQuestion() {
+            const question = questions[currentQuestion - 1];
+            document.getElementById('gameQuestion').innerHTML = `
+                <h4>Pertanyaan ${currentQuestion}:</h4>
+                <p>${question.question}</p>
+            `;
+            
+            const optionsContainer = document.getElementById('complexityOptions');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'complexity-option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => checkAnswer(currentQuestion, option);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            document.getElementById('score').textContent = score;
+        }
+
+        function checkAnswer(questionNum, selectedAnswer) {
+            const question = questions[questionNum - 1];
+            const options = document.querySelectorAll('.complexity-option');
+            
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+                if (option.textContent === question.correct) {
+                    option.classList.add('correct');
+                }
+                if (option.textContent === selectedAnswer && selectedAnswer !== question.correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            if (selectedAnswer === question.correct) {
+                score++;
+                document.getElementById('score').textContent = score;
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                alert(`🎉 Game selesai! Skor akhir Anda: ${score}/${questions.length}`);
+                // Reset game
+                currentQuestion = 1;
+                score = 0;
+                loadQuestion();
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateComplexityChart();
+            loadQuestion();
+            
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
