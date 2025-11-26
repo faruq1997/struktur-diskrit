@@ -9,56 +9,338 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
 :root {
-  --primary: #0d6efd;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --secondary: #7c3aed;
+  --accent: #10b981;
   --light-bg: #f8fafc;
   --card-bg: #ffffff;
-  --accent: #16a34a;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
-body { background-color: var(--light-bg); font-family: "Segoe UI", sans-serif; }
+
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+body { 
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
 header {
-  background: linear-gradient(90deg, var(--primary), #1e40af);
-  color: #fff; text-align: center;
-  padding: 2rem 1rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-header h3 { font-weight: 600; margin-bottom: 0.5rem; }
-.nav-tabs .nav-link.active {
-  background-color: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   color: white;
-  border-radius: 5px 5px 0 0;
+  text-align: center;
+  padding: 3rem 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
 }
-.nav-tabs .nav-link { color: #1e3a8a; font-weight: 500; }
+
+header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="rgba(255,255,255,0.1)"><polygon points="0,0 100,0 100,100" /></svg>');
+  background-size: cover;
+}
+
+header h3 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  position: relative;
+}
+
+.nav-tabs {
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 2rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.nav-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-tabs .nav-link {
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 12px 12px 0 0;
+  margin: 0 2px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--primary);
+  background-color: rgba(37, 99, 235, 0.1);
+  transform: translateY(-2px);
+}
+
+.nav-tabs .nav-link.active {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  border: none;
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
 .card {
-  background-color: var(--card-bg);
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  background: var(--card-bg);
+  border: none;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
-.card h5 { color: var(--primary); font-weight: 600; }
-.btn { border-radius: 6px; }
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card h5 {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.btn {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn-outline-primary {
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  background: transparent;
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
 .editable {
   background-color: #fff8e1;
   cursor: text;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  padding: 0.5rem;
 }
-.editable:focus { background-color: #fff3c4; outline: none; }
-.alert code {
-  background: #f1f5f9;
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: #0f172a;
+
+.editable:focus {
+  background-color: #fff3c4;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.3);
 }
+
+.table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table thead th {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  border: none;
+  font-weight: 600;
+  padding: 1rem;
+}
+
+.table tbody td {
+  padding: 1rem;
+  border-color: var(--border);
+  vertical-align: middle;
+}
+
+.alert {
+  border-radius: 12px;
+  border: none;
+  padding: 1rem 1.5rem;
+  font-weight: 500;
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+  color: var(--primary-dark);
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #d1fae5 0%, #dcfce7 100%);
+  color: #065f46;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+}
+
+.form-control, .form-select {
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  transform: translateY(-1px);
+}
+
 footer {
-  background: #0f172a;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   color: #e2e8f0;
   text-align: center;
-  padding: 1.2rem;
-  margin-top: 3rem;
-  font-size: 0.9rem;
-  border-top: 3px solid var(--primary);
+  padding: 2rem 1rem;
+  margin-top: 4rem;
+  border-top: 4px solid var(--primary);
+  position: relative;
 }
-footer a { color: #38bdf8; text-decoration: none; }
-footer a:hover { text-decoration: underline; }
+
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+}
+
+footer a { 
+  color: #38bdf8; 
+  text-decoration: none;
+  font-weight: 600;
+}
+
+footer a:hover { 
+  color: #7dd3fc; 
+  text-decoration: underline;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  header h3 {
+    font-size: 2rem;
+  }
+  
+  .nav-tabs .nav-link {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .card {
+    margin-bottom: 1.5rem;
+  }
+  
+  .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Animation for tab content */
+.tab-pane.fade {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
 </style>
 </head>
 
@@ -80,6 +362,7 @@ footer a:hover { text-decoration: underline; }
     <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#aljabar_boolean">Aljabar Boolean</a></li>
     <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#kuis">Kuis</a></li>
     <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#aljabar_boolean_lanjutan">Aljabar Boolean Lanjutan</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#algoritma">Algoritma & Struktur Data</a></li>
   </ul>
 
   <div class="tab-content">
@@ -227,6 +510,56 @@ footer a:hover { text-decoration: underline; }
         <a class="btn btn-primary" href="./pertemuan9.html" target="_blank">🎲 Aljabar Boolean Lanjutan</a>
       </div>
     </div>
+
+    <!-- 10️⃣ ALGORITMA & STRUKTUR DATA -->
+    <div class="tab-pane fade" id="algoritma">
+      <div class="card p-4 text-center">
+        <h5>📚 Algoritma & Struktur Data</h5>
+        <p class="text-muted">Review komprehensif materi algoritma dan struktur data dengan quiz interaktif</p>
+        
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <div class="card border-primary h-100">
+              <div class="card-body">
+                <h6 class="card-title">🎯 Ringkasan Materi</h6>
+                <p class="card-text small">Ringkasan lengkap semua materi dari Part 1-5</p>
+                <a class="btn btn-primary btn-sm" href="./pertemuan10.html" target="_blank">Buka Ringkasan</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card border-success h-100">
+              <div class="card-body">
+                <h6 class="card-title">🎮 Game Interaktif</h6>
+                <p class="card-text small">Binary Search Challenge dan visualisasi algoritma</p>
+                <a class="btn btn-success btn-sm" href="./pertemuan10.html#game-section" target="_blank">Main Game</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-4">
+            <a class="btn btn-outline-primary w-100 mb-2" href="./part1.html" target="_blank">📝 Part 1: Algoritma</a>
+          </div>
+          <div class="col-md-4">
+            <a class="btn btn-outline-primary w-100 mb-2" href="./part2.html" target="_blank">📊 Part 2: Big O</a>
+          </div>
+          <div class="col-md-4">
+            <a class="btn btn-outline-primary w-100 mb-2" href="./part3.html" target="_blank">🔍 Part 3: Pencarian</a>
+          </div>
+          <div class="col-md-4">
+            <a class="btn btn-outline-primary w-100 mb-2" href="./part4.html" target="_blank">🔄 Part 4: Pengurutan</a>
+          </div>
+          <div class="col-md-4">
+            <a class="btn btn-outline-primary w-100 mb-2" href="./part5.html" target="_blank">🌳 Part 5: Lanjutan</a>
+          </div>
+          <div class="col-md-4">
+            <a class="btn btn-primary w-100 mb-2" href="./pertemuan10.html" target="_blank">📝 Quiz Interaktif</a>
+          </div>
+        </div>
+      </div>
+    </div>
     
   </div>
 </div>
@@ -352,8 +685,3 @@ function checkFungsi(){
 </script>
 </body>
 </html>
-
-
-
-
-
