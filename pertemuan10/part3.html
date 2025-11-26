@@ -512,6 +512,110 @@
                     <p>Array berurut memungkinkan penghentian awal yang menghemat waktu perbandingan pada kasus gagal pencarian.</p>
                 </div>
             </div>
+
+            <!-- Binary Search Section -->
+            <div class="card">
+                <h2>🔍 Pencarian Biner (Binary Search)</h2>
+                
+                <div class="definition">
+                    <h3>Syarat Mutlak dan Konsep Dasar</h3>
+                    <p>Pencarian Biner hanya dapat bekerja pada Array atau Daftar yang <span class="highlight">SUDAH BERURUTAN</span> (Sorted).</p>
+                </div>
+
+                <div class="definition">
+                    <h3>Konsep Inti</h3>
+                    <p>Daripada memeriksa setiap item satu per satu (seperti Pencarian Beruntun), Pencarian Biner bekerja dengan cara <span class="highlight">membelah dua (memecah) daftar secara berulang-ulang</span>. Ini seperti mencari kata dalam kamus.</p>
+                </div>
+
+                <div class="example">
+                    <h4>📚 Cara Kerja Pencarian Biner</h4>
+                    <p>Bayangkan Anda mencari angka 55 dalam daftar berurut yang panjang.</p>
+                    
+                    <h5>Langkah 1: Tentukan Titik Tengah (Midpoint)</h5>
+                    <p>Algoritma selalu memulai dengan menemukan elemen tengah dari daftar.</p>
+                    <p><strong>Analogi Kamus:</strong> Jika Anda mencari kata 'Zebra' di kamus yang tebal, Anda tidak akan mulai dari halaman A. Anda akan langsung membuka bagian tengah (misalnya, M atau N).</p>
+                    
+                    <h5>Langkah 2: Bandingkan Titik Tengah dengan Target</h5>
+                    <p>Ada tiga kemungkinan hasil perbandingan:</p>
+                    <ul>
+                        <li><strong>Cocok:</strong> Elemen tengah adalah sama dengan Target (55). Pencarian Selesai!</li>
+                        <li><strong>Target Lebih Kecil:</strong> Elemen tengah (60) lebih besar dari Target (55). Ini berarti, karena daftarnya berurut, Target pasti berada di paruh KIRI dari elemen tengah.</li>
+                        <li><strong>Target Lebih Besar:</strong> Elemen tengah (40) lebih kecil dari Target (55). Ini berarti Target pasti berada di paruh KANAN dari elemen tengah.</li>
+                    </ul>
+                    
+                    <h5>Langkah 3: Ulangi Pembelahan</h5>
+                    <p>Algoritma sekarang mengabaikan setengah daftar yang tidak mungkin mengandung Target.</p>
+                    <p>Daftar yang tersisa (paruh kiri atau paruh kanan) menjadi "daftar baru" kita.</p>
+                    <p>Ulangi Langkah 1 dan 2 pada daftar yang tersisa tersebut hingga Target ditemukan atau daftar habis.</p>
+                </div>
+
+                <div class="example">
+                    <h4>⚡ Keunggulan: Kompleksitas Waktu (O Notasi)</h4>
+                    <p>Kecepatan Pencarian Biner adalah alasan utama penggunaannya.</p>
+                    <p><strong>Kompleksitas:</strong> $O(\log N)$ (Kompleksitas Logaritmik).</p>
+                    <p>Artinya: Setiap kali ukuran daftar ($N$) menjadi dua kali lipat, waktu yang dibutuhkan hanya bertambah sedikit sekali.</p>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Ukuran Daftar (N)</th>
+                                <th>Max Perbandingan (Linear Search O(N))</th>
+                                <th>Max Perbandingan (Binary Search O(logN))</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10</td>
+                                <td>10</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>1.000</td>
+                                <td>1.000</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>1 Juta</td>
+                                <td>1 Juta</td>
+                                <td>20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Perhatikan betapa dramatisnya perbedaan waktu (jumlah langkah) yang dibutuhkan untuk data yang sangat besar!</p>
+                </div>
+
+                <div class="example">
+                    <h4>📝 Penulisan Algoritma (Pseudocode)</h4>
+                    <div class="code-block">
+FUNGSI BinarySearch (Array, Target)
+  KIRI = 0
+  KANAN = panjang Array - 1
+
+  SELAMA KIRI KURANG DARI ATAU SAMA DENGAN KANAN LAKUKAN
+    TENGAH = (KIRI + KANAN) dibagi 2 (ambil bilangan bulat)
+
+    JIKA Array[TENGAH] SAMA DENGAN Target MAKA
+      KEMBALIKAN TENGAH // Target Ditemukan
+
+    SELAIN JIKA Array[TENGAH] KURANG DARI Target MAKA
+      KIRI = TENGAH + 1 // Cari di paruh KANAN
+
+    SELAIN
+      KANAN = TENGAH - 1 // Cari di paruh KIRI
+
+    AKHIR JIKA
+  AKHIR SELAMA
+
+  KEMBALIKAN -1 // Target Tidak Ditemukan
+AKHIR FUNGSI
+                    </div>
+                </div>
+
+                <div class="key-point">
+                    <h4>💡 Kesimpulan:</h4>
+                    <p>Pencarian Biner adalah raja efisiensi untuk pencarian, asalkan Anda selalu bisa menjaga datanya dalam keadaan berurut. Jika data Anda sering berubah dan tidak sempat diurutkan, Pencarian Beruntun mungkin lebih praktis.</p>
+                </div>
+            </div>
         </div>
 
         <!-- Interactive Games Section -->
