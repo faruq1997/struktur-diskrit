@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritma Lanjutan & Struktur Data - Game Interaktif</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .definition {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .definition h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .example {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #4dabf7;
+        }
+
+        .example h4 {
+            color: #1971c2;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .comparison-table tr:hover {
+            background: #e7f3ff;
+        }
+
+        .interactive-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .interactive-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .game-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+        }
+
+        .game-title {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .recursion-visualization {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #28a745;
+        }
+
+        .array-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .array-element {
+            background: #667eea;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .array-element.current {
+            background: #ffc107;
+            color: #333;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+
+        .array-element.comparing {
+            background: #dc3545;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+        }
+
+        .array-element.sorted {
+            background: #28a745;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+        }
+
+        .array-element.swapped {
+            background: #fd7e14;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(253, 126, 20, 0.5);
+        }
+
+        .sort-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+            margin: 5px;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .game-controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-display {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .key-point {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-point h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .math-formula {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        .animation-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .status-display {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .step-counter {
+            background: #17a2b8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .algorithm-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .algorithm-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .algorithm-btn:hover {
+            background: #5a6268;
+        }
+
+        .algorithm-btn.active {
+            background: #667eea;
+            transform: scale(1.05);
+        }
+
+        .tree-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            min-height: 300px;
+        }
+
+        .node {
+            background: #667eea;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .node.current {
+            background: #ffc107;
+            color: #333;
+            transform: scale(1.2);
+        }
+
+        .node.visited {
+            background: #28a745;
+        }
+
+        .node.path {
+            background: #fd7e14;
+        }
+
+        .recursion-tree {
+            font-family: 'Courier New', monospace;
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .maze-container {
+            display: grid;
+            grid-template-columns: repeat(10, 30px);
+            grid-template-rows: repeat(10, 30px);
+            gap: 2px;
+            margin: 20px auto;
+            justify-content: center;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .cell.wall {
+            background: #2d3748;
+            color: white;
+        }
+
+        .cell.path {
+            background: #28a745;
+            color: white;
+        }
+
+        .cell.current {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .cell.visited {
+            background: #4dabf7;
+            color: white;
+        }
+
+        .cell.start {
+            background: #28a745;
+            color: white;
+        }
+
+        .cell.end {
+            background: #dc3545;
+            color: white;
+        }
+
+        .graph-container {
+            position: relative;
+            height: 300px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            margin: 20px 0;
+            background: #f8f9fa;
+        }
+
+        .vertex {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .vertex.current {
+            background: #ffc107;
+            color: #333;
+            transform: scale(1.2);
+        }
+
+        .vertex.visited {
+            background: #28a745;
+        }
+
+        .vertex.path {
+            background: #fd7e14;
+        }
+
+        .edge {
+            position: absolute;
+            background: #6c757d;
+            transform-origin: 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌳 Algoritma Lanjutan & Struktur Data</h1>
+            <p>Game Interaktif Rekursi, Pohon, Graf, dan Maze Solving</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Recursion Section -->
+            <div class="card">
+                <h2>🔄 Rekursi & Hubungan Rekurens</h2>
+                
+                <div class="definition">
+                    <h3>Definisi Rekursi</h3>
+                    <p>Rekursi adalah teknik pemrograman di mana sebuah fungsi memanggil dirinya sendiri untuk menyelesaikan masalah yang lebih kecil.</p>
+                </div>
+
+                <div class="definition">
+                    <h3>Komponen Utama</h3>
+                    <p>Setiap fungsi rekursif harus memiliki:</p>
+                    <ul>
+                        <li><strong>Base Case:</strong> Kondisi berhenti untuk mencegah rekursi tak terbatas</li>
+                        <li><strong>Recursive Case:</strong> Bagian yang memanggil fungsi itu sendiri</li>
+                    </ul>
+                </div>
+
+                <div class="example">
+                    <h4>🎯 Contoh: Faktorial</h4>
+                    <div class="code-block">
+function factorial(n) {
+    // Base case
+    if (n === 0) return 1;
+    
+    // Recursive case
+    return n * factorial(n - 1);
+}
+
+// Contoh: factorial(5) = 5 * 4 * 3 * 2 * 1 = 120
+                    </div>
+                </div>
+
+                <div class="example">
+                    <h4>📊 Hubungan Rekurens</h4>
+                    <p>Faktorial: $F(n) = n \cdot F(n-1)$ dengan $F(0) = 1$</p>
+                    <p>Fibonacci: $F(n) = F(n-1) + F(n-2)$ dengan $F(0) = 0, F(1) = 1$</p>
+                </div>
+
+                <div class="key-point">
+                    <h4>💡 Intinya:</h4>
+                    <p>Rekursi memecah masalah besar menjadi sub-masalah yang lebih kecil hingga mencapai kasus dasar yang dapat diselesaikan langsung.</p>
+                </div>
+            </div>
+
+            <!-- Tree Structures Section -->
+            <div class="card">
+                <h2>🌳 Struktur Data Pohon</h2>
+                
+                <div class="definition">
+                    <h3>Definisi Pohon</h3>
+                    <p>Pohon adalah struktur data hierarkis yang terdiri dari node-node yang terhubung, dengan satu node akar (root) dan node-node anak (children).</p>
+                </div>
+
+                <div class="definition">
+                    <h3>Jenis-Jenis Pohon</h3>
+                    <ul>
+                        <li><strong>Binary Tree:</strong> Setiap node maksimal memiliki 2 anak</li>
+                        <li><strong>Binary Search Tree (BST):</strong> Binary tree dengan aturan pengurutan</li>
+                        <li><strong>AVL Tree:</strong> BST yang seimbang secara otomatis</li>
+                    </ul>
+                </div>
+
+                <div class="example">
+                    <h4>🎯 Binary Search Tree</h4>
+                    <p>Aturan BST:</p>
+                    <ol>
+                        <li>Semua node di subtree kiri lebih kecil dari root</li>
+                        <li>Semua node di subtree kanan lebih besar dari root</li>
+                        <li>Kedua subtree juga merupakan BST</li>
+                    </ol>
+                </div>
+
+                <div class="key-point">
+                    <h4>⚡ Kompleksitas Operasi</h4>
+                    <p><strong>Pencarian:</strong> O(log n) - Jika pohon seimbang</p>
+                    <p><strong>Insert/Delete:</strong> O(log n) - Jika pohon seimbang</p>
+                    <p><strong>Traversal:</strong> O(n) - Mengunjungi semua node</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Games Section -->
+        <div class="interactive-section">
+            <h2>🎮 Game Interaktif Algoritma Lanjutan</h2>
+            
+            <!-- Recursion Visualization -->
+            <div class="recursion-visualization">
+                <div class="game-title">🔄 Visualisasi Rekursi Faktorial</div>
+                <p>Lihat bagaimana fungsi rekursif bekerja langkah demi langkah!</p>
+                
+                <div class="input-group">
+                    <label for="factorialInput">Masukkan angka untuk menghitung faktorial:</label>
+                    <input type="number" id="factorialInput" min="0" max="10" value="5">
+                </div>
+                
+                <div class="recursion-tree" id="recursionTree">
+                    // Pohon rekursi akan ditampilkan di sini
+                </div>
+                
+                <div class="status-display" id="recursionStatus">Siap untuk memulai rekursi...</div>
+                <div class="step-counter">Langkah: <span id="recursionStep">0</span></div>
+                <div class="step-counter">Hasil: <span id="recursionResult">-</span></div>
+                
+                <div class="sort-controls">
+                    <button class="btn btn-success" onclick="startRecursion()">▶️ Mulai Rekursi</button>
+                    <button class="btn btn-warning" onclick="nextRecursionStep()">⏭️ Langkah Berikutnya</button>
+                    <button class="btn" onclick="resetRecursion()">🔄 Reset</button>
+                </div>
+            </div>
+
+            <!-- Tree Traversal Game -->
+            <div class="game-container">
+                <div class="game-title">🌳 Tree Traversal Game</div>
+                <p>Jelajahi pohon biner menggunakan berbagai metode traversal!</p>
+                
+                <div class="tree-container" id="treeContainer">
+                    <!-- Tree nodes will be generated here -->
+                </div>
+                
+                <div class="algorithm-selector">
+                    <button class="algorithm-btn active" onclick="selectTraversal('preorder')">Pre-order</button>
+                    <button class="algorithm-btn" onclick="selectTraversal('inorder')">In-order</button>
+                    <button class="algorithm-btn" onclick="selectTraversal('postorder')">Post-order</button>
+                </div>
+                
+                <div class="status-display" id="treeStatus">Pilih metode traversal...</div>
+                <div class="step-counter">Langkah: <span id="treeStep">0</span></div>
+                <div class="step-counter">Urutan: <span id="treeOrder">-</span></div>
+                
+                <div class="sort-controls">
+                    <button class="btn btn-success" onclick="startTreeTraversal()">▶️ Mulai Traversal</button>
+                    <button class="btn btn-warning" onclick="nextTreeStep()">⏭️ Langkah Berikutnya</button>
+                    <button class="btn" onclick="resetTree()">🔄 Reset</button>
+                </div>
+            </div>
+
+            <!-- Maze Solving Game -->
+            <div class="game-container">
+                <div class="game-title">🏁 Maze Solving Challenge</div>
+                <p>Lihat algoritma pathfinding menyelesaikan labirin!</p>
+                
+                <div class="maze-container" id="mazeContainer">
+                    <!-- Maze cells will be generated here -->
+                </div>
+                
+                <div class="algorithm-selector">
+                    <button class="algorithm-btn active" onclick="selectMazeAlgorithm('dfs')">DFS</button>
+                    <button class="algorithm-btn" onclick="selectMazeAlgorithm('bfs')">BFS</button>
+                    <button class="algorithm-btn" onclick="selectMazeAlgorithm('astar')">A*</button>
+                </div>
+                
+                <div class="status-display" id="mazeStatus">Siap untuk menyelesaikan labirin...</div>
+                <div class="step-counter">Langkah: <span id="mazeStep">0</span></div>
+                <div class="step-counter">Waktu: <span id="mazeTime">0.00</span>s</div>
+                
+                <div class="sort-controls">
+                    <button class="btn btn-success" onclick="startMazeSolving()">▶️ Mulai Solving</button>
+                    <button class="btn btn-warning" onclick="nextMazeStep()">⏭️ Langkah Berikutnya</button>
+                    <button class="btn" onclick="generateMaze()">🎲 Labirin Baru</button>
+                    <button class="btn" onclick="resetMaze()">🔄 Reset</button>
+                </div>
+            </div>
+
+            <!-- Graph Algorithm Game -->
+            <div class="game-container">
+                <div class="game-title">📊 Graph Algorithm Visualizer</div>
+                <p>Visualisasi algoritma graf seperti Dijkstra dan BFS!</p>
+                
+                <div class="graph-container" id="graphContainer">
+                    <!-- Graph vertices and edges will be generated here -->
+                </div>
+                
+                <div class="algorithm-selector">
+                    <button class="algorithm-btn active" onclick="selectGraphAlgorithm('bfs')">BFS</button>
+                    <button class="algorithm-btn" onclick="selectGraphAlgorithm('dijkstra')">Dijkstra</button>
+                    <button class="algorithm-btn" onclick="selectGraphAlgorithm('dfs')">DFS</button>
+                </div>
+                
+                <div class="status-display" id="graphStatus">Pilih algoritma graf...</div>
+                <div class="step-counter">Langkah: <span id="graphStep">0</span></div>
+                <div class="step-counter">Jarak: <span id="graphDistance">-</span></div>
+                
+                <div class="sort-controls">
+                    <button class="btn btn-success" onclick="startGraphAlgorithm()">▶️ Mulai Algoritma</button>
+                    <button class="btn btn-warning" onclick="nextGraphStep()">⏭️ Langkah Berikutnya</button>
+                    <button class="btn" onclick="generateGraph()">🎲 Graf Baru</button>
+                    <button class="btn" onclick="resetGraph()">🔄 Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 Tutorial Algoritma Lanjutan | Belajar algoritma dengan cara yang menyenangkan! 🎯</p>
+        </footer>
+    </div>
+
+    <script>
+        // Global variables for interactive games
+        let currentRecursionValue = 0;
+        let recursionSteps = [];
+        let currentRecursionStep = 0;
+        let currentTraversal = 'preorder';
+        let treeNodes = [];
+        let currentTreeStep = 0;
+        let mazeGrid = [];
+        let currentMazeAlgorithm = 'dfs';
+        let currentMazeStep = 0;
+        let graphVertices = [];
+        let currentGraphAlgorithm = 'bfs';
+        let currentGraphStep = 0;
+
+        // Recursion functions
+        function startRecursion() {
+            const input = parseInt(document.getElementById('factorialInput').value);
+            if (isNaN(input) || input < 0 || input > 10) {
+                alert('Masukkan angka antara 0 dan 10!');
+                return;
+            }
+            
+            currentRecursionValue = input;
+            recursionSteps = [];
+            currentRecursionStep = 0;
+            
+            // Generate recursion tree
+            generateRecursionTree(input);
+            document.getElementById('recursionStatus').textContent = 'Rekursi dimulai...';
+            document.getElementById('recursionStep').textContent = currentRecursionStep;
+            document.getElementById('recursionResult').textContent = '-';
+            
+            nextRecursionStep();
+        }
+
+        function generateRecursionTree(n) {
+            const treeElement = document.getElementById('recursionTree');
+            treeElement.innerHTML = '';
+            
+            let treeText = `factorial(${n}) {\n`;
+            
+            if (n === 0) {
+                treeText += `  return 1; // Base case\n`;
+            } else {
+                treeText += `  return ${n} * factorial(${n-1});\n`;
+            }
+            
+            treeText += `}`;
+            treeElement.textContent = treeText;
+        }
+
+        function nextRecursionStep() {
+            if (currentRecursionStep > currentRecursionValue) {
+                document.getElementById('recursionStatus').textContent = 'Rekursi selesai!';
+                return;
+            }
+            
+            currentRecursionStep++;
+            document.getElementById('recursionStep').textContent = currentRecursionStep;
+            
+            // Calculate factorial step by step
+            let result = 1;
+            for (let i = 1; i <= currentRecursionStep; i++) {
+                result *= i;
+            }
+            
+            document.getElementById('recursionResult').textContent = result;
+            document.getElementById('recursionStatus').textContent = 
+                `Menghitung factorial(${currentRecursionStep}) = ${result}`;
+            
+            // Update recursion tree
+            generateRecursionTree(currentRecursionValue - currentRecursionStep);
+        }
+
+        function resetRecursion() {
+            currentRecursionStep = 0;
+            document.getElementById('recursionStep').textContent = currentRecursionStep;
+            document.getElementById('recursionResult').textContent = '-';
+            document.getElementById('recursionStatus').textContent = 'Siap untuk memulai rekursi...';
+            generateRecursionTree(5);
+        }
+
+        // Tree traversal functions
+        function selectTraversal(traversal) {
+            currentTraversal = traversal;
+            document.querySelectorAll('.algorithm-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            resetTree();
+        }
+
+        function startTreeTraversal() {
+            generateTree();
+            currentTreeStep = 0;
+            document.getElementById('treeStep').textContent = currentTreeStep;
+            document.getElementById('treeOrder').textContent = '';
+            document.getElementById('treeStatus').textContent = 'Traversal dimulai...';
+            
+            nextTreeStep();
+        }
+
+        function generateTree() {
+            const container = document.getElementById('treeContainer');
+            container.innerHTML = '';
+            
+            // Create a simple binary tree
+            treeNodes = [
+                { value: 'A', x: 50, y: 50 },
+                { value: 'B', x: 30, y: 80 },
+                { value: 'C', x: 70, y: 80 },
+                { value: 'D', x: 20, y: 110 },
+                { value: 'E', x: 40, y: 110 },
+                { value: 'F', x: 60, y: 110 },
+                { value: 'G', x: 80, y: 110 }
+            ];
+            
+            treeNodes.forEach(node => {
+                const nodeElement = document.createElement('div');
+                nodeElement.className = 'node';
+                nodeElement.textContent = node.value;
+                nodeElement.style.position = 'absolute';
+                nodeElement.style.left = `${node.x}%`;
+                nodeElement.style.top = `${node.y}px`;
+                container.appendChild(nodeElement);
+            });
+        }
+
+        function nextTreeStep() {
+            if (currentTreeStep >= treeNodes.length) {
+                document.getElementById('treeStatus').textContent = 'Traversal selesai!';
+                return;
+            }
+            
+            // Reset all nodes
+            document.querySelectorAll('.node').forEach(node => {
+                node.classList.remove('current', 'visited');
+            });
+            
+            // Highlight current node based on traversal type
+            let currentNodeIndex;
+            switch(currentTraversal) {
+                case 'preorder':
+                    currentNodeIndex = currentTreeStep;
+                    break;
+                case 'inorder':
+                    currentNodeIndex = [3, 1, 4, 0, 5, 2, 6][currentTreeStep];
+                    break;
+                case 'postorder':
+                    currentNodeIndex = [3, 4, 1, 5, 6, 2, 0][currentTreeStep];
+                    break;
+            }
+            
+            const currentNode = document.querySelectorAll('.node')[currentNodeIndex];
+            currentNode.classList.add('current');
+            
+            // Update order display
+            const currentOrder = document.getElementById('treeOrder').textContent;
+            document.getElementById('treeOrder').textContent = currentOrder ? 
+                `${currentOrder} → ${currentNode.textContent}` : currentNode.textContent;
+            
+            currentTreeStep++;
+            document.getElementById('treeStep').textContent = currentTreeStep;
+            document.getElementById('treeStatus').textContent = 
+                `${currentTraversal.toUpperCase()} traversal: Mengunjungi node ${currentNode.textContent}`;
+        }
+
+        function resetTree() {
+            currentTreeStep = 0;
+            document.getElementById('treeStep').textContent = currentTreeStep;
+            document.getElementById('treeOrder').textContent = '-';
+            document.getElementById('treeStatus').textContent = 'Pilih metode traversal...';
+            generateTree();
+        }
+
+        // Maze solving functions
+        function selectMazeAlgorithm(algorithm) {
+            currentMazeAlgorithm = algorithm;
+            document.querySelectorAll('.algorithm-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            resetMaze();
+        }
+
+        function generateMaze() {
+            const container = document.getElementById('mazeContainer');
+            container.innerHTML = '';
+            
+            // Create a simple maze
+            mazeGrid = [];
+            for (let row = 0; row < 10; row++) {
+                const rowCells = [];
+                for (let col = 0; col < 10; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    
+                    // Create walls and paths
+                    if (row === 0 && col === 0) {
+                        cell.classList.add('start');
+                        cell.textContent = 'S';
+                    } else if (row === 9 && col === 9) {
+                        cell.classList.add('end');
+                        cell.textContent = 'E';
+                    } else if (Math.random() < 0.3 && !(row === 0 && col === 1) && !(row === 9 && col === 8)) {
+                        cell.classList.add('wall');
+                        cell.textContent = '█';
+                    }
+                    
+                    container.appendChild(cell);
+                    rowCells.push(cell);
+                }
+                mazeGrid.push(rowCells);
+            }
+            
+            currentMazeStep = 0;
+            document.getElementById('mazeStep').textContent = currentMazeStep;
+            document.getElementById('mazeTime').textContent = '0.00';
+            document.getElementById('mazeStatus').textContent = 'Labirin siap!';
+        }
+
+        function startMazeSolving() {
+            currentMazeStep = 0;
+            document.getElementById('mazeStep').textContent = currentMazeStep;
+            document.getElementById('mazeStatus').textContent = 'Menyelesaikan labirin...';
+            
+            // Reset maze
+            mazeGrid.forEach(row => {
+                row.forEach(cell => {
+                    cell.classList.remove('current', 'visited', 'path');
+                });
+            });
+            
+            nextMazeStep();
+        }
+
+        function nextMazeStep() {
+            if (currentMazeStep >= 20) {
+                document.getElementById('mazeStatus').textContent = 'Labirin berhasil diselesaikan!';
+                return;
+            }
+            
+            // Simulate maze solving steps
+            const row = Math.floor(currentMazeStep / 10);
+            const col = currentMazeStep % 10;
+            
+            if (mazeGrid[row] && mazeGrid[row][col] && !mazeGrid[row][col].classList.contains('wall')) {
+                mazeGrid[row][col].classList.add('visited');
+                
+                if (row === 9 && col === 9) {
+                    mazeGrid[row][col].classList.add('path');
+                }
+            }
+            
+            currentMazeStep++;
+            document.getElementById('mazeStep').textContent = currentMazeStep;
+            document.getElementById('mazeTime').textContent = (currentMazeStep * 0.1).toFixed(2);
+            document.getElementById('mazeStatus').textContent = 
+                `${currentMazeAlgorithm.toUpperCase()}: Langkah ${currentMazeStep}`;
+        }
+
+        function resetMaze() {
+            currentMazeStep = 0;
+            document.getElementById('mazeStep').textContent = currentMazeStep;
+            document.getElementById('mazeTime').textContent = '0.00';
+            document.getElementById('mazeStatus').textContent = 'Siap untuk menyelesaikan labirin...';
+            generateMaze();
+        }
+
+        // Graph algorithm functions
+        function selectGraphAlgorithm(algorithm) {
+            currentGraphAlgorithm = algorithm;
+            document.querySelectorAll('.algorithm-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            resetGraph();
+        }
+
+        function generateGraph() {
+            const container = document.getElementById('graphContainer');
+            container.innerHTML = '';
+            
+            // Create a simple graph
+            graphVertices = [
+                { id: 'A', x: 50, y: 50 },
+                { id: 'B', x: 100, y: 100 },
+                { id: 'C', x: 150, y: 50 },
+                { id: 'D', x: 200, y: 100 },
+                { id: 'E', x: 250, y: 50 }
+            ];
+            
+            // Create edges
+            const edges = [
+                { from: 'A', to: 'B', weight: 4 },
+                { from: 'A', to: 'C', weight: 2 },
+                { from: 'B', to: 'D', weight: 5 },
+                { from: 'C', to: 'D', weight: 1 },
+                { from: 'C', to: 'E', weight: 3 },
+                { from: 'D', to: 'E', weight: 2 }
+            ];
+            
+            // Create vertices
+            graphVertices.forEach(vertex => {
+                const vertexElement = document.createElement('div');
+                vertexElement.className = 'vertex';
+                vertexElement.textContent = vertex.id;
+                vertexElement.style.left = `${vertex.x}px`;
+                vertexElement.style.top = `${vertex.y}px`;
+                container.appendChild(vertexElement);
+            });
+            
+            // Create edges
+            edges.forEach(edge => {
+                const fromVertex = graphVertices.find(v => v.id === edge.from);
+                const toVertex = graphVertices.find(v => v.id === edge.to);
+                
+                if (fromVertex && toVertex) {
+                    const edgeElement = document.createElement('div');
+                    edgeElement.className = 'edge';
+                    
+                    const dx = toVertex.x - fromVertex.x;
+                    const dy = toVertex.y - fromVertex.y;
+                    const length = Math.sqrt(dx * dx + dy * dy);
+                    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                    
+                    edgeElement.style.width = `${length}px`;
+                    edgeElement.style.height = '2px';
+                    edgeElement.style.left = `${fromVertex.x}px`;
+                    edgeElement.style.top = `${fromVertex.y}px`;
+                    edgeElement.style.transform = `rotate(${angle}deg)`;
+                    
+                    container.appendChild(edgeElement);
+                }
+            });
+            
+            currentGraphStep = 0;
+            document.getElementById('graphStep').textContent = currentGraphStep;
+            document.getElementById('graphDistance').textContent = '-';
+            document.getElementById('graphStatus').textContent = 'Graf siap!';
+        }
+
+        function startGraphAlgorithm() {
+            currentGraphStep = 0;
+            document.getElementById('graphStep').textContent = currentGraphStep;
+            document.getElementById('graphStatus').textContent = 'Menjalankan algoritma graf...';
+            
+            // Reset graph
+            document.querySelectorAll('.vertex').forEach(vertex => {
+                vertex.classList.remove('current', 'visited', 'path');
+            });
+            
+            nextGraphStep();
+        }
+
+        function nextGraphStep() {
+            if (currentGraphStep >= graphVertices.length) {
+                document.getElementById('graphStatus').textContent = 'Algoritma graf selesai!';
+                return;
+            }
+            
+            // Reset all vertices
+            document.querySelectorAll('.vertex').forEach(vertex => {
+                vertex.classList.remove('current');
+            });
+            
+            // Highlight current vertex
+            const currentVertex = document.querySelectorAll('.vertex')[currentGraphStep];
+            currentVertex.classList.add('current');
+            
+            // Simulate algorithm progress
+            let distance = currentGraphStep * 2;
+            document.getElementById('graphDistance').textContent = distance;
+            
+            currentGraphStep++;
+            document.getElementById('graphStep').textContent = currentGraphStep;
+            document.getElementById('graphStatus').textContent = 
+                `${currentGraphAlgorithm.toUpperCase()}: Mengunjungi vertex ${currentVertex.textContent}`;
+        }
+
+        function resetGraph() {
+            currentGraphStep = 0;
+            document.getElementById('graphStep').textContent = currentGraphStep;
+            document.getElementById('graphDistance').textContent = '-';
+            document.getElementById('graphStatus').textContent = 'Pilih algoritma graf...';
+            generateGraph();
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            generateRecursionTree(5);
+            generateTree();
+            generateMaze();
+            generateGraph();
+            
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
