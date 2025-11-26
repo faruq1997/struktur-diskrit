@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritma dan Hubungan Referensi - Tutorial Interaktif</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .definition {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .definition h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .example {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #4dabf7;
+        }
+
+        .example h4 {
+            color: #1971c2;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .comparison-table tr:hover {
+            background: #e7f3ff;
+        }
+
+        .interactive-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .interactive-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .game-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+        }
+
+        .game-title {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .memory-card {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .memory-card:hover {
+            background: #5a6fd8;
+            transform: scale(1.05);
+        }
+
+        .memory-card.matched {
+            background: #28a745;
+            cursor: default;
+        }
+
+        .memory-card.flipped {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .algorithm-game {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #28a745;
+        }
+
+        .step-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .step {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+
+        .step.dragging {
+            opacity: 0.5;
+            border-color: #667eea;
+        }
+
+        .step.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .step.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .drop-zone {
+            background: #f8f9fa;
+            border: 2px dashed #6c757d;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            min-height: 200px;
+        }
+
+        .drop-zone.active {
+            border-color: #667eea;
+            background: #e7f3ff;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+            margin: 5px;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .game-controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-display {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .key-point {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-point h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        .animation-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .variable-box {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 15px 25px;
+            margin: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.5s ease;
+        }
+
+        .variable-box.changing {
+            background: #28a745;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 Algoritma & Hubungan Referensi</h1>
+            <p>Tutorial Interaktif dengan Game Edukatif</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Algoritma Section -->
+            <div class="card">
+                <h2>🧠 Apa itu Algoritma?</h2>
+                
+                <div class="definition">
+                    <h3>Definisi</h3>
+                    <p>Algoritma adalah serangkaian <span class="highlight">langkah atau instruksi</span> yang terdefinisi dengan baik dan berurutan untuk menyelesaikan suatu masalah atau mencapai suatu tujuan.</p>
+                </div>
+
+                <div class="definition">
+                    <h3>Tujuan</h3>
+                    <p>Untuk mengubah <span class="highlight">input</span> menjadi <span class="highlight">output</span> yang diinginkan secara efisien dan benar.</p>
+                </div>
+
+                <div class="example">
+                    <h4>🎯 Contoh Sederhana: Resep Masakan</h4>
+                    <p>Resep masakan adalah algoritma. Langkah-langkah untuk membuat kue harus diikuti secara berurutan agar hasilnya benar.</p>
+                    <div class="code-block">
+                        Algoritma Nasi Goreng:<br>
+                        1. Siapkan bahan (Input)<br>
+                        2. Panaskan minyak<br>
+                        3. Masukkan bumbu halus, tumis hingga harum<br>
+                        4. Masukkan nasi<br>
+                        5. Aduk rata<br>
+                        6. Angkat dan sajikan (Output)
+                    </div>
+                </div>
+
+                <div class="key-point">
+                    <h4>💡 Intinya:</h4>
+                    <p>Algoritma adalah langkah-langkah pasti untuk menyelesaikan tugas. Seperti resep yang harus diikuti langkah demi langkah.</p>
+                </div>
+            </div>
+
+            <!-- Hubungan Referensi Section -->
+            <div class="card">
+                <h2>🔗 Hubungan Referensi</h2>
+                
+                <div class="definition">
+                    <h3>Definisi</h3>
+                    <p>Dalam pemrograman, "hubungan referensi" merujuk pada cara variabel menyimpan nilai dengan menyimpan <span class="highlight">referensi (alamat memori)</span> ke lokasi nilai tersebut, bukan nilai itu sendiri.</p>
+                </div>
+
+                <div class="definition">
+                    <h3>Perbedaan dengan Nilai</h3>
+                    <p>Ini membedakannya dari <span class="highlight">hubungan nilai</span>, di mana variabel menyimpan salinan langsung dari nilai tersebut.</p>
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Fitur</th>
+                            <th>Variabel Bertipe Nilai</th>
+                            <th>Variabel Bertipe Referensi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Penyimpanan</strong></td>
+                            <td>Variabel menyimpan salinan langsung dari nilai</td>
+                            <td>Variabel menyimpan alamat memori (referensi) ke objek</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Perilaku Penyalinan</strong></td>
+                            <td>Menyalin variabel membuat salinan baru dari data</td>
+                            <td>Menyalin variabel membuat salinan dari referensi (alamat)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Efek Perubahan</strong></td>
+                            <td>Mengubah salinan tidak memengaruhi yang asli</td>
+                            <td>Mengubah objek melalui satu referensi akan memengaruhi semua referensi lain ke objek yang sama</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contoh</strong></td>
+                            <td>Bilangan bulat, boolean, karakter</td>
+                            <td>Objek, array, list (Java/Python/C#)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="key-point">
+                    <h4>💡 Intinya:</h4>
+                    <p>Variabel dengan hubungan referensi hanya menyimpan alamat ke data yang sama. Perubahan pada data melalui salah satu alamat akan terlihat melalui alamat lainnya.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Games Section -->
+        <div class="interactive-section">
+            <h2>🎮 Game Interaktif</h2>
+            
+            <!-- Memory Game -->
+            <div class="game-container">
+                <div class="game-title">🎯 Game Memori: Nilai vs Referensi</div>
+                <p>Cocokkan konsep dengan penjelasannya yang benar!</p>
+                
+                <div class="memory-game" id="memoryGame">
+                    <!-- Cards will be generated by JavaScript -->
+                </div>
+                
+                <div class="game-controls">
+                    <div class="score-display">Pasangan Ditemukan: <span id="matches">0</span>/4</div>
+                    <button class="btn" onclick="resetMemoryGame()">🔄 Mulai Ulang</button>
+                </div>
+            </div>
+
+            <!-- Algorithm Game -->
+            <div class="algorithm-game">
+                <div class="game-title">🧩 Game Algoritma: Susun Langkah</div>
+                <p>Susun langkah-langkah algoritma membuat kopi dalam urutan yang benar!</p>
+                
+                <div class="step-container" id="stepContainer">
+                    <div class="step" draggable="true" data-order="3">Tuang air panas ke dalam cangkir</div>
+                    <div class="step" draggable="true" data-order="1">Siapkan kopi dan cangkir</div>
+                    <div class="step" draggable="true" data-order="4">Aduk kopi hingga larut</div>
+                    <div class="step" draggable="true" data-order="2">Masukkan kopi ke dalam cangkir</div>
+                    <div class="step" draggable="true" data-order="5">Kopi siap disajikan</div>
+                </div>
+                
+                <div class="drop-zone" id="dropZone">
+                    <p>Seret dan lepas langkah-langkah di sini dalam urutan yang benar!</p>
+                </div>
+                
+                <div class="game-controls">
+                    <button class="btn btn-success" onclick="checkAlgorithm()">✓ Periksa Urutan</button>
+                    <button class="btn" onclick="resetAlgorithm()">🔄 Reset</button>
+                </div>
+            </div>
+
+            <!-- Variable Animation -->
+            <div class="game-container">
+                <div class="game-title">🌀 Animasi Variabel</div>
+                <p>Lihat bagaimana variabel berperilaku dengan hubungan nilai dan referensi!</p>
+                
+                <div class="animation-container">
+                    <div class="variable-box" id="varA">A = 5</div>
+                    <div class="variable-box" id="varB">B = ?</div>
+                </div>
+                
+                <div class="game-controls">
+                    <button class="btn" onclick="demonstrateValue()">🔢 Demonstrasi Hubungan Nilai</button>
+                    <button class="btn" onclick="demonstrateReference()">🔗 Demonstrasi Hubungan Referensi</button>
+                </div>
+                
+                <div id="animationExplanation" class="example" style="display: none;">
+                    <h4>📝 Penjelasan:</h4>
+                    <p id="explanationText"></p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 Tutorial Algoritma & Hubungan Referensi | Belajar sambil bermain! 🎮</p>
+        </footer>
+    </div>
+
+    <script>
+        // Memory Game
+        const memoryCards = [
+            { concept: "Hubungan Nilai", description: "Variabel menyimpan salinan langsung dari nilai" },
+            { concept: "Hubungan Referensi", description: "Variabel menyimpan alamat memori ke objek" },
+            { concept: "Contoh Nilai", description: "int x = 5; (tipe primitif)" },
+            { concept: "Contoh Referensi", description: "List list = new List(); (tipe objek)" }
+        ];
+
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function initializeMemoryGame() {
+            const gameContainer = document.getElementById('memoryGame');
+            gameContainer.innerHTML = '';
+            
+            // Duplicate and shuffle cards
+            const allCards = [...memoryCards, ...memoryCards];
+            allCards.sort(() => Math.random() - 0.5);
+            
+            allCards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'memory-card';
+                cardElement.textContent = '?';
+                cardElement.dataset.index = index;
+                cardElement.dataset.concept = card.concept;
+                cardElement.dataset.description = card.description;
+                cardElement.onclick = flipCard;
+                gameContainer.appendChild(cardElement);
+            });
+        }
+
+        function flipCard() {
+            if (this.classList.contains('matched') || flippedCards.length >= 2) return;
+            
+            this.classList.add('flipped');
+            this.textContent = this.dataset.concept;
+            flippedCards.push(this);
+            
+            if (flippedCards.length === 2) {
+                setTimeout(checkMatch, 500);
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            
+            if (card1.dataset.concept === card2.dataset.concept) {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedPairs++;
+                document.getElementById('matches').textContent = matchedPairs;
+                
+                if (matchedPairs === 4) {
+                    setTimeout(() => {
+                        alert('🎉 Selamat! Anda telah menyelesaikan game memori!');
+                    }, 300);
+                }
+            } else {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                card1.textContent = '?';
+                card2.textContent = '?';
+            }
+            
+            flippedCards = [];
+        }
+
+        function resetMemoryGame() {
+            flippedCards = [];
+            matchedPairs = 0;
+            document.getElementById('matches').textContent = '0';
+            initializeMemoryGame();
+        }
+
+        // Algorithm Game
+        let draggedStep = null;
+
+        function initializeAlgorithmGame() {
+            const steps = document.querySelectorAll('.step');
+            const dropZone = document.getElementById('dropZone');
+            
+            steps.forEach(step => {
+                step.addEventListener('dragstart', handleDragStart);
+                step.addEventListener('dragend', handleDragEnd);
+            });
+            
+            dropZone.addEventListener('dragover', handleDragOver);
+            dropZone.addEventListener('drop', handleDrop);
+        }
+
+        function handleDragStart(e) {
+            draggedStep = this;
+            this.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', this.dataset.order);
+        }
+
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+            draggedStep = null;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            this.classList.add('active');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('active');
+            
+            if (draggedStep) {
+                this.appendChild(draggedStep);
+                draggedStep.style.margin = '5px 0';
+            }
+        }
+
+        function checkAlgorithm() {
+            const dropZone = document.getElementById('dropZone');
+            const steps = dropZone.querySelectorAll('.step');
+            let correct = true;
+            
+            steps.forEach((step, index) => {
+                const expectedOrder = index + 1;
+                const actualOrder = parseInt(step.dataset.order);
+                
+                if (expectedOrder === actualOrder) {
+                    step.classList.add('correct');
+                    step.classList.remove('incorrect');
+                } else {
+                    step.classList.add('incorrect');
+                    step.classList.remove('correct');
+                    correct = false;
+                }
+            });
+            
+            if (correct) {
+                alert('✅ Urutan algoritma benar! Kopi Anda akan sempurna!');
+            } else {
+                alert('❌ Urutan masih salah. Coba lagi!');
+            }
+        }
+
+        function resetAlgorithm() {
+            const stepContainer = document.getElementById('stepContainer');
+            const dropZone = document.getElementById('dropZone');
+            const steps = dropZone.querySelectorAll('.step');
+            
+            steps.forEach(step => {
+                step.classList.remove('correct', 'incorrect');
+                stepContainer.appendChild(step);
+            });
+        }
+
+        // Variable Animation
+        function demonstrateValue() {
+            const varA = document.getElementById('varA');
+            const varB = document.getElementById('varB');
+            const explanation = document.getElementById('animationExplanation');
+            const explanationText = document.getElementById('explanationText');
+            
+            // Reset
+            varA.textContent = 'A = 5';
+            varB.textContent = 'B = ?';
+            varA.classList.remove('changing');
+            varB.classList.remove('changing');
+            
+            setTimeout(() => {
+                varB.textContent = 'B = 5';
+                varB.classList.add('changing');
+                
+                setTimeout(() => {
+                    varA.textContent = 'A = 10';
+                    varA.classList.add('changing');
+                    
+                    setTimeout(() => {
+                        explanationText.textContent = 'Dalam hubungan nilai, ketika B = A, nilai 5 disalin ke B. Ketika A diubah menjadi 10, B tetap 5 karena mereka adalah salinan terpisah di memori.';
+                        explanation.style.display = 'block';
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        }
+
+        function demonstrateReference() {
+            const varA = document.getElementById('varA');
+            const varB = document.getElementById('varB');
+            const explanation = document.getElementById('animationExplanation');
+            const explanationText = document.getElementById('explanationText');
+            
+            // Reset
+            varA.textContent = 'A → [1,2,3]';
+            varB.textContent = 'B = ?';
+            varA.classList.remove('changing');
+            varB.classList.remove('changing');
+            
+            setTimeout(() => {
+                varB.textContent = 'B → [1,2,3]';
+                varB.classList.add('changing');
+                
+                setTimeout(() => {
+                    varA.textContent = 'A → [1,2,3,4]';
+                    varB.textContent = 'B → [1,2,3,4]';
+                    varA.classList.add('changing');
+                    varB.classList.add('changing');
+                    
+                    setTimeout(() => {
+                        explanationText.textContent = 'Dalam hubungan referensi, ketika B = A, B mendapat referensi yang sama ke objek [1,2,3]. Ketika objek diubah melalui A, B juga melihat perubahan karena mereka merujuk ke objek yang sama.';
+                        explanation.style.display = 'block';
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        }
+
+        // Initialize games when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMemoryGame();
+            initializeAlgorithmGame();
+            
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
