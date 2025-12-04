@@ -1,0 +1,2423 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pertemuan 11: Teori Graf - Struktur Diskrit</title>
+    <style>
+        /* Reset dan Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Warna tema Indonesia (Merah-Putih) */
+    --primary-red: #e10600;
+    --primary-white: #ffffff;
+    --secondary-red: #b30500;
+    --dark-red: #8a0000;
+    --light-gray: #f5f5f5;
+    --medium-gray: #e0e0e0;
+    --dark-gray: #333333;
+    --text-color: #222222;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--light-gray);
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
+    color: var(--primary-white);
+    padding: 1.5rem 0;
+    box-shadow: var(--shadow);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.logo h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.logo h1 i {
+    margin-right: 10px;
+}
+
+.subtitle {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.indonesia-theme {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.flag-colors {
+    display: flex;
+    width: 60px;
+    height: 30px;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.flag-red {
+    flex: 1;
+    background-color: var(--primary-red);
+}
+
+.flag-white {
+    flex: 1;
+    background-color: var(--primary-white);
+}
+
+.theme-text {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* Navigation Styles */
+nav {
+    background-color: var(--primary-white);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    padding: 0;
+    margin: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.nav-menu li {
+    flex: 1;
+    text-align: center;
+}
+
+.nav-link {
+    display: block;
+    padding: 1rem 0.5rem;
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    transition: var(--transition);
+    border-bottom: 3px solid transparent;
+}
+
+.nav-link i {
+    margin-right: 8px;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--primary-red);
+    border-bottom-color: var(--primary-red);
+    background-color: rgba(225, 6, 0, 0.05);
+}
+
+/* Main Content */
+main {
+    padding: 2rem 0;
+}
+
+.content-section {
+    margin-bottom: 3rem;
+}
+
+.content-section h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--dark-red);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Hero Section */
+.hero {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(225, 6, 0, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 3rem;
+    box-shadow: var(--shadow);
+}
+
+.hero-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+.hero h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.2rem;
+    color: var(--dark-red);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.hero p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: var(--dark-gray);
+}
+
+.hero-badges {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    background-color: var(--primary-red);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hero-illustration {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Card Styles */
+.card {
+    background-color: var(--primary-white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card-content {
+    line-height: 1.7;
+}
+
+.card h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: var(--dark-red);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.analogy {
+    background-color: rgba(225, 6, 0, 0.05);
+    border-left: 4px solid var(--primary-red);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.definition ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.definition li {
+    margin-bottom: 0.5rem;
+}
+
+.visualization {
+    margin-top: 2rem;
+}
+
+.visualization h4 {
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 1rem;
+    color: var(--dark-gray);
+}
+
+.graph-visual {
+    height: 200px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px dashed var(--medium-gray);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+}
+
+/* Card Grid untuk Jenis Graf */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.card-grid .card {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.card-grid .card h3 {
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.card-grid .card p {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.graph-mini {
+    height: 120px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid var(--medium-gray);
+}
+
+/* Terminologi Grid */
+.terminology-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.terminology-item {
+    background-color: var(--primary-white);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    transition: var(--transition);
+}
+
+.terminology-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.terminology-item h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    color: var(--dark-red);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.terminology-item p {
+    font-size: 0.95rem;
+    color: var(--dark-gray);
+}
+
+/* Game Section */
+.game-card {
+    padding: 2rem;
+}
+
+.game-instructions {
+    margin-bottom: 2rem;
+}
+
+.game-instructions h3 {
+    margin-bottom: 0.75rem;
+}
+
+.game-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 1.5rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-primary {
+    background-color: var(--primary-red);
+    color: white;
+}
+
+.game-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.canvas-container {
+    flex: 2;
+    min-width: 300px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 2px solid var(--medium-gray);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#graph-canvas {
+    background-color: white;
+    border-radius: 4px;
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.game-info {
+    flex: 1;
+    min-width: 250px;
+    background-color: rgba(225, 6, 0, 0.05);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+}
+
+.game-info h4 {
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 1rem;
+    color: var(--dark-red);
+}
+
+.game-info p {
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.game-info span {
+    font-weight: 600;
+    color: var(--primary-red);
+}
+
+.hint {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: rgba(40, 167, 69, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #28a745;
+}
+
+/* Penerapan Section */
+.applications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.application-item {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    background-color: rgba(225, 6, 0, 0.03);
+    transition: var(--transition);
+}
+
+.application-item:hover {
+    background-color: rgba(225, 6, 0, 0.08);
+    transform: translateY(-5px);
+}
+
+.app-icon {
+    width: 70px;
+    height: 70px;
+    background-color: var(--primary-red);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 1rem;
+    font-size: 1.8rem;
+}
+
+.application-item h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    color: var(--dark-red);
+}
+
+.application-item p {
+    font-size: 0.95rem;
+    color: var(--dark-gray);
+}
+
+/* Quiz Section */
+.quiz-instructions {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--medium-gray);
+}
+
+.quiz-container {
+    margin-bottom: 2rem;
+}
+
+.quiz-item {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--medium-gray);
+    transition: var(--transition);
+}
+
+.quiz-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-item h4 {
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 1rem;
+    color: var(--dark-gray);
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.75rem;
+    background-color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid var(--medium-gray);
+}
+
+.option:hover {
+    background-color: rgba(225, 6, 0, 0.05);
+    border-color: var(--primary-red);
+}
+
+.option input {
+    margin-right: 10px;
+}
+
+.quiz-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 2rem;
+}
+
+.quiz-results {
+    background-color: rgba(225, 6, 0, 0.05);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    margin-top: 1rem;
+}
+
+.quiz-results h4 {
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 1rem;
+    color: var(--dark-red);
+}
+
+.quiz-results p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+#quiz-feedback {
+    margin-top: 1rem;
+}
+
+#quiz-feedback p {
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-weight: normal;
+}
+
+#quiz-feedback .correct {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-left: 4px solid #28a745;
+}
+
+#quiz-feedback .incorrect {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid #dc3545;
+}
+
+#quiz-feedback .unanswered {
+    background-color: rgba(108, 117, 125, 0.1);
+    border-left: 4px solid #6c757d;
+}
+
+/* Active state for game buttons */
+.btn.active {
+    background-color: var(--dark-red);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn.active:hover {
+    transform: none;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Popup Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background-color: var(--primary-white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--light-gray);
+}
+
+.modal-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    color: var(--dark-red);
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--dark-gray);
+    cursor: pointer;
+    transition: var(--transition);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.modal-close:hover {
+    background-color: var(--light-gray);
+    color: var(--primary-red);
+}
+
+.modal-body {
+    margin-bottom: 1.5rem;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: var(--primary-white);
+    border-radius: var(--border-radius);
+    padding: 1rem 1.5rem;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 1001;
+    transform: translateX(150%);
+    transition: transform 0.3s ease;
+    max-width: 350px;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.toast-success .toast-icon {
+    background-color: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+}
+
+.toast-info .toast-icon {
+    background-color: rgba(0, 123, 255, 0.2);
+    color: #007bff;
+}
+
+.toast-warning .toast-icon {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+}
+
+.toast-error .toast-icon {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.toast-message {
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: var(--medium-gray);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.toast-close:hover {
+    background-color: var(--light-gray);
+    color: var(--dark-gray);
+}
+
+/* Enhanced Game Controls */
+.edge-type-selector {
+    display: flex;
+    gap: 10px;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.edge-type-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--medium-gray);
+    background-color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.edge-type-btn:hover {
+    border-color: var(--primary-red);
+    background-color: rgba(225, 6, 0, 0.05);
+}
+
+.edge-type-btn.active {
+    background-color: var(--primary-red);
+    color: white;
+    border-color: var(--primary-red);
+}
+
+.graph-presets {
+    display: flex;
+    gap: 10px;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.preset-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--medium-gray);
+    background-color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.preset-btn:hover {
+    border-color: var(--primary-red);
+    background-color: rgba(225, 6, 0, 0.05);
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-gray);
+    color: white;
+    padding: 2.5rem 0;
+    margin-top: 3rem;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.footer-info h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-info p {
+    opacity: 0.8;
+}
+
+.footer-credits {
+    text-align: right;
+}
+
+.footer-credits p {
+    margin-bottom: 0.5rem;
+}
+
+.copyright {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .indonesia-theme {
+        justify-content: center;
+    }
+    
+    .nav-menu {
+        justify-content: flex-start;
+        overflow-x: auto;
+    }
+    
+    .nav-menu li {
+        flex: 0 0 auto;
+    }
+    
+    .nav-link {
+        padding: 1rem 1.5rem;
+    }
+    
+    .hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .hero-badges {
+        justify-content: center;
+    }
+    
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+    
+    .content-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .card-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    .game-area {
+        flex-direction: column;
+    }
+    
+    .canvas-container {
+        min-width: 100%;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-credits {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo h1 {
+        font-size: 1.6rem;
+    }
+    
+    .hero h2 {
+        font-size: 1.5rem;
+    }
+    
+    .card {
+        padding: 1.5rem;
+    }
+    
+    .game-controls {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .applications-grid {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+</head>
+<body>
+    <!-- Header dengan tema Indonesia -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><i class="fas fa-project-diagram"></i> Teori Graf</h1>
+                    <p class="subtitle">Pertemuan 11 - Struktur Diskrit</p>
+                </div>
+                <div class="indonesia-theme">
+                    <div class="flag-colors">
+                        <div class="flag-red"></div>
+                        <div class="flag-white"></div>
+                    </div>
+                    <p class="theme-text">Materi dengan pendekatan Indonesia</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigasi -->
+    <nav>
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="#definisi" class="nav-link active"><i class="fas fa-book"></i> Definisi</a></li>
+                <li><a href="#jenis" class="nav-link"><i class="fas fa-shapes"></i> Jenis Graf</a></li>
+                <li><a href="#terminologi" class="nav-link"><i class="fas fa-glossary"></i> Terminologi</a></li>
+                <li><a href="#game" class="nav-link"><i class="fas fa-gamepad"></i> Game Interaktif</a></li>
+                <li><a href="#penerapan" class="nav-link"><i class="fas fa-lightbulb"></i> Penerapan</a></li>
+                <li><a href="#latihan" class="nav-link"><i class="fas fa-question-circle"></i> Latihan Soal</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Definisi Graf -->
+        <section id="definisi" class="content-section">
+            <h2><i class="fas fa-info-circle"></i> Definisi Graf</h2>
+            <div class="card">
+                <div class="card-content">
+                    <p>Teori graf digunakan untuk merepresentasikan objek-objek diskrit dan hubungan antara objek-objek tersebut.</p>
+                    
+                    <div class="analogy">
+                        <h3><i class="fas fa-lightbulb"></i> Analogi: Peta Kota</h3>
+                        <p>Bayangkan sebuah kota dengan berbagai tempat (simpul) dan jalan yang menghubungkannya (sisi). 
+                        Setiap tempat bisa berupa rumah, sekolah, atau pasar. Jalan menunjukkan bagaimana Anda bisa berpindah dari satu tempat ke tempat lain.</p>
+                    </div>
+                    
+                    <div class="definition">
+                        <p>Secara matematis, graf <strong>G</strong> didefinisikan sebagai pasangan himpunan <strong>(V, E)</strong> dimana:</p>
+                        <ul>
+                            <li><strong>V</strong> = himpunan simpul (vertices/nodes) = {v₁, v₂, v₃, ..., vₙ}</li>
+                            <li><strong>E</strong> = himpunan sisi (edges/arcs) yang menghubungkan sepasang simpul = {e₁, e₂, e₃, ..., eₙ}</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="visualization">
+                        <h4>Visualisasi Graf Sederhana:</h4>
+                        <div class="graph-visual" id="definisi-graph">
+                            <!-- Graf akan digambar oleh JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Jenis-jenis Graf -->
+        <section id="jenis" class="content-section">
+            <h2><i class="fas fa-shapes"></i> Jenis-jenis Graf</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3><i class="fas fa-circle-notch"></i> Graf Sederhana</h3>
+                    <p>Graf yang tidak mengandung gelang maupun sisi ganda.</p>
+                    <div class="graph-mini" id="simple-graph"></div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-code-branch"></i> Graf Ganda</h3>
+                    <p>Graf yang mengandung sisi ganda (multigraph).</p>
+                    <div class="graph-mini" id="multi-graph"></div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-undo"></i> Graf Semu</h3>
+                    <p>Graf yang mengandung gelang (loop).</p>
+                    <div class="graph-mini" id="pseudo-graph"></div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-arrows-alt-h"></i> Graf Berarah</h3>
+                    <p>Sisi memiliki orientasi arah (directed graph).</p>
+                    <div class="graph-mini" id="directed-graph"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Terminologi Graf -->
+        <section id="terminologi" class="content-section">
+            <h2><i class="fas fa-glossary"></i> Terminologi Graf</h2>
+            <div class="terminology-grid">
+                <!-- Terminologi akan di-generate oleh JavaScript -->
+            </div>
+        </section>
+
+        <!-- Game Interaktif -->
+        <section id="game" class="content-section">
+            <h2><i class="fas fa-gamepad"></i> Game Interaktif: Bangun Graf Anda</h2>
+            <div class="card game-card">
+                <div class="game-instructions">
+                    <h3><i class="fas fa-info-circle"></i> Instruksi:</h3>
+                    <p>Drag and drop simpul (titik) untuk membuat graf. Pilih jenis sisi, lalu klik dua simpul untuk menghubungkannya.</p>
+                    
+                    <div class="game-controls">
+                        <button id="add-node" class="btn"><i class="fas fa-plus-circle"></i> Tambah Simpul</button>
+                        <button id="add-edge" class="btn"><i class="fas fa-link"></i> Tambah Sisi</button>
+                        <button id="add-loop" class="btn"><i class="fas fa-undo"></i> Tambah Loop</button>
+                        <button id="add-multigraph" class="btn"><i class="fas fa-code-branch"></i> Multigraph</button>
+                        <button id="add-directed" class="btn"><i class="fas fa-arrows-alt-h"></i> Directed Graph</button>
+                        <button id="clear-graph" class="btn btn-danger"><i class="fas fa-trash"></i> Hapus Semua</button>
+                        <button id="check-graph" class="btn btn-success"><i class="fas fa-check"></i> Cek Jenis Graf</button>
+                    </div>
+                </div>
+                
+                <div class="game-area">
+                    <div class="canvas-container">
+                        <canvas id="graph-canvas" width="600" height="400"></canvas>
+                    </div>
+                    
+                    <div class="game-info">
+                        <h4>Statistik Graf:</h4>
+                        <p>Jumlah Simpul: <span id="node-count">0</span></p>
+                        <p>Jumlah Sisi: <span id="edge-count">0</span></p>
+                        <p>Jenis Graf: <span id="graph-type">-</span></p>
+                        <div class="hint">
+                            <p><strong>Tips:</strong> Coba buat graf sederhana, graf ganda, atau graf berarah!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Penerapan dalam Kehidupan Sehari-hari -->
+        <section id="penerapan" class="content-section">
+            <h2><i class="fas fa-lightbulb"></i> Penerapan dalam Kehidupan Sehari-hari</h2>
+            <div class="card">
+                <div class="applications-grid">
+                    <div class="application-item">
+                        <div class="app-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3>Peta dan Navigasi</h3>
+                        <p>Google Maps menggunakan graf untuk merepresentasikan persimpangan (simpul) dan jalan (sisi). Algoritma pencarian rute terpendek seperti Dijkstra bekerja pada struktur graf.</p>
+                    </div>
+                    
+                    <div class="application-item">
+                        <div class="app-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Media Sosial</h3>
+                        <p>Facebook dan Instagram menggunakan graf sosial dimana pengguna adalah simpul dan pertemanan adalah sisi. Rekomendasi teman menggunakan analisis graf.</p>
+                    </div>
+                    
+                    <div class="application-item">
+                        <div class="app-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <h3>Jaringan Komputer</h3>
+                        <p>Internet adalah graf raksasa dengan router sebagai simpul dan koneksi sebagai sisi. Protokol routing menggunakan teori graf untuk mengirim data.</p>
+                    </div>
+                    
+                    <div class="application-item">
+                        <div class="app-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h3>Manajemen Proyek</h3>
+                        <p>Diagram PERT dan Gantt Chart menggunakan graf untuk merepresentasikan tugas-tugas (simpul) dan ketergantungan antar tugas (sisi).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latihan Soal -->
+        <section id="latihan" class="content-section">
+            <h2><i class="fas fa-question-circle"></i> Latihan Soal</h2>
+            <div class="card">
+                <div class="quiz-instructions">
+                    <p>Jawablah 10 soal berikut untuk menguji pemahaman Anda tentang teori graf. Setelah selesai, klik "Periksa Jawaban" untuk melihat skor Anda.</p>
+                </div>
+                
+                <div class="quiz-container" id="quiz-container">
+                    <!-- Soal akan di-generate oleh JavaScript -->
+                </div>
+                
+                <div class="quiz-controls">
+                    <button id="submit-quiz" class="btn btn-primary"><i class="fas fa-check-square"></i> Periksa Jawaban</button>
+                    <button id="reset-quiz" class="btn"><i class="fas fa-redo"></i> Ulangi Kuis</button>
+                </div>
+                
+                <div class="quiz-results">
+                    <h4>Hasil:</h4>
+                    <p>Skor: <span id="quiz-score">0</span>/10</p>
+                    <div id="quiz-feedback"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3><i class="fas fa-project-diagram"></i> Teori Graf - Struktur Diskrit</h3>
+                    <p>Pertemuan 11 | Materi dengan pendekatan kontekstual Indonesia</p>
+                </div>
+                <div class="footer-credits">
+                    <p>Dibuat dengan <i class="fas fa-heart"></i> untuk pembelajaran interaktif</p>
+                    <p class="copyright">© 2023 - Pendidikan Indonesia</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ==================== UTILITY FUNCTIONS ====================
+function getRandomColor() {
+    const colors = ['#e10600', '#b30500', '#8a0000', '#0066cc', '#009688', '#ff9800'];
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function drawCircle(ctx, x, y, radius, color, label) {
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    // Draw label
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, y);
+}
+
+function drawLine(ctx, x1, y1, x2, y2, color = '#333', width = 2, directed = false, weight = null) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.stroke();
+    
+    // Draw arrow for directed edges
+    if (directed) {
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        const arrowLength = 10;
+        const arrowX = x2 - arrowLength * Math.cos(angle);
+        const arrowY = y2 - arrowLength * Math.sin(angle);
+        
+        ctx.beginPath();
+        ctx.moveTo(arrowX, arrowY);
+        ctx.lineTo(
+            arrowX - arrowLength * Math.cos(angle - Math.PI / 6),
+            arrowY - arrowLength * Math.sin(angle - Math.PI / 6)
+        );
+        ctx.lineTo(
+            arrowX - arrowLength * Math.cos(angle + Math.PI / 6),
+            arrowY - arrowLength * Math.sin(angle + Math.PI / 6)
+        );
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+    }
+    
+    // Draw weight if provided
+    if (weight !== null) {
+        const midX = (x1 + x2) / 2;
+        const midY = (y1 + y2) / 2;
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(weight, midX, midY - 10);
+    }
+}
+
+function drawLoop(ctx, x, y, radius, color = '#333', width = 2) {
+    ctx.beginPath();
+    ctx.arc(x + radius, y - radius, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.stroke();
+}
+
+// ==================== POPUP AND NOTIFICATION SYSTEM ====================
+class NotificationSystem {
+    static showToast(type, title, message, duration = 5000) {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+            <div class="toast-icon">
+                <i class="fas ${this.getIcon(type)}"></i>
+            </div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Show toast
+        setTimeout(() => toast.classList.add('show'), 10);
+        
+        // Close button
+        toast.querySelector('.toast-close').addEventListener('click', () => {
+            this.hideToast(toast);
+        });
+        
+        // Auto hide
+        if (duration > 0) {
+            setTimeout(() => this.hideToast(toast), duration);
+        }
+        
+        return toast;
+    }
+    
+    static getIcon(type) {
+        const icons = {
+            'success': 'fa-check-circle',
+            'info': 'fa-info-circle',
+            'warning': 'fa-exclamation-triangle',
+            'error': 'fa-times-circle'
+        };
+        return icons[type] || 'fa-info-circle';
+    }
+    
+    static hideToast(toast) {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
+    }
+    
+    static showModal(title, content, buttons = []) {
+        const modalId = 'modal-' + Date.now();
+        const modalHTML = `
+            <div class="modal-overlay active" id="${modalId}">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3 class="modal-title">${title}</h3>
+                        <button class="modal-close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ${content}
+                    </div>
+                    <div class="modal-footer">
+                        ${buttons.map(btn => `
+                            <button class="btn ${btn.class || ''}" data-action="${btn.action || 'close'}">
+                                ${btn.text}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        const modal = document.getElementById(modalId);
+        
+        // Close button
+        modal.querySelector('.modal-close').addEventListener('click', () => {
+            this.hideModal(modal);
+        });
+        
+        // Button actions
+        modal.querySelectorAll('.modal-footer .btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const action = e.target.dataset.action;
+                if (action === 'close') {
+                    this.hideModal(modal);
+                }
+                // Other actions can be handled by the caller
+            });
+        });
+        
+        // Close on overlay click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                this.hideModal(modal);
+            }
+        });
+        
+        return modal;
+    }
+    
+    static hideModal(modal) {
+        modal.classList.remove('active');
+        setTimeout(() => {
+            if (modal.parentNode) {
+                modal.parentNode.removeChild(modal);
+            }
+        }, 300);
+    }
+}
+
+// ==================== VISUALIZATION FOR HERO SECTION ====================
+function drawHeroGraph() {
+    const svg = document.getElementById('hero-graph');
+    if (!svg) return;
+    
+    // Clear SVG
+    svg.innerHTML = '';
+    
+    // Define nodes
+    const nodes = [
+        { id: 'A', x: 60, y: 100, color: '#e10600' },
+        { id: 'B', x: 150, y: 50, color: '#b30500' },
+        { id: 'C', x: 240, y: 100, color: '#8a0000' },
+        { id: 'D', x: 150, y: 150, color: '#0066cc' }
+    ];
+    
+    // Define edges
+    const edges = [
+        { from: 'A', to: 'B' },
+        { from: 'B', to: 'C' },
+        { from: 'C', to: 'D' },
+        { from: 'D', to: 'A' },
+        { from: 'A', to: 'C' }
+    ];
+    
+    // Draw edges
+    edges.forEach(edge => {
+        const fromNode = nodes.find(n => n.id === edge.from);
+        const toNode = nodes.find(n => n.id === edge.to);
+        
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', fromNode.x);
+        line.setAttribute('y1', fromNode.y);
+        line.setAttribute('x2', toNode.x);
+        line.setAttribute('y2', toNode.y);
+        line.setAttribute('stroke', '#666');
+        line.setAttribute('stroke-width', '2');
+        svg.appendChild(line);
+    });
+    
+    // Draw nodes
+    nodes.forEach(node => {
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', node.x);
+        circle.setAttribute('cy', node.y);
+        circle.setAttribute('r', '20');
+        circle.setAttribute('fill', node.color);
+        circle.setAttribute('stroke', '#333');
+        circle.setAttribute('stroke-width', '2');
+        svg.appendChild(circle);
+        
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', node.x);
+        text.setAttribute('y', node.y);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('dy', '0.3em');
+        text.setAttribute('fill', 'white');
+        text.setAttribute('font-weight', 'bold');
+        text.setAttribute('font-size', '14');
+        text.textContent = node.id;
+        svg.appendChild(text);
+    });
+}
+
+// ==================== VISUALIZATION FOR DEFINITION SECTION ====================
+function drawDefinitionGraph() {
+    const container = document.getElementById('definisi-graph');
+    if (!container) return;
+    
+    // Create canvas if it doesn't exist
+    let canvas = container.querySelector('canvas');
+    if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.width = 400;
+        canvas.height = 200;
+        container.appendChild(canvas);
+    }
+    
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw a simple graph
+    const nodes = [
+        { x: 100, y: 100, label: 'v₁' },
+        { x: 200, y: 80, label: 'v₂' },
+        { x: 300, y: 100, label: 'v₃' },
+        { x: 200, y: 160, label: 'v₄' }
+    ];
+    
+    // Draw edges
+    drawLine(ctx, nodes[0].x, nodes[0].y, nodes[1].x, nodes[1].y, '#666');
+    drawLine(ctx, nodes[1].x, nodes[1].y, nodes[2].x, nodes[2].y, '#666');
+    drawLine(ctx, nodes[2].x, nodes[2].y, nodes[3].x, nodes[3].y, '#666');
+    drawLine(ctx, nodes[3].x, nodes[3].y, nodes[0].x, nodes[0].y, '#666');
+    drawLine(ctx, nodes[0].x, nodes[0].y, nodes[2].x, nodes[2].y, '#666');
+    
+    // Draw nodes
+    nodes.forEach(node => {
+        drawCircle(ctx, node.x, node.y, 20, '#e10600', node.label);
+    });
+    
+    // Add caption
+    ctx.fillStyle = '#333';
+    ctx.font = '14px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Graf G = (V, E) dengan 4 simpul dan 5 sisi', canvas.width/2, 190);
+}
+
+// ==================== VISUALIZATION FOR GRAPH TYPES ====================
+function drawGraphTypes() {
+    const graphTypes = ['simple-graph', 'multi-graph', 'pseudo-graph', 'directed-graph'];
+    
+    graphTypes.forEach((id, index) => {
+        const container = document.getElementById(id);
+        if (!container) return;
+        
+        // Create canvas if it doesn't exist
+        let canvas = container.querySelector('canvas');
+        if (!canvas) {
+            canvas = document.createElement('canvas');
+            canvas.width = 200;
+            canvas.height = 120;
+            container.appendChild(canvas);
+        }
+        
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        switch(index) {
+            case 0: // Simple graph
+                drawSimpleGraph(ctx);
+                break;
+            case 1: // Multi graph
+                drawMultiGraph(ctx);
+                break;
+            case 2: // Pseudo graph
+                drawPseudoGraph(ctx);
+                break;
+            case 3: // Directed graph
+                drawDirectedGraph(ctx);
+                break;
+        }
+    });
+}
+
+function drawSimpleGraph(ctx) {
+    const nodes = [
+        { x: 60, y: 60, label: 'A' },
+        { x: 140, y: 60, label: 'B' },
+        { x: 100, y: 100, label: 'C' }
+    ];
+    
+    drawLine(ctx, nodes[0].x, nodes[0].y, nodes[1].x, nodes[1].y, '#666');
+    drawLine(ctx, nodes[1].x, nodes[1].y, nodes[2].x, nodes[2].y, '#666');
+    drawLine(ctx, nodes[2].x, nodes[2].y, nodes[0].x, nodes[0].y, '#666');
+    
+    nodes.forEach(node => {
+        drawCircle(ctx, node.x, node.y, 15, '#e10600', node.label);
+    });
+}
+
+function drawMultiGraph(ctx) {
+    const nodes = [
+        { x: 60, y: 60, label: 'A' },
+        { x: 140, y: 60, label: 'B' },
+        { x: 100, y: 100, label: 'C' }
+    ];
+    
+    // Multiple edges between A and B
+    drawLine(ctx, nodes[0].x, nodes[0].y - 5, nodes[1].x, nodes[1].y - 5, '#666');
+    drawLine(ctx, nodes[0].x, nodes[0].y + 5, nodes[1].x, nodes[1].y + 5, '#666');
+    drawLine(ctx, nodes[1].x, nodes[1].y, nodes[2].x, nodes[2].y, '#666');
+    drawLine(ctx, nodes[2].x, nodes[2].y, nodes[0].x, nodes[0].y, '#666');
+    
+    nodes.forEach(node => {
+        drawCircle(ctx, node.x, node.y, 15, '#b30500', node.label);
+    });
+}
+
+function drawPseudoGraph(ctx) {
+    const nodes = [
+        { x: 60, y: 60, label: 'A' },
+        { x: 140, y: 60, label: 'B' },
+        { x: 100, y: 100, label: 'C' }
+    ];
+    
+    drawLine(ctx, nodes[0].x, nodes[0].y, nodes[1].x, nodes[1].y, '#666');
+    drawLine(ctx, nodes[1].x, nodes[1].y, nodes[2].x, nodes[2].y, '#666');
+    
+    // Loop on node C
+    drawLoop(ctx, nodes[2].x, nodes[2].y, 15, '#666');
+    
+    nodes.forEach(node => {
+        drawCircle(ctx, node.x, node.y, 15, '#8a0000', node.label);
+    });
+}
+
+function drawDirectedGraph(ctx) {
+    const nodes = [
+        { x: 60, y: 60, label: 'A' },
+        { x: 140, y: 60, label: 'B' },
+        { x: 100, y: 100, label: 'C' }
+    ];
+    
+    drawLine(ctx, nodes[0].x, nodes[0].y, nodes[1].x, nodes[1].y, '#666', 2, true);
+    drawLine(ctx, nodes[1].x, nodes[1].y, nodes[2].x, nodes[2].y, '#666', 2, true);
+    drawLine(ctx, nodes[2].x, nodes[2].y, nodes[0].x, nodes[0].y, '#666', 2, true);
+    
+    nodes.forEach(node => {
+        drawCircle(ctx, node.x, node.y, 15, '#0066cc', node.label);
+    });
+}
+
+// ==================== TERMINOLOGY GENERATION ====================
+function generateTerminology() {
+    const terminology = [
+        {
+            title: "Ketetanggaan (Adjacent)",
+            description: "Dua buah simpul dikatakan bertetangga bila keduanya terhubung langsung oleh sebuah sisi.",
+            icon: "fas fa-handshake"
+        },
+        {
+            title: "Bersisian (Incidency)",
+            description: "Sebuah sisi e = (vⱼ, vₖ) dikatakan bersisian dengan simpul vⱼ dan simpul vₖ.",
+            icon: "fas fa-link"
+        },
+        {
+            title: "Simpul Terpencil",
+            description: "Simpul yang tidak mempunyai sisi yang bersisian dengannya, atau tidak bertetangga dengan simpul lainnya.",
+            icon: "fas fa-user-alt-slash"
+        },
+        {
+            title: "Graf Kosong",
+            description: "Graf yang tidak mempunyai sisi satupun tetapi simpulnya harus ada, minimal satu.",
+            icon: "fas fa-ban"
+        },
+        {
+            title: "Derajat (Degree)",
+            description: "Derajat suatu simpul adalah jumlah sisi yang bersisian dengan simpul tersebut.",
+            icon: "fas fa-sort-amount-up"
+        },
+        {
+            title: "Lintasan (Path)",
+            description: "Rangkaian sisi-sisi yang menghubungkan dari simpul awal hingga simpul akhir.",
+            icon: "fas fa-road"
+        },
+        {
+            title: "Siklus (Cycle)",
+            description: "Lintasan elementer dengan simpul pertama sama dengan simpul yang terakhir.",
+            icon: "fas fa-sync-alt"
+        },
+        {
+            title: "Terhubung (Connected)",
+            description: "Dua buah simpul v₁ dan v₂ disebut terhubung jika terdapat lintasan dari v₁ ke v₂.",
+            icon: "fas fa-plug"
+        },
+        {
+            title: "Pohon (Tree)",
+            description: "Graf terhubung yang tidak mempunyai sirkuit.",
+            icon: "fas fa-tree"
+        },
+        {
+            title: "Graf Berbobot",
+            description: "Graf yang setiap sisinya diberi sebuah harga (bobot).",
+            icon: "fas fa-weight-hanging"
+        }
+    ];
+    
+    const container = document.querySelector('.terminology-grid');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    terminology.forEach(term => {
+        const item = document.createElement('div');
+        item.className = 'terminology-item';
+        item.innerHTML = `
+            <h3><i class="${term.icon}"></i> ${term.title}</h3>
+            <p>${term.description}</p>
+        `;
+        container.appendChild(item);
+    });
+}
+
+// ==================== ENHANCED INTERACTIVE GAME ====================
+class EnhancedGraphGame {
+    constructor() {
+        this.canvas = document.getElementById('graph-canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.nodes = [];
+        this.edges = [];
+        this.selectedNode = null;
+        this.isAddingEdge = false;
+        this.isAddingLoop = false;
+        this.edgeStartNode = null;
+        this.edgeStartPos = { x: 0, y: 0 };
+        this.edgeType = 'undirected'; // 'undirected', 'directed', 'weighted'
+        this.nodeRadius = 20;
+        this.nodeCounter = 1;
+        this.edgeCounter = 1;
+        
+        this.init();
+    }
+    
+    init() {
+        // Set canvas size
+        this.canvas.width = this.canvas.offsetWidth;
+        this.canvas.height = this.canvas.offsetHeight;
+        
+        // Add event listeners
+        this.canvas.addEventListener('mousedown', this.handleMouseDown.bind(this));
+        this.canvas.addEventListener('mousemove', this.handleMouseMove.bind(this));
+        this.canvas.addEventListener('mouseup', this.handleMouseUp.bind(this));
+        
+        // Add initial nodes
+        this.addNode(100, 100);
+        this.addNode(200, 150);
+        this.addNode(150, 250);
+        
+        // Add some initial edges
+        this.addEdge(0, 1, false);
+        this.addEdge(1, 2, false);
+        
+        this.draw();
+        this.updateStats();
+    }
+    
+    addNode(x, y) {
+        const node = {
+            id: this.nodeCounter++,
+            x: x,
+            y: y,
+            color: getRandomColor(),
+            label: `v${this.nodes.length + 1}`
+        };
+        this.nodes.push(node);
+        this.updateStats();
+        NotificationSystem.showToast('success', 'Simpul Ditambahkan', `Simpul ${node.label} berhasil ditambahkan`, 3000);
+        return node;
+    }
+    
+    addEdge(fromIndex, toIndex, isLoop = false) {
+        // For loops
+        if (isLoop) {
+            const edge = {
+                id: this.edgeCounter++,
+                from: fromIndex,
+                to: fromIndex, // Same node for loop
+                directed: this.edgeType === 'directed',
+                weighted: this.edgeType === 'weighted',
+                weight: this.edgeType === 'weighted' ? Math.floor(Math.random() * 10) + 1 : null,
+                isLoop: true
+            };
+            this.edges.push(edge);
+            this.updateStats();
+            NotificationSystem.showToast('info', 'Loop Ditambahkan', `Loop berhasil ditambahkan pada simpul ${this.nodes[fromIndex].label}`, 3000);
+            return edge;
+        }
+        
+        // Check if edge already exists
+        const existingEdge = this.edges.find(edge => {
+            if (this.edgeType === 'directed') {
+                return edge.from === fromIndex && edge.to === toIndex;
+            } else {
+                return (edge.from === fromIndex && edge.to === toIndex) ||
+                       (edge.from === toIndex && edge.to === fromIndex);
+            }
+        });
+        
+        if (existingEdge && this.edgeType !== 'directed') {
+            NotificationSystem.showToast('warning', 'Sisi Ganda', 'Sisi tak berarah sudah ada antara simpul ini', 3000);
+            return;
+        }
+        
+        const edge = {
+            id: this.edgeCounter++,
+            from: fromIndex,
+            to: toIndex,
+            directed: this.edgeType === 'directed',
+            weighted: this.edgeType === 'weighted',
+            weight: this.edgeType === 'weighted' ? Math.floor(Math.random() * 10) + 1 : null,
+            isLoop: false
+        };
+        this.edges.push(edge);
+        this.updateStats();
+        
+        const fromLabel = this.nodes[fromIndex].label;
+        const toLabel = this.nodes[toIndex].label;
+        NotificationSystem.showToast('success', 'Sisi Ditambahkan', 
+            `Sisi ${edge.directed ? 'berarah' : 'tak berarah'} dari ${fromLabel} ke ${toLabel} berhasil ditambahkan`, 
+            3000);
+        return edge;
+    }
+    
+    getNodeAt(x, y) {
+        for (let i = this.nodes.length - 1; i >= 0; i--) {
+            const node = this.nodes[i];
+            const distance = Math.sqrt((x - node.x) ** 2 + (y - node.y) ** 2);
+            if (distance <= this.nodeRadius) {
+                return { node, index: i };
+            }
+        }
+        return null;
+    }
+    
+    handleMouseDown(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const nodeInfo = this.getNodeAt(x, y);
+        
+        if (this.isAddingLoop) {
+            if (nodeInfo) {
+                this.addEdge(nodeInfo.index, nodeInfo.index, true);
+                this.isAddingLoop = false;
+                document.getElementById('add-loop').classList.remove('active');
+                this.draw();
+            }
+        } else if (this.isAddingEdge) {
+            if (nodeInfo) {
+                if (this.edgeStartNode === null) {
+                    this.edgeStartNode = nodeInfo.index;
+                    this.edgeStartPos = { x, y };
+                    this.draw();
+                } else {
+                    if (this.edgeStartNode !== nodeInfo.index) {
+                        this.addEdge(this.edgeStartNode, nodeInfo.index);
+                    }
+                    this.edgeStartNode = null;
+                    this.isAddingEdge = false;
+                    document.getElementById('add-edge').classList.remove('active');
+                    this.draw();
+                }
+            }
+        } else {
+            if (nodeInfo) {
+                this.selectedNode = nodeInfo;
+            } else {
+                // Add new node
+                this.addNode(x, y);
+                this.draw();
+            }
+        }
+    }
+    
+    handleMouseMove(e) {
+        if (this.selectedNode) {
+            const rect = this.canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            this.selectedNode.node.x = x;
+            this.selectedNode.node.y = y;
+            this.draw();
+        }
+        
+        // Update edge start position for visual feedback
+        if (this.isAddingEdge && this.edgeStartNode !== null) {
+            const rect = this.canvas.getBoundingClientRect();
+            this.edgeStartPos = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+            this.draw();
+        }
+    }
+    
+    handleMouseUp() {
+        this.selectedNode = null;
+    }
+    
+    draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Draw edges
+        this.edges.forEach(edge => {
+            if (edge.isLoop) {
+                const node = this.nodes[edge.from];
+                drawLoop(this.ctx, node.x, node.y, 15, '#666', 2);
+            } else {
+                const fromNode = this.nodes[edge.from];
+                const toNode = this.nodes[edge.to];
+                drawLine(this.ctx, fromNode.x, fromNode.y, toNode.x, toNode.y, 
+                        '#333', 2, edge.directed, edge.weighted ? edge.weight : null);
+            }
+        });
+        
+        // Draw temporary edge if adding
+        if (this.isAddingEdge && this.edgeStartNode !== null) {
+            const fromNode = this.nodes[this.edgeStartNode];
+            drawLine(this.ctx, fromNode.x, fromNode.y, this.edgeStartPos.x, this.edgeStartPos.y, 
+                    '#666', 2, this.edgeType === 'directed', false);
+        }
+        
+        // Draw nodes
+        this.nodes.forEach(node => {
+            drawCircle(this.ctx, node.x, node.y, this.nodeRadius, node.color, node.label);
+        });
+    }
+    
+    updateStats() {
+        document.getElementById('node-count').textContent = this.nodes.length;
+        document.getElementById('edge-count').textContent = this.edges.length;
+        
+        // Determine graph type
+        let graphType = 'Sederhana';
+        let hasLoop = false;
+        let hasMultipleEdges = false;
+        let hasDirected = false;
+        let hasWeighted = false;
+        
+        // Check for features
+        for (const edge of this.edges) {
+            if (edge.isLoop) {
+                hasLoop = true;
+            }
+            if (edge.directed) {
+                hasDirected = true;
+            }
+            if (edge.weighted) {
+                hasWeighted = true;
+            }
+        }
+        
+        // Check for multiple edges
+        const edgeMap = new Map();
+        for (const edge of this.edges) {
+            if (edge.isLoop) continue;
+            
+            const key = edge.directed ? 
+                `${edge.from}-${edge.to}` : 
+                [edge.from, edge.to].sort().join('-');
+            
+            if (edgeMap.has(key)) {
+                hasMultipleEdges = true;
+            } else {
+                edgeMap.set(key, true);
+            }
+        }
+        
+        if (hasLoop) {
+            graphType = 'Semu';
+        } else if (hasMultipleEdges) {
+            graphType = 'Ganda';
+        } else if (hasDirected) {
+            graphType = 'Berarah';
+        } else if (hasWeighted) {
+            graphType = 'Berbobot';
+        }
+        
+        document.getElementById('graph-type').textContent = graphType;
+    }
+    
+    clear() {
+        NotificationSystem.showModal(
+            'Konfirmasi Hapus',
+            'Apakah Anda yakin ingin menghapus semua simpul dan sisi?',
+            [
+                { text: 'Batal', class: 'btn', action: 'close' },
+                { 
+                    text: 'Hapus Semua', 
+                    class: 'btn btn-danger',
+                    action: () => {
+                        // Reset semua data
+                        this.nodes = [];
+                        this.edges = [];
+                        this.nodeCounter = 1;
+                        this.edgeCounter = 1;
+                        this.selectedNode = null;
+                        this.isAddingEdge = false;
+                        this.isAddingLoop = false;
+                        this.edgeStartNode = null;
+                        
+                        // Hapus tombol active state
+                        document.getElementById('add-edge')?.classList.remove('active');
+                        document.getElementById('add-loop')?.classList.remove('active');
+                        document.getElementById('add-multigraph')?.classList.remove('active');
+                        document.getElementById('add-directed')?.classList.remove('active');
+                        
+                        // Bersihkan canvas dan gambar ulang
+                        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                        this.draw();
+                        this.updateStats();
+                        
+                        // Tampilkan notifikasi
+                        NotificationSystem.showToast('success', 'Graf Dihapus', 'Semua simpul dan sisi telah dihapus. Graf kosong siap digunakan.', 3000);
+                        NotificationSystem.hideModal(document.querySelector('.modal-overlay.active'));
+                    }
+                }
+            ]
+        );
+    }
+    
+    loadPreset(presetType) {
+        this.nodes = [];
+        this.edges = [];
+        this.nodeCounter = 1;
+        this.edgeCounter = 1;
+        
+        switch(presetType) {
+            case 'simple':
+                // Simple graph: triangle
+                this.addNode(100, 100);
+                this.addNode(200, 100);
+                this.addNode(150, 200);
+                this.addEdge(0, 1);
+                this.addEdge(1, 2);
+                this.addEdge(2, 0);
+                break;
+                
+            case 'multi':
+                // Multi graph: with multiple edges
+                this.addNode(100, 100);
+                this.addNode(200, 100);
+                this.addNode(150, 200);
+                this.addEdge(0, 1);
+                this.addEdge(0, 1); // Multiple edge
+                this.addEdge(1, 2);
+                this.addEdge(2, 0);
+                break;
+                
+            case 'pseudo':
+                // Pseudo graph: with loop
+                this.addNode(100, 100);
+                this.addNode(200, 100);
+                this.addNode(150, 200);
+                this.addEdge(0, 1);
+                this.addEdge(1, 2);
+                this.addEdge(2, 2, true); // Loop
+                break;
+                
+            case 'directed':
+                // Directed graph
+                this.edgeType = 'directed';
+                this.addNode(100, 100);
+                this.addNode(200, 100);
+                this.addNode(150, 200);
+                this.addEdge(0, 1);
+                this.addEdge(1, 2);
+                this.addEdge(2, 0);
+                break;
+                
+            case 'complete':
+                // Complete graph K4
+                this.addNode(100, 100);
+                this.addNode(200, 100);
+                this.addNode(100, 200);
+                this.addNode(200, 200);
+                // Connect every node to every other node
+                for (let i = 0; i < 4; i++) {
+                    for (let j = i + 1; j < 4; j++) {
+                        this.addEdge(i, j);
+                    }
+                }
+                break;
+        }
+        
+        this.draw();
+        this.updateStats();
+        NotificationSystem.showToast('info', 'Preset Dimuat', `Graf ${presetType} berhasil dimuat`, 3000);
+    }
+    
+    setEdgeType(type) {
+        this.edgeType = type;
+        document.querySelectorAll('.edge-type-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`.edge-type-btn[data-type="${type}"]`).classList.add('active');
+    }
+}
+
+// ==================== QUIZ SYSTEM ====================
+const quizQuestions = [
+    {
+        question: "Himpunan simpul-simpul yang dihubungkan oleh sisi sisi disebut…….",
+        options: ["Graf", "Pohon", "vertex", "edges", "node"],
+        correct: 0,
+        explanation: "Graf adalah himpunan simpul-simpul yang dihubungkan oleh sisi-sisi."
+    },
+    {
+        question: "Graf yang tidak mengandung gelang maupun sisi ganda disebut graf…….",
+        options: ["Berhingga", "Sederhana", "Berarah", "Tak sederhana", "Tak berhingga"],
+        correct: 1,
+        explanation: "Graf sederhana adalah graf yang tidak mengandung gelang maupun sisi ganda."
+    },
+    {
+        question: "Dalam pengujian program kita menerapkan jenis graf…..",
+        options: ["Sederhana", "Tak berarah", "Berarah", "Tak sederhana", "Tak berhingga"],
+        correct: 2,
+        explanation: "Dalam pengujian program (control flow graph) kita menggunakan graf berarah."
+    },
+    {
+        question: "Lintasan elementer dengan simpul awal sama dengan simpul akhir disebut…….",
+        options: ["Derajat", "Terhubung", "Simpul terpencil", "Siklus", "Pohon"],
+        correct: 3,
+        explanation: "Siklus adalah lintasan elementer dengan simpul awal sama dengan simpul akhir."
+    },
+    {
+        question: "Jumlah sisi pada graf lengkap dirumuskan dengan…….",
+        options: ["n-1", "(n-1)/2", "2n", "n(n-1)/2", "nr/2"],
+        correct: 3,
+        explanation: "Jumlah sisi pada graf lengkap dengan n simpul adalah n(n-1)/2."
+    },
+    {
+        question: "Suatu graf dimana simpul tidak boleh kosong tetapi garis atau sisi boleh kosong terminologi graf ……",
+        options: ["simpul terpencil", "pohon", "graf kosong", "derajat", "lintasan"],
+        correct: 2,
+        explanation: "Graf kosong adalah graf yang tidak mempunyai sisi satupun tetapi simpulnya harus ada."
+    },
+    {
+        question: "Simpul yang tidak bersisian dengan simpul lainnya merupakan terminologi graf ……",
+        options: ["simpul terpencil", "graf kosong", "derajat", "lintasan", "pohon"],
+        correct: 0,
+        explanation: "Simpul terpencil adalah simpul yang tidak mempunyai sisi yang bersisian dengannya."
+    },
+    {
+        question: "Jumlah sisi pada sebuah simpul dalam terminologi graf disebut ……",
+        options: ["graf terpencil", "graf kosong", "derajat", "lintasan", "pohon"],
+        correct: 2,
+        explanation: "Derajat suatu simpul adalah jumlah sisi yang bersisian dengan simpul tersebut."
+    },
+    {
+        question: "Rangkaian sisi yang menghubungkan dari simpul awal hingga simpul akhir terminologi graf ……",
+        options: ["graf terpencil", "graf kosong", "derajat", "lintasan", "pohon"],
+        correct: 3,
+        explanation: "Lintasan adalah rangkaian sisi-sisi yang menghubungkan dari simpul awal hingga simpul akhir."
+    },
+    {
+        question: "Graf dimana sisi-sisinya hanya berupa percabangan tidak membentuk lintasan tertutup atau sirkuit terminologi graf ……",
+        options: ["graf terpencil", "graf kosong", "derajat", "lintasan", "pohon"],
+        correct: 4,
+        explanation: "Pohon adalah graf terhubung yang tidak mempunyai sirkuit (lintasan tertutup)."
+    }
+];
+
+function generateQuiz() {
+    const container = document.getElementById('quiz-container');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    quizQuestions.forEach((q, index) => {
+        const questionElement = document.createElement('div');
+        questionElement.className = 'quiz-item';
+        questionElement.innerHTML = `
+            <h4>${index + 1}. ${q.question}</h4>
+            <div class="options">
+                ${q.options.map((option, optIndex) => `
+                    <label class="option">
+                        <input type="radio" name="question-${index}" value="${optIndex}">
+                        <span class="option-text">${option}</span>
+                    </label>
+                `).join('')}
+            </div>
+            <div class="explanation" id="explanation-${index}" style="display: none;">
+                <p><strong>Penjelasan:</strong> ${q.explanation}</p>
+            </div>
+        `;
+        container.appendChild(questionElement);
+        
+        // Add event listener to show explanation when option is selected
+        questionElement.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const explanation = document.getElementById(`explanation-${index}`);
+                explanation.style.display = 'block';
+            });
+        });
+    });
+}
+
+function checkQuiz() {
+    let score = 0;
+    const totalQuestions = quizQuestions.length;
+    
+    quizQuestions.forEach((q, index) => {
+        const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
+        if (selectedOption) {
+            const selectedValue = parseInt(selectedOption.value);
+            if (selectedValue === q.correct) {
+                score++;
+            }
+        }
+    });
+    
+    const percentage = (score / totalQuestions) * 100;
+    const resultMessage = `Anda mendapatkan ${score} dari ${totalQuestions} soal benar (${percentage.toFixed(1)}%)`;
+    
+    NotificationSystem.showModal(
+        'Hasil Kuis',
+        `
+        <div class="quiz-result">
+            <h3>${resultMessage}</h3>
+            <p>Kunci Jawaban: ABCDEBACDE</p>
+            <p>${percentage >= 70 ? '🎉 Selamat! Anda memahami materi dengan baik.' : '📚 Anda perlu mempelajari kembali materi ini.'}</p>
+        </div>
+        `,
+        [
+            { text: 'Tutup', class: 'btn', action: 'close' },
+            { 
+                text: 'Coba Lagi', 
+                class: 'btn btn-primary',
+                action: () => {
+                    generateQuiz();
+                    NotificationSystem.hideModal(document.querySelector('.modal-overlay.active'));
+                }
+            }
+        ]
+    );
+}
+
+// ==================== INITIALIZATION ====================
+document.addEventListener('DOMContentLoaded', function() {
+    // Draw visualizations
+    drawHeroGraph();
+    drawDefinitionGraph();
+    drawGraphTypes();
+    generateTerminology();
+    generateQuiz();
+    
+    // Initialize game
+    let game = null;
+    const gameCanvas = document.getElementById('graph-canvas');
+    if (gameCanvas) {
+        game = new EnhancedGraphGame();
+    }
+    
+    // Game controls
+    const addNodeBtn = document.getElementById('add-node');
+    const addEdgeBtn = document.getElementById('add-edge');
+    const addLoopBtn = document.getElementById('add-loop');
+    const addMultigraphBtn = document.getElementById('add-multigraph');
+    const addDirectedBtn = document.getElementById('add-directed');
+    const clearBtn = document.getElementById('clear-graph');
+    const checkGraphBtn = document.getElementById('check-graph');
+    const checkQuizBtn = document.getElementById('submit-quiz');
+    
+    if (addNodeBtn && game) {
+        addNodeBtn.addEventListener('click', () => {
+            const x = Math.random() * (game.canvas.width - 100) + 50;
+            const y = Math.random() * (game.canvas.height - 100) + 50;
+            game.addNode(x, y);
+            game.draw();
+        });
+    }
+    
+    if (addEdgeBtn && game) {
+        addEdgeBtn.addEventListener('click', () => {
+            game.isAddingEdge = !game.isAddingEdge;
+            game.isAddingLoop = false;
+            addEdgeBtn.classList.toggle('active');
+            addLoopBtn.classList.remove('active');
+            addMultigraphBtn.classList.remove('active');
+            addDirectedBtn.classList.remove('active');
+        });
+    }
+    
+    if (addLoopBtn && game) {
+        addLoopBtn.addEventListener('click', () => {
+            game.isAddingLoop = !game.isAddingLoop;
+            game.isAddingEdge = false;
+            addLoopBtn.classList.toggle('active');
+            addEdgeBtn.classList.remove('active');
+            addMultigraphBtn.classList.remove('active');
+            addDirectedBtn.classList.remove('active');
+        });
+    }
+    
+    if (addMultigraphBtn && game) {
+        addMultigraphBtn.addEventListener('click', () => {
+            // Add multiple edges between two random nodes
+            if (game.nodes.length >= 2) {
+                const node1 = Math.floor(Math.random() * game.nodes.length);
+                let node2 = Math.floor(Math.random() * game.nodes.length);
+                while (node2 === node1 && game.nodes.length > 1) {
+                    node2 = Math.floor(Math.random() * game.nodes.length);
+                }
+                game.addEdge(node1, node2);
+                game.addEdge(node1, node2); // Add second edge for multigraph
+                game.draw();
+                addMultigraphBtn.classList.add('active');
+                setTimeout(() => addMultigraphBtn.classList.remove('active'), 500);
+            } else {
+                NotificationSystem.showToast('warning', 'Perhatian', 'Tambahkan minimal 2 simpul untuk membuat multigraph', 3000);
+            }
+        });
+    }
+    
+    if (addDirectedBtn && game) {
+        addDirectedBtn.addEventListener('click', () => {
+            // Add directed edge between two random nodes
+            if (game.nodes.length >= 2) {
+                const node1 = Math.floor(Math.random() * game.nodes.length);
+                let node2 = Math.floor(Math.random() * game.nodes.length);
+                while (node2 === node1 && game.nodes.length > 1) {
+                    node2 = Math.floor(Math.random() * game.nodes.length);
+                }
+                game.edgeType = 'directed';
+                game.addEdge(node1, node2);
+                game.draw();
+                addDirectedBtn.classList.add('active');
+                setTimeout(() => addDirectedBtn.classList.remove('active'), 500);
+            } else {
+                NotificationSystem.showToast('warning', 'Perhatian', 'Tambahkan minimal 2 simpul untuk membuat directed graph', 3000);
+            }
+        });
+    }
+    
+    if (clearBtn && game) {
+        clearBtn.addEventListener('click', () => {
+            game.clear();
+        });
+    }
+    
+    if (checkGraphBtn && game) {
+        checkGraphBtn.addEventListener('click', () => {
+            const graphType = document.getElementById('graph-type').textContent;
+            NotificationSystem.showModal(
+                'Jenis Graf Terdeteksi',
+                `Graf yang Anda buat adalah: <strong>${graphType}</strong><br><br>
+                <p>Penjelasan:</p>
+                <ul>
+                    <li><strong>Sederhana:</strong> Tidak ada loop atau sisi ganda</li>
+                    <li><strong>Ganda (Multigraph):</strong> Memiliki sisi ganda</li>
+                    <li><strong>Semu:</strong> Memiliki loop</li>
+                    <li><strong>Berarah:</strong> Sisi memiliki arah</li>
+                    <li><strong>Berbobot:</strong> Sisi memiliki bobot/nilai</li>
+                </ul>`,
+                [
+                    { text: 'Tutup', class: 'btn', action: 'close' }
+                ]
+            );
+        });
+    }
+    
+    if (checkQuizBtn) {
+        checkQuizBtn.addEventListener('click', checkQuiz);
+    }
+    
+    // Reset quiz button
+    const resetQuizBtn = document.getElementById('reset-quiz');
+    if (resetQuizBtn) {
+        resetQuizBtn.addEventListener('click', () => {
+            generateQuiz();
+            NotificationSystem.showToast('info', 'Kuis Diulang', 'Kuis telah direset. Silakan jawab kembali.', 3000);
+        });
+    }
+    
+    // Mobile responsiveness
+    function handleResize() {
+        if (game) {
+            game.canvas.width = game.canvas.offsetWidth;
+            game.canvas.height = game.canvas.offsetHeight;
+            game.draw();
+        }
+    }
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Show welcome message
+    setTimeout(() => {
+        NotificationSystem.showToast('info', 'Selamat Datang!', 'Selamat belajar teori graf. Gunakan game interaktif untuk memahami konsep graf.', 5000);
+    }, 1000);
+});
+
+// ==================== MOBILE TOUCH SUPPORT ====================
+function setupTouchSupport() {
+    const canvas = document.getElementById('graph-canvas');
+    if (!canvas) return;
+    
+    canvas.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent('mousedown', {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+    }, false);
+    
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent('mousemove', {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+    }, false);
+    
+    canvas.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        const mouseEvent = new MouseEvent('mouseup', {});
+        canvas.dispatchEvent(mouseEvent);
+    }, false);
+}
+
+// Initialize touch support for mobile
+if ('ontouchstart' in window) {
+    document.addEventListener('DOMContentLoaded', setupTouchSupport);
+}
+    </script>
+</body>
+</html>
