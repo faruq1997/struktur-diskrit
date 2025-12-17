@@ -3,2421 +3,1823 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pertemuan 11: Teori Graf - Struktur Diskrit</title>
-    <style>
-        /* Reset dan Base Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    /* Warna tema Indonesia (Merah-Putih) */
-    --primary-red: #e10600;
-    --primary-white: #ffffff;
-    --secondary-red: #b30500;
-    --dark-red: #8a0000;
-    --light-gray: #f5f5f5;
-    --medium-gray: #e0e0e0;
-    --dark-gray: #333333;
-    --text-color: #222222;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --border-radius: 12px;
-    --transition: all 0.3s ease;
-}
-
-body {
-    font-family: 'Inter', sans-serif;
-    line-height: 1.6;
-    color: var(--text-color);
-    background-color: var(--light-gray);
-    overflow-x: hidden;
-}
-
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* Header Styles */
-header {
-    background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
-    color: var(--primary-white);
-    padding: 1.5rem 0;
-    box-shadow: var(--shadow);
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.logo h1 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-}
-
-.logo h1 i {
-    margin-right: 10px;
-}
-
-.subtitle {
-    font-size: 1rem;
-    opacity: 0.9;
-}
-
-.indonesia-theme {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.flag-colors {
-    display: flex;
-    width: 60px;
-    height: 30px;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.flag-red {
-    flex: 1;
-    background-color: var(--primary-red);
-}
-
-.flag-white {
-    flex: 1;
-    background-color: var(--primary-white);
-}
-
-.theme-text {
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-/* Navigation Styles */
-nav {
-    background-color: var(--primary-white);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.nav-menu {
-    display: flex;
-    list-style: none;
-    justify-content: space-between;
-    padding: 0;
-    margin: 0;
-    overflow-x: auto;
-    white-space: nowrap;
-}
-
-.nav-menu li {
-    flex: 1;
-    text-align: center;
-}
-
-.nav-link {
-    display: block;
-    padding: 1rem 0.5rem;
-    text-decoration: none;
-    color: var(--dark-gray);
-    font-weight: 500;
-    font-family: 'Poppins', sans-serif;
-    transition: var(--transition);
-    border-bottom: 3px solid transparent;
-}
-
-.nav-link i {
-    margin-right: 8px;
-}
-
-.nav-link:hover, .nav-link.active {
-    color: var(--primary-red);
-    border-bottom-color: var(--primary-red);
-    background-color: rgba(225, 6, 0, 0.05);
-}
-
-/* Main Content */
-main {
-    padding: 2rem 0;
-}
-
-.content-section {
-    margin-bottom: 3rem;
-}
-
-.content-section h2 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    color: var(--dark-red);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Hero Section */
-.hero {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(135deg, rgba(225, 6, 0, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
-    padding: 2.5rem;
-    border-radius: var(--border-radius);
-    margin-bottom: 3rem;
-    box-shadow: var(--shadow);
-}
-
-.hero-content {
-    flex: 1;
-    min-width: 300px;
-}
-
-.hero h2 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2.2rem;
-    color: var(--dark-red);
-    margin-bottom: 1rem;
-    line-height: 1.3;
-}
-
-.hero p {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    color: var(--dark-gray);
-}
-
-.hero-badges {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.badge {
-    background-color: var(--primary-red);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.hero-illustration {
-    flex: 1;
-    min-width: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Card Styles */
-.card {
-    background-color: var(--primary-white);
-    border-radius: var(--border-radius);
-    padding: 2rem;
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-}
-
-.card-content {
-    line-height: 1.7;
-}
-
-.card h3 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-    color: var(--dark-red);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.analogy {
-    background-color: rgba(225, 6, 0, 0.05);
-    border-left: 4px solid var(--primary-red);
-    padding: 1.5rem;
-    margin: 1.5rem 0;
-    border-radius: 0 var(--border-radius) var(--border-radius) 0;
-}
-
-.definition ul {
-    margin-left: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.definition li {
-    margin-bottom: 0.5rem;
-}
-
-.visualization {
-    margin-top: 2rem;
-}
-
-.visualization h4 {
-    font-family: 'Poppins', sans-serif;
-    margin-bottom: 1rem;
-    color: var(--dark-gray);
-}
-
-.graph-visual {
-    height: 200px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    border: 1px dashed var(--medium-gray);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #888;
-}
-
-/* Card Grid untuk Jenis Graf */
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-}
-
-.card-grid .card {
-    padding: 1.5rem;
-    text-align: center;
-}
-
-.card-grid .card h3 {
-    justify-content: center;
-    font-size: 1.2rem;
-}
-
-.card-grid .card p {
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
-}
-
-.graph-mini {
-    height: 120px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    border: 1px solid var(--medium-gray);
-}
-
-/* Terminologi Grid */
-.terminology-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-}
-
-.terminology-item {
-    background-color: var(--primary-white);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-    transition: var(--transition);
-}
-
-.terminology-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.terminology-item h3 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.2rem;
-    margin-bottom: 0.75rem;
-    color: var(--dark-red);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.terminology-item p {
-    font-size: 0.95rem;
-    color: var(--dark-gray);
-}
-
-/* Game Section */
-.game-card {
-    padding: 2rem;
-}
-
-.game-instructions {
-    margin-bottom: 2rem;
-}
-
-.game-instructions h3 {
-    margin-bottom: 0.75rem;
-}
-
-.game-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 1.5rem;
-}
-
-.btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: var(--transition);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-success {
-    background-color: #28a745;
-    color: white;
-}
-
-.btn-primary {
-    background-color: var(--primary-red);
-    color: white;
-}
-
-.game-area {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
-
-.canvas-container {
-    flex: 2;
-    min-width: 300px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 1rem;
-    border: 2px solid var(--medium-gray);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#graph-canvas {
-    background-color: white;
-    border-radius: 4px;
-    display: block;
-    max-width: 100%;
-    height: auto;
-}
-
-.game-info {
-    flex: 1;
-    min-width: 250px;
-    background-color: rgba(225, 6, 0, 0.05);
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-}
-
-.game-info h4 {
-    font-family: 'Poppins', sans-serif;
-    margin-bottom: 1rem;
-    color: var(--dark-red);
-}
-
-.game-info p {
-    margin-bottom: 0.75rem;
-    font-size: 1.1rem;
-}
-
-.game-info span {
-    font-weight: 600;
-    color: var(--primary-red);
-}
-
-.hint {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background-color: rgba(40, 167, 69, 0.1);
-    border-radius: 8px;
-    border-left: 4px solid #28a745;
-}
-
-/* Penerapan Section */
-.applications-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-}
-
-.application-item {
-    text-align: center;
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    background-color: rgba(225, 6, 0, 0.03);
-    transition: var(--transition);
-}
-
-.application-item:hover {
-    background-color: rgba(225, 6, 0, 0.08);
-    transform: translateY(-5px);
-}
-
-.app-icon {
-    width: 70px;
-    height: 70px;
-    background-color: var(--primary-red);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto 1rem;
-    font-size: 1.8rem;
-}
-
-.application-item h3 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.2rem;
-    margin-bottom: 0.75rem;
-    color: var(--dark-red);
-}
-
-.application-item p {
-    font-size: 0.95rem;
-    color: var(--dark-gray);
-}
-
-/* Quiz Section */
-.quiz-instructions {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--medium-gray);
-}
-
-.quiz-container {
-    margin-bottom: 2rem;
-}
-
-.quiz-item {
-    background-color: #f9f9f9;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    border-left: 4px solid var(--medium-gray);
-    transition: var(--transition);
-}
-
-.quiz-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.quiz-item h4 {
-    font-family: 'Poppins', sans-serif;
-    margin-bottom: 1rem;
-    color: var(--dark-gray);
-}
-
-.options {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0.75rem;
-    background-color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transition);
-    border: 1px solid var(--medium-gray);
-}
-
-.option:hover {
-    background-color: rgba(225, 6, 0, 0.05);
-    border-color: var(--primary-red);
-}
-
-.option input {
-    margin-right: 10px;
-}
-
-.quiz-controls {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 2rem;
-}
-
-.quiz-results {
-    background-color: rgba(225, 6, 0, 0.05);
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    margin-top: 1rem;
-}
-
-.quiz-results h4 {
-    font-family: 'Poppins', sans-serif;
-    margin-bottom: 1rem;
-    color: var(--dark-red);
-}
-
-.quiz-results p {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-
-#quiz-feedback {
-    margin-top: 1rem;
-}
-
-#quiz-feedback p {
-    font-size: 0.95rem;
-    margin-bottom: 0.75rem;
-    padding: 0.75rem;
-    border-radius: 6px;
-    font-weight: normal;
-}
-
-#quiz-feedback .correct {
-    background-color: rgba(40, 167, 69, 0.1);
-    border-left: 4px solid #28a745;
-}
-
-#quiz-feedback .incorrect {
-    background-color: rgba(220, 53, 69, 0.1);
-    border-left: 4px solid #dc3545;
-}
-
-#quiz-feedback .unanswered {
-    background-color: rgba(108, 117, 125, 0.1);
-    border-left: 4px solid #6c757d;
-}
-
-/* Active state for game buttons */
-.btn.active {
-    background-color: var(--dark-red);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.btn.active:hover {
-    transform: none;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* Popup Modal Styles */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-}
-
-.modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.modal {
-    background-color: var(--primary-white);
-    border-radius: var(--border-radius);
-    padding: 2rem;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transform: translateY(-20px);
-    transition: transform 0.3s ease;
-}
-
-.modal-overlay.active .modal {
-    transform: translateY(0);
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid var(--light-gray);
-}
-
-.modal-title {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem;
-    color: var(--dark-red);
-    margin: 0;
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--dark-gray);
-    cursor: pointer;
-    transition: var(--transition);
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.modal-close:hover {
-    background-color: var(--light-gray);
-    color: var(--primary-red);
-}
-
-.modal-body {
-    margin-bottom: 1.5rem;
-}
-
-.modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-}
-
-/* Toast Notification */
-.toast {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: var(--primary-white);
-    border-radius: var(--border-radius);
-    padding: 1rem 1.5rem;
-    box-shadow: var(--shadow-lg);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    z-index: 1001;
-    transform: translateX(150%);
-    transition: transform 0.3s ease;
-    max-width: 350px;
-}
-
-.toast.show {
-    transform: translateX(0);
-}
-
-.toast-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-
-.toast-success .toast-icon {
-    background-color: rgba(40, 167, 69, 0.2);
-    color: #28a745;
-}
-
-.toast-info .toast-icon {
-    background-color: rgba(0, 123, 255, 0.2);
-    color: #007bff;
-}
-
-.toast-warning .toast-icon {
-    background-color: rgba(255, 193, 7, 0.2);
-    color: #ffc107;
-}
-
-.toast-error .toast-icon {
-    background-color: rgba(220, 53, 69, 0.2);
-    color: #dc3545;
-}
-
-.toast-content {
-    flex: 1;
-}
-
-.toast-title {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-.toast-message {
-    font-size: 0.9rem;
-    color: var(--dark-gray);
-}
-
-.toast-close {
-    background: none;
-    border: none;
-    color: var(--medium-gray);
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.toast-close:hover {
-    background-color: var(--light-gray);
-    color: var(--dark-gray);
-}
-
-/* Enhanced Game Controls */
-.edge-type-selector {
-    display: flex;
-    gap: 10px;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-}
-
-.edge-type-btn {
-    padding: 0.5rem 1rem;
-    border: 2px solid var(--medium-gray);
-    background-color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transition);
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.edge-type-btn:hover {
-    border-color: var(--primary-red);
-    background-color: rgba(225, 6, 0, 0.05);
-}
-
-.edge-type-btn.active {
-    background-color: var(--primary-red);
-    color: white;
-    border-color: var(--primary-red);
-}
-
-.graph-presets {
-    display: flex;
-    gap: 10px;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-}
-
-.preset-btn {
-    padding: 0.5rem 1rem;
-    border: 2px solid var(--medium-gray);
-    background-color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transition);
-    font-size: 0.9rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.preset-btn:hover {
-    border-color: var(--primary-red);
-    background-color: rgba(225, 6, 0, 0.05);
-}
-
-/* Footer */
-footer {
-    background-color: var(--dark-gray);
-    color: white;
-    padding: 2.5rem 0;
-    margin-top: 3rem;
-}
-
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
-
-.footer-info h3 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.footer-info p {
-    opacity: 0.8;
-}
-
-.footer-credits {
-    text-align: right;
-}
-
-.footer-credits p {
-    margin-bottom: 0.5rem;
-}
-
-.copyright {
-    font-size: 0.9rem;
-    opacity: 0.7;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 1rem;
-    }
-    
-    .indonesia-theme {
-        justify-content: center;
-    }
-    
-    .nav-menu {
-        justify-content: flex-start;
-        overflow-x: auto;
-    }
-    
-    .nav-menu li {
-        flex: 0 0 auto;
-    }
-    
-    .nav-link {
-        padding: 1rem 1.5rem;
-    }
-    
-    .hero {
-        flex-direction: column;
-        text-align: center;
-        padding: 2rem;
-    }
-    
-    .hero-badges {
-        justify-content: center;
-    }
-    
-    .hero h2 {
-        font-size: 1.8rem;
-    }
-    
-    .content-section h2 {
-        font-size: 1.5rem;
-    }
-    
-    .card-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-    
-    .game-area {
-        flex-direction: column;
-    }
-    
-    .canvas-container {
-        min-width: 100%;
-    }
-    
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .footer-credits {
-        text-align: center;
-    }
-}
-
-@media (max-width: 480px) {
-    .logo h1 {
-        font-size: 1.6rem;
-    }
-    
-    .hero h2 {
-        font-size: 1.5rem;
-    }
-    
-    .card {
-        padding: 1.5rem;
-    }
-    
-    .game-controls {
-        flex-direction: column;
-    }
-    
-    .btn {
-        width: 100%;
-    }
-    
-    .applications-grid {
-        grid-template-columns: 1fr;
-    }
-}
-    </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>Petualangan Teori Graf - Game Edukasi Struktur Diskrit</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ffff;
+            --secondary: #ff00ff;
+            --accent: #00ff00;
+            --dark-bg: #0a0a1a;
+            --darker-bg: #050510;
+            --card-bg: #121230;
+            --text: #f0f0ff;
+            --text-secondary: #b0b0d0;
+            --border: #2a2a5a;
+            --correct: #00ff88;
+            --incorrect: #ff3366;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text);
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.05) 0%, transparent 20%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--darker-bg) 0%, #151540 100%);
+            border-bottom: 2px solid var(--primary);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        h1 i {
+            margin-right: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.1);
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        h2 i {
+            margin-right: 10px;
+        }
+
+        .section-intro {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Tabs */
+        .tabs, .quiz-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn, .quiz-tab-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem 1.5rem;
+            background: var(--darker-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover, .quiz-tab-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .tab-btn.active, .quiz-tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--darker-bg);
+            border-color: transparent;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Learning Content */
+        .concept-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .concept-card h3 {
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            font-size: 1.4rem;
+        }
+
+        .concept-card p {
+            margin-bottom: 0.5rem;
+        }
+
+        .analogy {
+            background: rgba(255, 0, 255, 0.05);
+            border: 1px dashed var(--secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .analogy strong {
+            color: var(--secondary);
+        }
+
+        /* Quiz Section */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .score-display {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .score-display span {
+            color: var(--primary);
+        }
+
+        #score, #progress {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, var(--incorrect), #ff6699);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reset-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
+        }
+
+        /* Quiz Questions */
+        .quiz-content {
+            display: none;
+        }
+
+        .quiz-content.active {
+            display: block;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            border-color: var(--primary);
+        }
+
+        .question-number {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--darker-bg);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+            color: var(--text);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 10px;
+        }
+
+        .option {
+            padding: 1rem;
+            background: var(--darker-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option:hover {
+            border-color: var(--primary);
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .option.selected {
+            border-color: var(--accent);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .option.correct {
+            border-color: var(--correct);
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--correct);
+        }
+
+        .option.incorrect {
+            border-color: var(--incorrect);
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--incorrect);
+        }
+
+        .option-letter {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: var(--border);
+            color: var(--text);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .option.selected .option-letter {
+            background: var(--accent);
+            color: var(--darker-bg);
+        }
+
+        .option.correct .option-letter {
+            background: var(--correct);
+            color: var(--darker-bg);
+        }
+
+        .option.incorrect .option-letter {
+            background: var(--incorrect);
+            color: var(--darker-bg);
+        }
+
+        /* Quiz Result */
+        .quiz-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        #result-title {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        #result-message {
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker-bg);
+            border-top: 1px solid var(--border);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-note {
+            font-size: 0.9rem;
+            color: var(--border) !important;
+        }
+
+        /* Visualization Section */
+        .visualization-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .viz-tab-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem 1.5rem;
+            background: var(--darker-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .viz-tab-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .viz-tab-btn.active {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: var(--darker-bg);
+            border-color: transparent;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .viz-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .viz-content.active {
+            display: block;
+        }
+
+        /* Graph Grid */
+        .graph-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .graph-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .graph-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.1);
+        }
+
+        .graph-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .graph-container {
+            width: 100%;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .graph-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .vertex {
+            filter: drop-shadow(0 0 3px currentColor);
+            transition: fill 0.3s ease;
+        }
+
+        .graph-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Application Grid */
+        .application-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .app-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.1);
+        }
+
+        .app-card h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-icon {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .app-card p {
+            color: var(--text);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .app-details {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid var(--warning);
+            padding: 0.8rem;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .app-details strong {
+            color: var(--warning);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            section {
+                padding: 1.5rem;
+            }
+            
+            .quiz-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .score-display {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-btn, .quiz-tab-btn, .viz-tab-btn {
+                min-width: 100%;
+            }
+            
+            .graph-grid, .application-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .graph-container {
+                height: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .question-text {
+                font-size: 1rem;
+            }
+            
+            .graph-card h3, .app-card h3 {
+                font-size: 1.1rem;
+            }
+            
+            .graph-description, .app-card p {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Header dengan tema Indonesia -->
+    <!-- Header -->
     <header>
         <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1><i class="fas fa-project-diagram"></i> Teori Graf</h1>
-                    <p class="subtitle">Pertemuan 11 - Struktur Diskrit</p>
-                </div>
-                <div class="indonesia-theme">
-                    <div class="flag-colors">
-                        <div class="flag-red"></div>
-                        <div class="flag-white"></div>
-                    </div>
-                    <p class="theme-text">Materi dengan pendekatan Indonesia</p>
-                </div>
-            </div>
+            <h1><i class="fas fa-project-diagram"></i> Petualangan Teori Graf</h1>
+            <p class="subtitle">Eksplorasi Interaktif Struktur Diskrit - Pertemuan 11 & 12</p>
         </div>
     </header>
 
-    <!-- Navigasi -->
-    <nav>
-        <div class="container">
-            <ul class="nav-menu">
-                <li><a href="#definisi" class="nav-link active"><i class="fas fa-book"></i> Definisi</a></li>
-                <li><a href="#jenis" class="nav-link"><i class="fas fa-shapes"></i> Jenis Graf</a></li>
-                <li><a href="#terminologi" class="nav-link"><i class="fas fa-glossary"></i> Terminologi</a></li>
-                <li><a href="#game" class="nav-link"><i class="fas fa-gamepad"></i> Game Interaktif</a></li>
-                <li><a href="#penerapan" class="nav-link"><i class="fas fa-lightbulb"></i> Penerapan</a></li>
-                <li><a href="#latihan" class="nav-link"><i class="fas fa-question-circle"></i> Latihan Soal</a></li>
-            </ul>
-        </div>
-    </nav>
-
     <main class="container">
-        <!-- Definisi Graf -->
-        <section id="definisi" class="content-section">
-            <h2><i class="fas fa-info-circle"></i> Definisi Graf</h2>
-            <div class="card">
-                <div class="card-content">
-                    <p>Teori graf digunakan untuk merepresentasikan objek-objek diskrit dan hubungan antara objek-objek tersebut.</p>
-                    
+        <!-- Materi Belajar -->
+        <section class="learning-section">
+            <h2><i class="fas fa-book-open"></i> Materi Belajar Interaktif</h2>
+            <p class="section-intro">Pelajari teori graf dengan analogi dunia nyata yang mudah dipahami!</p>
+            
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="pertemuan11">Pertemuan 11: Dasar Graf</button>
+                <button class="tab-btn" data-tab="pertemuan12">Pertemuan 12: Lanjutan</button>
+            </div>
+            
+            <div class="tab-content active" id="pertemuan11">
+                <div class="concept-card">
+                    <h3><i class="fas fa-map"></i> Definisi Graf</h3>
+                    <p>Graf adalah kumpulan simpul (vertex) dan sisi (edge) yang menghubungkan simpul-simpul tersebut.</p>
                     <div class="analogy">
-                        <h3><i class="fas fa-lightbulb"></i> Analogi: Peta Kota</h3>
-                        <p>Bayangkan sebuah kota dengan berbagai tempat (simpul) dan jalan yang menghubungkannya (sisi). 
-                        Setiap tempat bisa berupa rumah, sekolah, atau pasar. Jalan menunjukkan bagaimana Anda bisa berpindah dari satu tempat ke tempat lain.</p>
+                        <strong>Analogi Dunia Nyata:</strong> Bayangkan <strong>peta kota</strong>! Setiap <strong>kota</strong> adalah <strong>simpul</strong>, dan <strong>jalanan</strong> yang menghubungkan kota-kota adalah <strong>sisi</strong>.
+                    </div>
+                </div>
+                
+                <div class="concept-card">
+                    <h3><i class="fas fa-exchange-alt"></i> Jenis-Jenis Graf</h3>
+                    <p><strong>Graf Tak Berarah:</strong> Sisi dapat dilalui dua arah.</p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Seperti <strong>jalan dua arah</strong> di kota, bisa bolak-balik.
                     </div>
                     
-                    <div class="definition">
-                        <p>Secara matematis, graf <strong>G</strong> didefinisikan sebagai pasangan himpunan <strong>(V, E)</strong> dimana:</p>
-                        <ul>
-                            <li><strong>V</strong> = himpunan simpul (vertices/nodes) = {v₁, v₂, v₃, ..., vₙ}</li>
-                            <li><strong>E</strong> = himpunan sisi (edges/arcs) yang menghubungkan sepasang simpul = {e₁, e₂, e₃, ..., eₙ}</li>
-                        </ul>
+                    <p><strong>Graf Berarah:</strong> Sisi hanya bisa dilalui satu arah.</p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Seperti <strong>jalan satu arah</strong>, hanya boleh lewat dari satu sisi.
                     </div>
                     
-                    <div class="visualization">
-                        <h4>Visualisasi Graf Sederhana:</h4>
-                        <div class="graph-visual" id="definisi-graph">
-                            <!-- Graf akan digambar oleh JavaScript -->
+                    <p><strong>Graf Sederhana vs Tak Sederhana:</strong></p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Graf Tak Sederhana itu seperti jalan yang punya <strong>"flyover putar balik"</strong> (gelang/loop) atau ada <strong>dua jalan berbeda</strong> untuk ke tujuan yang sama (sisi ganda).
+                    </div>
+                </div>
+                
+                <div class="concept-card">
+                    <h3><i class="fas fa-graduation-cap"></i> Terminologi Penting</h3>
+                    
+                    <p><strong>Bertetangga & Bersisian:</strong></p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> <strong>Tetangga</strong> itu kota sebelah, <strong>bersisian</strong> itu jalan yang nempel di kota itu.
+                    </div>
+                    
+                    <p><strong>Simpul Terpencil:</strong></p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Kota di tengah pulau tanpa jalan akses.
+                    </div>
+                    
+                    <p><strong>Graf Kosong:</strong></p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Peta yang cuma ada nama kota tapi belum dibangun jalan.
+                    </div>
+                    
+                    <p><strong>Derajat:</strong></p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Jumlah jalan yang terhubung ke satu kota.
+                    </div>
+                    
+                    <p><strong>Lintasan (Path) vs Sirkuit/Siklus:</strong></p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> <strong>Lintasan</strong> itu perjalanan dari A ke B. <strong>Sirkuit</strong> itu jalan-jalan yang balik lagi ke rumah (A ke A).
+                    </div>
+                    
+                    <p><strong>Pohon (Tree):</strong></p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Jaringan jalan yang tidak memutar (tidak ada sirkuit), ibarat struktur folder di komputer atau silsilah keluarga.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="pertemuan12">
+                <div class="concept-card">
+                    <h3><i class="fas fa-laptop-code"></i> Representasi Graf</h3>
+                    <p>Komputer tidak melihat gambar graf, tapi melihat angka-angka.</p>
+                    
+                    <p><strong>Matriks Ketetanggaan:</strong> Tabel berisi 0 dan 1 (Biner).</p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> <strong>1</strong> artinya "ada jalan", <strong>0</strong> artinya "buntu/tidak terhubung".
+                    </div>
+                    
+                    <p><strong>Matriks Bersisian & Senarai Ketetanggaan:</strong></p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Cara lain mencatat rute perjalanan, seperti daftar kota yang saling terhubung.
+                    </div>
+                </div>
+                
+                <div class="concept-card">
+                    <h3><i class="fas fa-spider"></i> Graf Isomorfik</h3>
+                    <p>Dua graf yang secara struktural sama tetapi bentuk visualnya berbeda.</p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Ibarat dua <strong>jaring laba-laba</strong> yang bentuknya beda saat ditarik, tapi jumlah benang dan sambungannya sebenarnya sama persis.
+                    </div>
+                </div>
+                
+                <div class="concept-card">
+                    <h3><i class="fas fa-project-diagram"></i> Graf Planar</h3>
+                    <p>Graf yang dapat digambarkan pada bidang datar tanpa sisi-sisi yang saling berpotongan.</p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Ibarat mendesain jalur di <strong>papan sirkuit (PCB)</strong> atau <strong>jalan layang</strong> dimana kabel/jalan tidak boleh saling bertabrakan/berpotongan di satu titik datar.
+                    </div>
+                </div>
+                
+                <div class="concept-card">
+                    <h3><i class="fas fa-route"></i> Euler vs Hamilton</h3>
+                    <p><strong>Lintasan Euler:</strong> Harus melewati <strong>SEMUA JALAN</strong> (Sisi) tepat satu kali.</p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Ibarat <strong>"Tukang Pos"</strong> yang harus melewati semua jalan di kompleks tepat satu kali untuk mengantar surat.
+                    </div>
+                    
+                    <p><strong>Lintasan Hamilton:</strong> Harus mengunjungi <strong>SEMUA KOTA</strong> (Simpul) tepat satu kali.</p>
+                    <div class="analogy">
+                        <strong>Analogi:</strong> Ibarat <strong>"Kurir Paket"</strong> atau <strong>Pedagang Keliling</strong> yang harus mengunjungi semua toko/kota tepat satu kali untuk mengantar barang.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visualisasi Graf & Contoh Penerapan -->
+        <section class="visualization-section">
+            <h2><i class="fas fa-project-diagram"></i> Visualisasi Graf & Contoh Penerapan</h2>
+            <p class="section-intro">Lihat contoh-contoh graf dan bagaimana teori graf diterapkan dalam kehidupan nyata!</p>
+            
+            <div class="visualization-tabs">
+                <button class="viz-tab-btn active" data-viz="contoh-graf">Contoh Graf</button>
+                <button class="viz-tab-btn" data-viz="penerapan">Penerapan Nyata</button>
+            </div>
+            
+            <div class="viz-content active" id="contoh-graf">
+                <div class="graph-grid">
+                    <div class="graph-card">
+                        <h3><i class="fas fa-circle-nodes"></i> Graf Sederhana</h3>
+                        <div class="graph-container">
+                            <svg class="graph-svg" viewBox="0 0 200 150">
+                                <!-- Simpul -->
+                                <circle cx="50" cy="50" r="15" fill="var(--primary)" class="vertex"/>
+                                <circle cx="150" cy="50" r="15" fill="var(--primary)" class="vertex"/>
+                                <circle cx="100" cy="120" r="15" fill="var(--primary)" class="vertex"/>
+                                <circle cx="30" cy="120" r="15" fill="var(--primary)" class="vertex"/>
+                                <circle cx="170" cy="120" r="15" fill="var(--primary)" class="vertex"/>
+                                
+                                <!-- Sisi -->
+                                <line x1="50" y1="50" x2="150" y2="50" stroke="var(--accent)" stroke-width="2"/>
+                                <line x1="50" y1="50" x2="100" y2="120" stroke="var(--accent)" stroke-width="2"/>
+                                <line x1="150" y1="50" x2="100" y2="120" stroke="var(--accent)" stroke-width="2"/>
+                                <line x1="100" y1="120" x2="30" y2="120" stroke="var(--accent)" stroke-width="2"/>
+                                <line x1="100" y1="120" x2="170" y2="120" stroke="var(--accent)" stroke-width="2"/>
+                                
+                                <!-- Label simpul -->
+                                <text x="50" y="50" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">A</text>
+                                <text x="150" y="50" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">B</text>
+                                <text x="100" y="120" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">C</text>
+                                <text x="30" y="120" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">D</text>
+                                <text x="170" y="120" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">E</text>
+                            </svg>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Jenis-jenis Graf -->
-        <section id="jenis" class="content-section">
-            <h2><i class="fas fa-shapes"></i> Jenis-jenis Graf</h2>
-            <div class="card-grid">
-                <div class="card">
-                    <h3><i class="fas fa-circle-notch"></i> Graf Sederhana</h3>
-                    <p>Graf yang tidak mengandung gelang maupun sisi ganda.</p>
-                    <div class="graph-mini" id="simple-graph"></div>
-                </div>
-                
-                <div class="card">
-                    <h3><i class="fas fa-code-branch"></i> Graf Ganda</h3>
-                    <p>Graf yang mengandung sisi ganda (multigraph).</p>
-                    <div class="graph-mini" id="multi-graph"></div>
-                </div>
-                
-                <div class="card">
-                    <h3><i class="fas fa-undo"></i> Graf Semu</h3>
-                    <p>Graf yang mengandung gelang (loop).</p>
-                    <div class="graph-mini" id="pseudo-graph"></div>
-                </div>
-                
-                <div class="card">
-                    <h3><i class="fas fa-arrows-alt-h"></i> Graf Berarah</h3>
-                    <p>Sisi memiliki orientasi arah (directed graph).</p>
-                    <div class="graph-mini" id="directed-graph"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Terminologi Graf -->
-        <section id="terminologi" class="content-section">
-            <h2><i class="fas fa-glossary"></i> Terminologi Graf</h2>
-            <div class="terminology-grid">
-                <!-- Terminologi akan di-generate oleh JavaScript -->
-            </div>
-        </section>
-
-        <!-- Game Interaktif -->
-        <section id="game" class="content-section">
-            <h2><i class="fas fa-gamepad"></i> Game Interaktif: Bangun Graf Anda</h2>
-            <div class="card game-card">
-                <div class="game-instructions">
-                    <h3><i class="fas fa-info-circle"></i> Instruksi:</h3>
-                    <p>Drag and drop simpul (titik) untuk membuat graf. Pilih jenis sisi, lalu klik dua simpul untuk menghubungkannya.</p>
-                    
-                    <div class="game-controls">
-                        <button id="add-node" class="btn"><i class="fas fa-plus-circle"></i> Tambah Simpul</button>
-                        <button id="add-edge" class="btn"><i class="fas fa-link"></i> Tambah Sisi</button>
-                        <button id="add-loop" class="btn"><i class="fas fa-undo"></i> Tambah Loop</button>
-                        <button id="add-multigraph" class="btn"><i class="fas fa-code-branch"></i> Multigraph</button>
-                        <button id="add-directed" class="btn"><i class="fas fa-arrows-alt-h"></i> Directed Graph</button>
-                        <button id="clear-graph" class="btn btn-danger"><i class="fas fa-trash"></i> Hapus Semua</button>
-                        <button id="check-graph" class="btn btn-success"><i class="fas fa-check"></i> Cek Jenis Graf</button>
-                    </div>
-                </div>
-                
-                <div class="game-area">
-                    <div class="canvas-container">
-                        <canvas id="graph-canvas" width="600" height="400"></canvas>
+                        <p class="graph-description">Graf sederhana dengan 5 simpul dan 5 sisi. Tidak ada gelang atau sisi ganda.</p>
                     </div>
                     
-                    <div class="game-info">
-                        <h4>Statistik Graf:</h4>
-                        <p>Jumlah Simpul: <span id="node-count">0</span></p>
-                        <p>Jumlah Sisi: <span id="edge-count">0</span></p>
-                        <p>Jenis Graf: <span id="graph-type">-</span></p>
-                        <div class="hint">
-                            <p><strong>Tips:</strong> Coba buat graf sederhana, graf ganda, atau graf berarah!</p>
+                    <div class="graph-card">
+                        <h3><i class="fas fa-arrow-right"></i> Graf Berarah</h3>
+                        <div class="graph-container">
+                            <svg class="graph-svg" viewBox="0 0 200 150">
+                                <!-- Simpul -->
+                                <circle cx="50" cy="50" r="15" fill="var(--secondary)" class="vertex"/>
+                                <circle cx="150" cy="50" r="15" fill="var(--secondary)" class="vertex"/>
+                                <circle cx="100" cy="120" r="15" fill="var(--secondary)" class="vertex"/>
+                                
+                                <!-- Sisi berarah dengan panah -->
+                                <line x1="60" y1="50" x2="140" y2="50" stroke="var(--secondary)" stroke-width="2" marker-end="url(#arrow)"/>
+                                <line x1="150" y1="60" x2="110" y2="110" stroke="var(--secondary)" stroke-width="2" marker-end="url(#arrow)"/>
+                                <line x1="90" y1="110" x2="50" y2="60" stroke="var(--secondary)" stroke-width="2" marker-end="url(#arrow)"/>
+                                <line x1="55" y1="55" x2="95" y2="115" stroke="var(--secondary)" stroke-width="2" marker-end="url(#arrow)"/>
+                                
+                                <!-- Label simpul -->
+                                <text x="50" y="50" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">X</text>
+                                <text x="150" y="50" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">Y</text>
+                                <text x="100" y="120" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">Z</text>
+                                
+                                <!-- Definisi marker panah -->
+                                <defs>
+                                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                                        <path d="M0,0 L0,6 L9,3 z" fill="var(--secondary)"/>
+                                    </marker>
+                                </defs>
+                            </svg>
                         </div>
+                        <p class="graph-description">Graf berarah dengan sisi memiliki arah tertentu. Digunakan untuk merepresentasikan hubungan satu arah.</p>
+                    </div>
+                    
+                    <div class="graph-card">
+                        <h3><i class="fas fa-tree"></i> Pohon (Tree)</h3>
+                        <div class="graph-container">
+                            <svg class="graph-svg" viewBox="0 0 200 150">
+                                <!-- Simpul -->
+                                <circle cx="100" cy="30" r="15" fill="var(--correct)" class="vertex"/>
+                                <circle cx="60" cy="70" r="15" fill="var(--correct)" class="vertex"/>
+                                <circle cx="100" cy="70" r="15" fill="var(--correct)" class="vertex"/>
+                                <circle cx="140" cy="70" r="15" fill="var(--correct)" class="vertex"/>
+                                <circle cx="40" cy="110" r="15" fill="var(--correct)" class="vertex"/>
+                                <circle cx="80" cy="110" r="15" fill="var(--correct)" class="vertex"/>
+                                <circle cx="120" cy="110" r="15" fill="var(--correct)" class="vertex"/>
+                                <circle cx="160" cy="110" r="15" fill="var(--correct)" class="vertex"/>
+                                
+                                <!-- Sisi -->
+                                <line x1="100" y1="45" x2="60" y2="65" stroke="var(--correct)" stroke-width="2"/>
+                                <line x1="100" y1="45" x2="100" y2="65" stroke="var(--correct)" stroke-width="2"/>
+                                <line x1="100" y1="45" x2="140" y2="65" stroke="var(--correct)" stroke-width="2"/>
+                                <line x1="60" y1="85" x2="40" y2="105" stroke="var(--correct)" stroke-width="2"/>
+                                <line x1="60" y1="85" x2="80" y2="105" stroke="var(--correct)" stroke-width="2"/>
+                                <line x1="100" y1="85" x2="120" y2="105" stroke="var(--correct)" stroke-width="2"/>
+                                <line x1="140" y1="85" x2="160" y2="105" stroke="var(--correct)" stroke-width="2"/>
+                                
+                                <!-- Label simpul -->
+                                <text x="100" y="30" text-anchor="middle" dy="5" fill="var(--darker-bg)" font-size="12" font-weight="bold">Root</text>
+                                <text x="60" y="70" text-anchor="middle" dy="5" fill="var(--darker-bg)" font-size="10" font-weight="bold">A</text>
+                                <text x="100" y="70" text-anchor="middle" dy="5" fill="var(--darker-bg)" font-size="10" font-weight="bold">B</text>
+                                <text x="140" y="70" text-anchor="middle" dy="5" fill="var(--darker-bg)" font-size="10" font-weight="bold">C</text>
+                                <text x="40" y="110" text-anchor="middle" dy="5" fill="var(--darker-bg)" font-size="10" font-weight="bold">D</text>
+                                <text x="80" y="110" text-anchor="middle" dy="5" fill="var(--darker-bg)" font-size="10" font-weight="bold">E</text>
+                                <text x="120" y="110" text-anchor="middle" dy="5" fill="var(--darker-bg)" font-size="10" font-weight="bold">F</text>
+                                <text x="160" y="110" text-anchor="middle" dy="5" fill="var(--darker-bg)" font-size="10" font-weight="bold">G</text>
+                            </svg>
+                        </div>
+                        <p class="graph-description">Struktur pohon dengan simpul root dan cabang-cabang. Tidak ada sirkuit, digunakan untuk hierarki.</p>
+                    </div>
+                    
+                    <div class="graph-card">
+                        <h3><i class="fas fa-sitemap"></i> Graf Planar</h3>
+                        <div class="graph-container">
+                            <svg class="graph-svg" viewBox="0 0 200 150">
+                                <!-- Simpul -->
+                                <circle cx="100" cy="50" r="15" fill="var(--primary)" class="vertex"/>
+                                <circle cx="50" cy="100" r="15" fill="var(--primary)" class="vertex"/>
+                                <circle cx="150" cy="100" r="15" fill="var(--primary)" class="vertex"/>
+                                <circle cx="100" cy="100" r="15" fill="var(--primary)" class="vertex"/>
+                                
+                                <!-- Sisi tanpa perpotongan -->
+                                <line x1="100" y1="65" x2="100" y2="85" stroke="var(--primary)" stroke-width="2"/>
+                                <line x1="100" y1="65" x2="60" y2="95" stroke="var(--primary)" stroke-width="2"/>
+                                <line x1="100" y1="65" x2="140" y2="95" stroke="var(--primary)" stroke-width="2"/>
+                                <line x1="60" y1="105" x2="140" y2="105" stroke="var(--primary)" stroke-width="2"/>
+                                <line x1="60" y1="105" x2="90" y2="95" stroke="var(--primary)" stroke-width="2"/>
+                                <line x1="140" y1="105" x2="110" y2="95" stroke="var(--primary)" stroke-width="2"/>
+                                
+                                <!-- Label simpul -->
+                                <text x="100" y="50" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">P</text>
+                                <text x="50" y="100" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">Q</text>
+                                <text x="150" y="100" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">R</text>
+                                <text x="100" y="100" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">S</text>
+                            </svg>
+                        </div>
+                        <p class="graph-description">Graf planar dapat digambar tanpa sisi yang saling berpotongan. Penting dalam desain papan sirkuit.</p>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- Penerapan dalam Kehidupan Sehari-hari -->
-        <section id="penerapan" class="content-section">
-            <h2><i class="fas fa-lightbulb"></i> Penerapan dalam Kehidupan Sehari-hari</h2>
-            <div class="card">
-                <div class="applications-grid">
-                    <div class="application-item">
+            
+            <div class="viz-content" id="penerapan">
+                <div class="application-grid">
+                    <div class="app-card">
+                        <h3><i class="fas fa-share-alt"></i> Jaringan Sosial</h3>
                         <div class="app-icon">
-                            <i class="fas fa-map-marked-alt"></i>
+                            <i class="fas fa-users fa-3x" style="color: var(--primary);"></i>
                         </div>
-                        <h3>Peta dan Navigasi</h3>
-                        <p>Google Maps menggunakan graf untuk merepresentasikan persimpangan (simpul) dan jalan (sisi). Algoritma pencarian rute terpendek seperti Dijkstra bekerja pada struktur graf.</p>
+                        <p>Facebook, Instagram, Twitter menggunakan graf untuk merepresentasikan hubungan pertemanan. Setiap user adalah simpul, dan hubungan pertemanan adalah sisi.</p>
+                        <div class="app-details">
+                            <strong>Jenis Graf:</strong> Graf tak berarah (pertemanan biasanya timbal balik)
+                        </div>
                     </div>
                     
-                    <div class="application-item">
+                    <div class="app-card">
+                        <h3><i class="fas fa-map-marked-alt"></i> Peta & Navigasi</h3>
                         <div class="app-icon">
-                            <i class="fas fa-users"></i>
+                            <i class="fas fa-map fa-3x" style="color: var(--accent);"></i>
                         </div>
-                        <h3>Media Sosial</h3>
-                        <p>Facebook dan Instagram menggunakan graf sosial dimana pengguna adalah simpul dan pertemanan adalah sisi. Rekomendasi teman menggunakan analisis graf.</p>
+                        <p>Google Maps, Waze menggunakan graf untuk mencari rute terpendek. Persimpangan adalah simpul, jalan adalah sisi dengan bobot (jarak/waktu).</p>
+                        <div class="app-details">
+                            <strong>Algoritma:</strong> Dijkstra untuk mencari jalur terpendek
+                        </div>
                     </div>
                     
-                    <div class="application-item">
+                    <div class="app-card">
+                        <h3><i class="fas fa-microchip"></i> Rancangan Sirkuit</h3>
                         <div class="app-icon">
-                            <i class="fas fa-sitemap"></i>
+                            <i class="fas fa-project-diagram fa-3x" style="color: var(--secondary);"></i>
                         </div>
-                        <h3>Jaringan Komputer</h3>
-                        <p>Internet adalah graf raksasa dengan router sebagai simpul dan koneksi sebagai sisi. Protokol routing menggunakan teori graf untuk mengirim data.</p>
+                        <p>Desain PCB (Printed Circuit Board) menggunakan graf planar untuk memastikan jalur tidak saling bersilangan.</p>
+                        <div class="app-details">
+                            <strong>Konsep:</strong> Graf planar untuk menghindari short circuit
+                        </div>
                     </div>
                     
-                    <div class="application-item">
+                    <div class="app-card">
+                        <h3><i class="fas fa-sitemap"></i> Struktur Data</h3>
                         <div class="app-icon">
-                            <i class="fas fa-project-diagram"></i>
+                            <i class="fas fa-database fa-3x" style="color: var(--correct);"></i>
                         </div>
-                        <h3>Manajemen Proyek</h3>
-                        <p>Diagram PERT dan Gantt Chart menggunakan graf untuk merepresentasikan tugas-tugas (simpul) dan ketergantungan antar tugas (sisi).</p>
+                        <p>Basis data menggunakan pohon (B-tree, Binary Tree) untuk indexing dan pencarian efisien.</p>
+                        <div class="app-details">
+                            <strong>Contoh:</strong> Struktur folder, organisasi file, silsilah keluarga
+                        </div>
+                    </div>
+                    
+                    <div class="app-card">
+                        <h3><i class="fas fa-robot"></i> Kecerdasan Buatan</h3>
+                        <div class="app-icon">
+                            <i class="fas fa-brain fa-3x" style="color: var(--warning);"></i>
+                        </div>
+                        <p>Jaringan saraf tiruan (Neural Network) adalah graf berarah dengan bobot pada sisi-sisinya.</p>
+                        <div class="app-details">
+                            <strong>Aplikasi:</strong> Pengenalan gambar, terjemahan bahasa, rekomendasi
+                        </div>
+                    </div>
+                    
+                    <div class="app-card">
+                        <h3><i class="fas fa-truck"></i> Logistik & Distribusi</h3>
+                        <div class="app-icon">
+                            <i class="fas fa-shipping-fast fa-3x" style="color: var(--incorrect);"></i>
+                        </div>
+                        <p>Masalah Traveling Salesman (TSP) menggunakan graf untuk mencari rute terpendek mengunjungi semua kota.</p>
+                        <div class="app-details">
+                            <strong>Optimasi:</strong> Menghemat waktu dan biaya pengiriman
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Latihan Soal -->
-        <section id="latihan" class="content-section">
-            <h2><i class="fas fa-question-circle"></i> Latihan Soal</h2>
-            <div class="card">
-                <div class="quiz-instructions">
-                    <p>Jawablah 10 soal berikut untuk menguji pemahaman Anda tentang teori graf. Setelah selesai, klik "Periksa Jawaban" untuk melihat skor Anda.</p>
+        <!-- Kuis Interaktif -->
+        <section class="quiz-section">
+            <h2><i class="fas fa-gamepad"></i> Kuis Interaktif</h2>
+            <p class="section-intro">Uji pemahamanmu dengan kuis berikut!</p>
+            
+            <div class="quiz-header">
+                <div class="score-display">
+                    <span>Skor: <span id="score">0</span>/20</span>
+                    <span class="progress">Progress: <span id="progress">0</span>/20</span>
+                </div>
+                <button id="reset-btn" class="reset-btn"><i class="fas fa-redo"></i> Reset Kuis</button>
+            </div>
+            
+            <div class="quiz-tabs">
+                <button class="quiz-tab-btn active" data-quiz="bagian1">Bagian 1: Pertemuan 11</button>
+                <button class="quiz-tab-btn" data-quiz="bagian2">Bagian 2: Pertemuan 12</button>
+            </div>
+            
+            <div class="quiz-content active" id="bagian1">
+                <!-- Soal Pertemuan 11 (1-10) -->
+                <div class="question-card" data-question="1" data-correct="a">
+                    <div class="question-number">1</div>
+                    <div class="question-text">Himpunan simpul-simpul yang dihubungkan oleh sisi sisi disebut...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Graf</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Pohon</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Vertex</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">edges</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">node</span>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="quiz-container" id="quiz-container">
-                    <!-- Soal akan di-generate oleh JavaScript -->
+                <div class="question-card" data-question="2" data-correct="b">
+                    <div class="question-number">2</div>
+                    <div class="question-text">Graf yang tidak mengandung gelang maupun sisi ganda disebut graf...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Berhingga</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Sederhana</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Berarah</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">Tak sederhana</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">Tak berhingga</span>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="quiz-controls">
-                    <button id="submit-quiz" class="btn btn-primary"><i class="fas fa-check-square"></i> Periksa Jawaban</button>
-                    <button id="reset-quiz" class="btn"><i class="fas fa-redo"></i> Ulangi Kuis</button>
+                <div class="question-card" data-question="3" data-correct="c">
+                    <div class="question-number">3</div>
+                    <div class="question-text">Dalam pengujian program kita menerapkan jenis graf...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Sederhana</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Tak berarah</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Berarah</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">Tak sederhana</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">Tak berhingga</span>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="quiz-results">
-                    <h4>Hasil:</h4>
-                    <p>Skor: <span id="quiz-score">0</span>/10</p>
-                    <div id="quiz-feedback"></div>
+                <div class="question-card" data-question="4" data-correct="d">
+                    <div class="question-number">4</div>
+                    <div class="question-text">Lintasan elementer dengan simpul awal sama dengan simpul akhir disebut...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Derajat</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Terhubung</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Simpul terpencil</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">Siklus</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">Pohon</span>
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="question-card" data-question="5" data-correct="e">
+                    <div class="question-number">5</div>
+                    <div class="question-text">Jumlah sisi pada graf lengkap dirumuskan dengan...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">n-1</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">(n-1)/2</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">nr/2</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">2n</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">n(n-1)/2</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="6" data-correct="b">
+                    <div class="question-number">6</div>
+                    <div class="question-text">Suatu graf dimana simpul tidak boleh kosong tetapi garis atau sisi boleh kosong terminologi graf...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">simpul terpencil</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">graf kosong</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">derajat</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">lintasan</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">pohon</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="7" data-correct="a">
+                    <div class="question-number">7</div>
+                    <div class="question-text">Simpul yang tidak bersisian dengan simpul lainnya merupakan terminologi graf...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">simpul terpencil</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">graf kosong</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">derajat</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">lintasan</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">pohon</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="8" data-correct="c">
+                    <div class="question-number">8</div>
+                    <div class="question-text">Jumlah sisi pada sebuah simpul dalam terminologi graf disebut...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">graf terpencil</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">graf kosong</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">derajat</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">lintasan</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">pohon</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="9" data-correct="d">
+                    <div class="question-number">9</div>
+                    <div class="question-text">Rangkaian sisi yang menghubungkan dari simpul awal hingga simpul akhir terminologi graf...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">graf terpencil</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">graf kosong</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">derajat</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">lintasan</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">pohon</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="10" data-correct="e">
+                    <div class="question-number">10</div>
+                    <div class="question-text">Graf dimana sisi-sisinya hanya berupa percabangan tidak membentuk lintasan tertutup atau sirkuit terminologi graf...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">graf terpencil</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">graf kosong</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">derajat</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">lintasan</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">pohon</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quiz-content" id="bagian2">
+                <!-- Soal Pertemuan 12 (11-20) -->
+                <div class="question-card" data-question="11" data-correct="c">
+                    <div class="question-number">11</div>
+                    <div class="question-text">Untuk merepresentasikan graf ada ... cara</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">1</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">2</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">3</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">4</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="12" data-correct="a">
+                    <div class="question-number">12</div>
+                    <div class="question-text">Dua buah graf sama dengan bentuk yang berbeda disebut graf...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Isomorfik</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Dual</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Euler</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">Hamilton</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">Planar</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="13" data-correct="b">
+                    <div class="question-number">13</div>
+                    <div class="question-text">Untuk menyatakan jumlah wilayah dalam graf dinotasikan dengan...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">n</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">f</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">e</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">s</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">r</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="14" data-correct="d">
+                    <div class="question-number">14</div>
+                    <div class="question-text">Lintasan atau sirkuit yang melalui sisi-sisi graf tepat satu kali disebut...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Isomorfik</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Dual</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Planar</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">Euler</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">Hamilton</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="15" data-correct="c">
+                    <div class="question-number">15</div>
+                    <div class="question-text">Graf yang dapat digambarkan pada bidang datar dengan sisi-sisi tidak saling memotong disebut graf...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Isomorfik</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Dual</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Planar</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">Euler</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">Hamilton</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="16" data-correct="a">
+                    <div class="question-number">16</div>
+                    <div class="question-text">Lintasan yang melalui sisi-sisi dalam graf tepat satu kali disebut...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Lintasan euler</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Sirkuit euler</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Lintasan Hamilton</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">Sirkuit Hamilton</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">Pohon</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="17" data-correct="b">
+                    <div class="question-number">17</div>
+                    <div class="question-text">Lintasan yang melalui sisi-sisi dalam graf tepat satu kali kembali ke simpul awal (membentuk lintasan tertutup) disebut...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Lintasan euler</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Sirkuit euler</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Lintasan Hamilton</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">Sirkuit Hamilton</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">Pohon</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="18" data-correct="c">
+                    <div class="question-number">18</div>
+                    <div class="question-text">Lintasan yang melalui simpul dalam graf tepat satu kali disebut...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Lintasan euler</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Sirkuit euler</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Lintasan Hamilton</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">Sirkuit Hamilton</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">Pohon</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="19" data-correct="d">
+                    <div class="question-number">19</div>
+                    <div class="question-text">Lintasan yang melalui simpul dalam graf tepat satu kali dan kembali pada simpul awal (membentuk lintasan tertutup) disebut...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Lintasan euler</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Sirkuit euler</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Lintasan Hamilton</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">Sirkuit Hamilton</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">Pohon</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="20" data-correct="b">
+                    <div class="question-number">20</div>
+                    <div class="question-text">Dalam representasi graf menggunakan jenis bilangan...</div>
+                    <div class="options">
+                        <div class="option" data-value="a">
+                            <span class="option-letter">a</span>
+                            <span class="option-text">Asli</span>
+                        </div>
+                        <div class="option" data-value="b">
+                            <span class="option-letter">b</span>
+                            <span class="option-text">Biner</span>
+                        </div>
+                        <div class="option" data-value="c">
+                            <span class="option-letter">c</span>
+                            <span class="option-text">Oktal</span>
+                        </div>
+                        <div class="option" data-value="d">
+                            <span class="option-letter">d</span>
+                            <span class="option-text">Heksa</span>
+                        </div>
+                        <div class="option" data-value="e">
+                            <span class="option-letter">e</span>
+                            <span class="option-text">Cacah</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quiz-result">
+                <h3 id="result-title">Mulai Kuis!</h3>
+                <p id="result-message">Pilih jawaban untuk melihat hasil</p>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <h3><i class="fas fa-project-diagram"></i> Teori Graf - Struktur Diskrit</h3>
-                    <p>Pertemuan 11 | Materi dengan pendekatan kontekstual Indonesia</p>
-                </div>
-                <div class="footer-credits">
-                    <p>Dibuat dengan <i class="fas fa-heart"></i> untuk pembelajaran interaktif</p>
-                    <p class="copyright">© 2023 - Pendidikan Indonesia</p>
-                </div>
-            </div>
+            <p>Dibuat untuk Mata Kuliah Struktur Diskrit Sistem Informasi - Teori Graf</p>
+            <p class="footer-note">© 2023 - Game Edukasi Interaktif untuk Mahasiswa</p>
         </div>
     </footer>
 
     <script>
-        // ==================== UTILITY FUNCTIONS ====================
-function getRandomColor() {
-    const colors = ['#e10600', '#b30500', '#8a0000', '#0066cc', '#009688', '#ff9800'];
-    return colors[Math.floor(Math.random() * colors.length)];
-}
-
-function drawCircle(ctx, x, y, radius, color, label) {
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.fillStyle = color;
-    ctx.fill();
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    
-    // Draw label
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 14px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(label, x, y);
-}
-
-function drawLine(ctx, x1, y1, x2, y2, color = '#333', width = 2, directed = false, weight = null) {
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = width;
-    ctx.stroke();
-    
-    // Draw arrow for directed edges
-    if (directed) {
-        const angle = Math.atan2(y2 - y1, x2 - x1);
-        const arrowLength = 10;
-        const arrowX = x2 - arrowLength * Math.cos(angle);
-        const arrowY = y2 - arrowLength * Math.sin(angle);
-        
-        ctx.beginPath();
-        ctx.moveTo(arrowX, arrowY);
-        ctx.lineTo(
-            arrowX - arrowLength * Math.cos(angle - Math.PI / 6),
-            arrowY - arrowLength * Math.sin(angle - Math.PI / 6)
-        );
-        ctx.lineTo(
-            arrowX - arrowLength * Math.cos(angle + Math.PI / 6),
-            arrowY - arrowLength * Math.sin(angle + Math.PI / 6)
-        );
-        ctx.closePath();
-        ctx.fillStyle = color;
-        ctx.fill();
-    }
-    
-    // Draw weight if provided
-    if (weight !== null) {
-        const midX = (x1 + x2) / 2;
-        const midY = (y1 + y2) / 2;
-        ctx.fillStyle = '#333';
-        ctx.font = 'bold 12px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(weight, midX, midY - 10);
-    }
-}
-
-function drawLoop(ctx, x, y, radius, color = '#333', width = 2) {
-    ctx.beginPath();
-    ctx.arc(x + radius, y - radius, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = width;
-    ctx.stroke();
-}
-
-// ==================== POPUP AND NOTIFICATION SYSTEM ====================
-class NotificationSystem {
-    static showToast(type, title, message, duration = 5000) {
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.innerHTML = `
-            <div class="toast-icon">
-                <i class="fas ${this.getIcon(type)}"></i>
-            </div>
-            <div class="toast-content">
-                <div class="toast-title">${title}</div>
-                <div class="toast-message">${message}</div>
-            </div>
-            <button class="toast-close">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        
-        document.body.appendChild(toast);
-        
-        // Show toast
-        setTimeout(() => toast.classList.add('show'), 10);
-        
-        // Close button
-        toast.querySelector('.toast-close').addEventListener('click', () => {
-            this.hideToast(toast);
-        });
-        
-        // Auto hide
-        if (duration > 0) {
-            setTimeout(() => this.hideToast(toast), duration);
-        }
-        
-        return toast;
-    }
-    
-    static getIcon(type) {
-        const icons = {
-            'success': 'fa-check-circle',
-            'info': 'fa-info-circle',
-            'warning': 'fa-exclamation-triangle',
-            'error': 'fa-times-circle'
+        // State untuk kuis
+        let quizState = {
+            score: 0,
+            totalAnswered: 0,
+            userAnswers: {},
+            maxQuestions: 20
         };
-        return icons[type] || 'fa-info-circle';
-    }
-    
-    static hideToast(toast) {
-        toast.classList.remove('show');
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, 300);
-    }
-    
-    static showModal(title, content, buttons = []) {
-        const modalId = 'modal-' + Date.now();
-        const modalHTML = `
-            <div class="modal-overlay active" id="${modalId}">
-                <div class="modal">
-                    <div class="modal-header">
-                        <h3 class="modal-title">${title}</h3>
-                        <button class="modal-close">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ${content}
-                    </div>
-                    <div class="modal-footer">
-                        ${buttons.map(btn => `
-                            <button class="btn ${btn.class || ''}" data-action="${btn.action || 'close'}">
-                                ${btn.text}
-                            </button>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-        const modal = document.getElementById(modalId);
-        
-        // Close button
-        modal.querySelector('.modal-close').addEventListener('click', () => {
-            this.hideModal(modal);
+
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            initializeQuizTabs();
+            initializeVizTabs();
+            initializeQuiz();
+            setupResetButton();
+            updateDisplay();
         });
-        
-        // Button actions
-        modal.querySelectorAll('.modal-footer .btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const action = e.target.dataset.action;
-                if (action === 'close') {
-                    this.hideModal(modal);
-                }
-                // Other actions can be handled by the caller
+
+        // Fungsi untuk tab materi belajar
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    // Hapus class active dari semua tab buttons dan contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Tambah class active ke tab yang dipilih
+                    button.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
             });
-        });
-        
-        // Close on overlay click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                this.hideModal(modal);
-            }
-        });
-        
-        return modal;
-    }
-    
-    static hideModal(modal) {
-        modal.classList.remove('active');
-        setTimeout(() => {
-            if (modal.parentNode) {
-                modal.parentNode.removeChild(modal);
-            }
-        }, 300);
-    }
-}
-
-// ==================== VISUALIZATION FOR HERO SECTION ====================
-function drawHeroGraph() {
-    const svg = document.getElementById('hero-graph');
-    if (!svg) return;
-    
-    // Clear SVG
-    svg.innerHTML = '';
-    
-    // Define nodes
-    const nodes = [
-        { id: 'A', x: 60, y: 100, color: '#e10600' },
-        { id: 'B', x: 150, y: 50, color: '#b30500' },
-        { id: 'C', x: 240, y: 100, color: '#8a0000' },
-        { id: 'D', x: 150, y: 150, color: '#0066cc' }
-    ];
-    
-    // Define edges
-    const edges = [
-        { from: 'A', to: 'B' },
-        { from: 'B', to: 'C' },
-        { from: 'C', to: 'D' },
-        { from: 'D', to: 'A' },
-        { from: 'A', to: 'C' }
-    ];
-    
-    // Draw edges
-    edges.forEach(edge => {
-        const fromNode = nodes.find(n => n.id === edge.from);
-        const toNode = nodes.find(n => n.id === edge.to);
-        
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', fromNode.x);
-        line.setAttribute('y1', fromNode.y);
-        line.setAttribute('x2', toNode.x);
-        line.setAttribute('y2', toNode.y);
-        line.setAttribute('stroke', '#666');
-        line.setAttribute('stroke-width', '2');
-        svg.appendChild(line);
-    });
-    
-    // Draw nodes
-    nodes.forEach(node => {
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', node.x);
-        circle.setAttribute('cy', node.y);
-        circle.setAttribute('r', '20');
-        circle.setAttribute('fill', node.color);
-        circle.setAttribute('stroke', '#333');
-        circle.setAttribute('stroke-width', '2');
-        svg.appendChild(circle);
-        
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', node.x);
-        text.setAttribute('y', node.y);
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('dy', '0.3em');
-        text.setAttribute('fill', 'white');
-        text.setAttribute('font-weight', 'bold');
-        text.setAttribute('font-size', '14');
-        text.textContent = node.id;
-        svg.appendChild(text);
-    });
-}
-
-// ==================== VISUALIZATION FOR DEFINITION SECTION ====================
-function drawDefinitionGraph() {
-    const container = document.getElementById('definisi-graph');
-    if (!container) return;
-    
-    // Create canvas if it doesn't exist
-    let canvas = container.querySelector('canvas');
-    if (!canvas) {
-        canvas = document.createElement('canvas');
-        canvas.width = 400;
-        canvas.height = 200;
-        container.appendChild(canvas);
-    }
-    
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw a simple graph
-    const nodes = [
-        { x: 100, y: 100, label: 'v₁' },
-        { x: 200, y: 80, label: 'v₂' },
-        { x: 300, y: 100, label: 'v₃' },
-        { x: 200, y: 160, label: 'v₄' }
-    ];
-    
-    // Draw edges
-    drawLine(ctx, nodes[0].x, nodes[0].y, nodes[1].x, nodes[1].y, '#666');
-    drawLine(ctx, nodes[1].x, nodes[1].y, nodes[2].x, nodes[2].y, '#666');
-    drawLine(ctx, nodes[2].x, nodes[2].y, nodes[3].x, nodes[3].y, '#666');
-    drawLine(ctx, nodes[3].x, nodes[3].y, nodes[0].x, nodes[0].y, '#666');
-    drawLine(ctx, nodes[0].x, nodes[0].y, nodes[2].x, nodes[2].y, '#666');
-    
-    // Draw nodes
-    nodes.forEach(node => {
-        drawCircle(ctx, node.x, node.y, 20, '#e10600', node.label);
-    });
-    
-    // Add caption
-    ctx.fillStyle = '#333';
-    ctx.font = '14px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('Graf G = (V, E) dengan 4 simpul dan 5 sisi', canvas.width/2, 190);
-}
-
-// ==================== VISUALIZATION FOR GRAPH TYPES ====================
-function drawGraphTypes() {
-    const graphTypes = ['simple-graph', 'multi-graph', 'pseudo-graph', 'directed-graph'];
-    
-    graphTypes.forEach((id, index) => {
-        const container = document.getElementById(id);
-        if (!container) return;
-        
-        // Create canvas if it doesn't exist
-        let canvas = container.querySelector('canvas');
-        if (!canvas) {
-            canvas = document.createElement('canvas');
-            canvas.width = 200;
-            canvas.height = 120;
-            container.appendChild(canvas);
         }
-        
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        switch(index) {
-            case 0: // Simple graph
-                drawSimpleGraph(ctx);
-                break;
-            case 1: // Multi graph
-                drawMultiGraph(ctx);
-                break;
-            case 2: // Pseudo graph
-                drawPseudoGraph(ctx);
-                break;
-            case 3: // Directed graph
-                drawDirectedGraph(ctx);
-                break;
+
+        // Fungsi untuk tab kuis
+        function initializeQuizTabs() {
+            const quizTabButtons = document.querySelectorAll('.quiz-tab-btn');
+            const quizContents = document.querySelectorAll('.quiz-content');
+            
+            quizTabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const quizId = button.getAttribute('data-quiz');
+                    
+                    // Hapus class active dari semua tab buttons dan contents
+                    quizTabButtons.forEach(btn => btn.classList.remove('active'));
+                    quizContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Tambah class active ke tab yang dipilih
+                    button.classList.add('active');
+                    document.getElementById(quizId).classList.add('active');
+                });
+            });
         }
-    });
-}
 
-function drawSimpleGraph(ctx) {
-    const nodes = [
-        { x: 60, y: 60, label: 'A' },
-        { x: 140, y: 60, label: 'B' },
-        { x: 100, y: 100, label: 'C' }
-    ];
-    
-    drawLine(ctx, nodes[0].x, nodes[0].y, nodes[1].x, nodes[1].y, '#666');
-    drawLine(ctx, nodes[1].x, nodes[1].y, nodes[2].x, nodes[2].y, '#666');
-    drawLine(ctx, nodes[2].x, nodes[2].y, nodes[0].x, nodes[0].y, '#666');
-    
-    nodes.forEach(node => {
-        drawCircle(ctx, node.x, node.y, 15, '#e10600', node.label);
-    });
-}
-
-function drawMultiGraph(ctx) {
-    const nodes = [
-        { x: 60, y: 60, label: 'A' },
-        { x: 140, y: 60, label: 'B' },
-        { x: 100, y: 100, label: 'C' }
-    ];
-    
-    // Multiple edges between A and B
-    drawLine(ctx, nodes[0].x, nodes[0].y - 5, nodes[1].x, nodes[1].y - 5, '#666');
-    drawLine(ctx, nodes[0].x, nodes[0].y + 5, nodes[1].x, nodes[1].y + 5, '#666');
-    drawLine(ctx, nodes[1].x, nodes[1].y, nodes[2].x, nodes[2].y, '#666');
-    drawLine(ctx, nodes[2].x, nodes[2].y, nodes[0].x, nodes[0].y, '#666');
-    
-    nodes.forEach(node => {
-        drawCircle(ctx, node.x, node.y, 15, '#b30500', node.label);
-    });
-}
-
-function drawPseudoGraph(ctx) {
-    const nodes = [
-        { x: 60, y: 60, label: 'A' },
-        { x: 140, y: 60, label: 'B' },
-        { x: 100, y: 100, label: 'C' }
-    ];
-    
-    drawLine(ctx, nodes[0].x, nodes[0].y, nodes[1].x, nodes[1].y, '#666');
-    drawLine(ctx, nodes[1].x, nodes[1].y, nodes[2].x, nodes[2].y, '#666');
-    
-    // Loop on node C
-    drawLoop(ctx, nodes[2].x, nodes[2].y, 15, '#666');
-    
-    nodes.forEach(node => {
-        drawCircle(ctx, node.x, node.y, 15, '#8a0000', node.label);
-    });
-}
-
-function drawDirectedGraph(ctx) {
-    const nodes = [
-        { x: 60, y: 60, label: 'A' },
-        { x: 140, y: 60, label: 'B' },
-        { x: 100, y: 100, label: 'C' }
-    ];
-    
-    drawLine(ctx, nodes[0].x, nodes[0].y, nodes[1].x, nodes[1].y, '#666', 2, true);
-    drawLine(ctx, nodes[1].x, nodes[1].y, nodes[2].x, nodes[2].y, '#666', 2, true);
-    drawLine(ctx, nodes[2].x, nodes[2].y, nodes[0].x, nodes[0].y, '#666', 2, true);
-    
-    nodes.forEach(node => {
-        drawCircle(ctx, node.x, node.y, 15, '#0066cc', node.label);
-    });
-}
-
-// ==================== TERMINOLOGY GENERATION ====================
-function generateTerminology() {
-    const terminology = [
-        {
-            title: "Ketetanggaan (Adjacent)",
-            description: "Dua buah simpul dikatakan bertetangga bila keduanya terhubung langsung oleh sebuah sisi.",
-            icon: "fas fa-handshake"
-        },
-        {
-            title: "Bersisian (Incidency)",
-            description: "Sebuah sisi e = (vⱼ, vₖ) dikatakan bersisian dengan simpul vⱼ dan simpul vₖ.",
-            icon: "fas fa-link"
-        },
-        {
-            title: "Simpul Terpencil",
-            description: "Simpul yang tidak mempunyai sisi yang bersisian dengannya, atau tidak bertetangga dengan simpul lainnya.",
-            icon: "fas fa-user-alt-slash"
-        },
-        {
-            title: "Graf Kosong",
-            description: "Graf yang tidak mempunyai sisi satupun tetapi simpulnya harus ada, minimal satu.",
-            icon: "fas fa-ban"
-        },
-        {
-            title: "Derajat (Degree)",
-            description: "Derajat suatu simpul adalah jumlah sisi yang bersisian dengan simpul tersebut.",
-            icon: "fas fa-sort-amount-up"
-        },
-        {
-            title: "Lintasan (Path)",
-            description: "Rangkaian sisi-sisi yang menghubungkan dari simpul awal hingga simpul akhir.",
-            icon: "fas fa-road"
-        },
-        {
-            title: "Siklus (Cycle)",
-            description: "Lintasan elementer dengan simpul pertama sama dengan simpul yang terakhir.",
-            icon: "fas fa-sync-alt"
-        },
-        {
-            title: "Terhubung (Connected)",
-            description: "Dua buah simpul v₁ dan v₂ disebut terhubung jika terdapat lintasan dari v₁ ke v₂.",
-            icon: "fas fa-plug"
-        },
-        {
-            title: "Pohon (Tree)",
-            description: "Graf terhubung yang tidak mempunyai sirkuit.",
-            icon: "fas fa-tree"
-        },
-        {
-            title: "Graf Berbobot",
-            description: "Graf yang setiap sisinya diberi sebuah harga (bobot).",
-            icon: "fas fa-weight-hanging"
+        // Fungsi untuk tab visualisasi
+        function initializeVizTabs() {
+            const vizTabButtons = document.querySelectorAll('.viz-tab-btn');
+            const vizContents = document.querySelectorAll('.viz-content');
+            
+            vizTabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const vizId = button.getAttribute('data-viz');
+                    
+                    // Hapus class active dari semua tab buttons dan contents
+                    vizTabButtons.forEach(btn => btn.classList.remove('active'));
+                    vizContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Tambah class active ke tab yang dipilih
+                    button.classList.add('active');
+                    document.getElementById(vizId).classList.add('active');
+                });
+            });
         }
-    ];
-    
-    const container = document.querySelector('.terminology-grid');
-    if (!container) return;
-    
-    container.innerHTML = '';
-    
-    terminology.forEach(term => {
-        const item = document.createElement('div');
-        item.className = 'terminology-item';
-        item.innerHTML = `
-            <h3><i class="${term.icon}"></i> ${term.title}</h3>
-            <p>${term.description}</p>
-        `;
-        container.appendChild(item);
-    });
-}
 
-// ==================== ENHANCED INTERACTIVE GAME ====================
-class EnhancedGraphGame {
-    constructor() {
-        this.canvas = document.getElementById('graph-canvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.nodes = [];
-        this.edges = [];
-        this.selectedNode = null;
-        this.isAddingEdge = false;
-        this.isAddingLoop = false;
-        this.edgeStartNode = null;
-        this.edgeStartPos = { x: 0, y: 0 };
-        this.edgeType = 'undirected'; // 'undirected', 'directed', 'weighted'
-        this.nodeRadius = 20;
-        this.nodeCounter = 1;
-        this.edgeCounter = 1;
-        
-        this.init();
-    }
-    
-    init() {
-        // Set canvas size
-        this.canvas.width = this.canvas.offsetWidth;
-        this.canvas.height = this.canvas.offsetHeight;
-        
-        // Add event listeners
-        this.canvas.addEventListener('mousedown', this.handleMouseDown.bind(this));
-        this.canvas.addEventListener('mousemove', this.handleMouseMove.bind(this));
-        this.canvas.addEventListener('mouseup', this.handleMouseUp.bind(this));
-        
-        // Add initial nodes
-        this.addNode(100, 100);
-        this.addNode(200, 150);
-        this.addNode(150, 250);
-        
-        // Add some initial edges
-        this.addEdge(0, 1, false);
-        this.addEdge(1, 2, false);
-        
-        this.draw();
-        this.updateStats();
-    }
-    
-    addNode(x, y) {
-        const node = {
-            id: this.nodeCounter++,
-            x: x,
-            y: y,
-            color: getRandomColor(),
-            label: `v${this.nodes.length + 1}`
-        };
-        this.nodes.push(node);
-        this.updateStats();
-        NotificationSystem.showToast('success', 'Simpul Ditambahkan', `Simpul ${node.label} berhasil ditambahkan`, 3000);
-        return node;
-    }
-    
-    addEdge(fromIndex, toIndex, isLoop = false) {
-        // For loops
-        if (isLoop) {
-            const edge = {
-                id: this.edgeCounter++,
-                from: fromIndex,
-                to: fromIndex, // Same node for loop
-                directed: this.edgeType === 'directed',
-                weighted: this.edgeType === 'weighted',
-                weight: this.edgeType === 'weighted' ? Math.floor(Math.random() * 10) + 1 : null,
-                isLoop: true
-            };
-            this.edges.push(edge);
-            this.updateStats();
-            NotificationSystem.showToast('info', 'Loop Ditambahkan', `Loop berhasil ditambahkan pada simpul ${this.nodes[fromIndex].label}`, 3000);
-            return edge;
+        // Fungsi untuk inisialisasi kuis
+        function initializeQuiz() {
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionCard = this.closest('.question-card');
+                    const questionId = questionCard.getAttribute('data-question');
+                    const selectedValue = this.getAttribute('data-value');
+                    const correctAnswer = questionCard.getAttribute('data-correct');
+                    
+                    // Jika sudah menjawab, jangan biarkan mengubah jawaban
+                    if (quizState.userAnswers[questionId]) {
+                        return;
+                    }
+                    
+                    // Hapus seleksi dari semua opsi di pertanyaan ini
+                    const allOptions = questionCard.querySelectorAll('.option');
+                    allOptions.forEach(opt => {
+                        opt.classList.remove('selected', 'correct', 'incorrect');
+                    });
+                    
+                    // Tandai opsi yang dipilih
+                    this.classList.add('selected');
+                    
+                    // Cek jawaban
+                    const isCorrect = selectedValue === correctAnswer;
+                    
+                    if (isCorrect) {
+                        this.classList.add('correct');
+                        quizState.score++;
+                    } else {
+                        this.classList.add('incorrect');
+                        
+                        // Tampilkan jawaban yang benar
+                        const correctOption = questionCard.querySelector(`.option[data-value="${correctAnswer}"]`);
+                        if (correctOption) {
+                            correctOption.classList.add('correct');
+                        }
+                    }
+                    
+                    // Simpan jawaban user
+                    quizState.userAnswers[questionId] = {
+                        selected: selectedValue,
+                        correct: correctAnswer,
+                        isCorrect: isCorrect
+                    };
+                    
+                    // Update progress
+                    quizState.totalAnswered = Object.keys(quizState.userAnswers).length;
+                    
+                    // Update display
+                    updateDisplay();
+                    
+                    // Update feedback
+                    updateFeedback(isCorrect, questionId);
+                });
+            });
         }
-        
-        // Check if edge already exists
-        const existingEdge = this.edges.find(edge => {
-            if (this.edgeType === 'directed') {
-                return edge.from === fromIndex && edge.to === toIndex;
+
+        // Fungsi untuk update tampilan skor dan progress
+        function updateDisplay() {
+            document.getElementById('score').textContent = quizState.score;
+            document.getElementById('progress').textContent = quizState.totalAnswered;
+        }
+
+        // Fungsi untuk update feedback
+        function updateFeedback(isCorrect, questionId) {
+            const resultTitle = document.getElementById('result-title');
+            const resultMessage = document.getElementById('result-message');
+            
+            if (isCorrect) {
+                resultTitle.textContent = 'Benar! 🎉';
+                resultTitle.style.color = 'var(--correct)';
+                resultMessage.textContent = `Jawaban Anda untuk soal ${questionId} benar! Skor bertambah.`;
             } else {
-                return (edge.from === fromIndex && edge.to === toIndex) ||
-                       (edge.from === toIndex && edge.to === fromIndex);
+                resultTitle.textContent = 'Salah! 💡';
+                resultTitle.style.color = 'var(--incorrect)';
+                const correctAnswer = quizState.userAnswers[questionId].correct;
+                const answerText = getAnswerText(questionId, correctAnswer);
+                resultMessage.textContent = `Jawaban yang benar untuk soal ${questionId} adalah: ${answerText}`;
             }
-        });
-        
-        if (existingEdge && this.edgeType !== 'directed') {
-            NotificationSystem.showToast('warning', 'Sisi Ganda', 'Sisi tak berarah sudah ada antara simpul ini', 3000);
-            return;
-        }
-        
-        const edge = {
-            id: this.edgeCounter++,
-            from: fromIndex,
-            to: toIndex,
-            directed: this.edgeType === 'directed',
-            weighted: this.edgeType === 'weighted',
-            weight: this.edgeType === 'weighted' ? Math.floor(Math.random() * 10) + 1 : null,
-            isLoop: false
-        };
-        this.edges.push(edge);
-        this.updateStats();
-        
-        const fromLabel = this.nodes[fromIndex].label;
-        const toLabel = this.nodes[toIndex].label;
-        NotificationSystem.showToast('success', 'Sisi Ditambahkan', 
-            `Sisi ${edge.directed ? 'berarah' : 'tak berarah'} dari ${fromLabel} ke ${toLabel} berhasil ditambahkan`, 
-            3000);
-        return edge;
-    }
-    
-    getNodeAt(x, y) {
-        for (let i = this.nodes.length - 1; i >= 0; i--) {
-            const node = this.nodes[i];
-            const distance = Math.sqrt((x - node.x) ** 2 + (y - node.y) ** 2);
-            if (distance <= this.nodeRadius) {
-                return { node, index: i };
-            }
-        }
-        return null;
-    }
-    
-    handleMouseDown(e) {
-        const rect = this.canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const nodeInfo = this.getNodeAt(x, y);
-        
-        if (this.isAddingLoop) {
-            if (nodeInfo) {
-                this.addEdge(nodeInfo.index, nodeInfo.index, true);
-                this.isAddingLoop = false;
-                document.getElementById('add-loop').classList.remove('active');
-                this.draw();
-            }
-        } else if (this.isAddingEdge) {
-            if (nodeInfo) {
-                if (this.edgeStartNode === null) {
-                    this.edgeStartNode = nodeInfo.index;
-                    this.edgeStartPos = { x, y };
-                    this.draw();
+            
+            // Update hasil akhir jika semua soal sudah dijawab
+            if (quizState.totalAnswered === quizState.maxQuestions) {
+                const percentage = (quizState.score / quizState.maxQuestions) * 100;
+                let finalMessage = '';
+                
+                if (percentage >= 80) {
+                    finalMessage = 'Luar biasa! Anda menguasai materi teori graf dengan sangat baik! 🏆';
+                } else if (percentage >= 60) {
+                    finalMessage = 'Bagus! Pemahaman Anda tentang teori graf sudah cukup baik. 👍';
+                } else if (percentage >= 40) {
+                    finalMessage = 'Cukup baik. Pelajari kembali materi untuk meningkatkan pemahaman. 📚';
                 } else {
-                    if (this.edgeStartNode !== nodeInfo.index) {
-                        this.addEdge(this.edgeStartNode, nodeInfo.index);
-                    }
-                    this.edgeStartNode = null;
-                    this.isAddingEdge = false;
-                    document.getElementById('add-edge').classList.remove('active');
-                    this.draw();
+                    finalMessage = 'Perlu belajar lebih giat lagi. Coba pelajari materi sekali lagi! 💪';
                 }
-            }
-        } else {
-            if (nodeInfo) {
-                this.selectedNode = nodeInfo;
-            } else {
-                // Add new node
-                this.addNode(x, y);
-                this.draw();
-            }
-        }
-    }
-    
-    handleMouseMove(e) {
-        if (this.selectedNode) {
-            const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            this.selectedNode.node.x = x;
-            this.selectedNode.node.y = y;
-            this.draw();
-        }
-        
-        // Update edge start position for visual feedback
-        if (this.isAddingEdge && this.edgeStartNode !== null) {
-            const rect = this.canvas.getBoundingClientRect();
-            this.edgeStartPos = {
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top
-            };
-            this.draw();
-        }
-    }
-    
-    handleMouseUp() {
-        this.selectedNode = null;
-    }
-    
-    draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
-        // Draw edges
-        this.edges.forEach(edge => {
-            if (edge.isLoop) {
-                const node = this.nodes[edge.from];
-                drawLoop(this.ctx, node.x, node.y, 15, '#666', 2);
-            } else {
-                const fromNode = this.nodes[edge.from];
-                const toNode = this.nodes[edge.to];
-                drawLine(this.ctx, fromNode.x, fromNode.y, toNode.x, toNode.y, 
-                        '#333', 2, edge.directed, edge.weighted ? edge.weight : null);
-            }
-        });
-        
-        // Draw temporary edge if adding
-        if (this.isAddingEdge && this.edgeStartNode !== null) {
-            const fromNode = this.nodes[this.edgeStartNode];
-            drawLine(this.ctx, fromNode.x, fromNode.y, this.edgeStartPos.x, this.edgeStartPos.y, 
-                    '#666', 2, this.edgeType === 'directed', false);
-        }
-        
-        // Draw nodes
-        this.nodes.forEach(node => {
-            drawCircle(this.ctx, node.x, node.y, this.nodeRadius, node.color, node.label);
-        });
-    }
-    
-    updateStats() {
-        document.getElementById('node-count').textContent = this.nodes.length;
-        document.getElementById('edge-count').textContent = this.edges.length;
-        
-        // Determine graph type
-        let graphType = 'Sederhana';
-        let hasLoop = false;
-        let hasMultipleEdges = false;
-        let hasDirected = false;
-        let hasWeighted = false;
-        
-        // Check for features
-        for (const edge of this.edges) {
-            if (edge.isLoop) {
-                hasLoop = true;
-            }
-            if (edge.directed) {
-                hasDirected = true;
-            }
-            if (edge.weighted) {
-                hasWeighted = true;
-            }
-        }
-        
-        // Check for multiple edges
-        const edgeMap = new Map();
-        for (const edge of this.edges) {
-            if (edge.isLoop) continue;
-            
-            const key = edge.directed ? 
-                `${edge.from}-${edge.to}` : 
-                [edge.from, edge.to].sort().join('-');
-            
-            if (edgeMap.has(key)) {
-                hasMultipleEdges = true;
-            } else {
-                edgeMap.set(key, true);
-            }
-        }
-        
-        if (hasLoop) {
-            graphType = 'Semu';
-        } else if (hasMultipleEdges) {
-            graphType = 'Ganda';
-        } else if (hasDirected) {
-            graphType = 'Berarah';
-        } else if (hasWeighted) {
-            graphType = 'Berbobot';
-        }
-        
-        document.getElementById('graph-type').textContent = graphType;
-    }
-    
-    clear() {
-        NotificationSystem.showModal(
-            'Konfirmasi Hapus',
-            'Apakah Anda yakin ingin menghapus semua simpul dan sisi?',
-            [
-                { text: 'Batal', class: 'btn', action: 'close' },
-                { 
-                    text: 'Hapus Semua', 
-                    class: 'btn btn-danger',
-                    action: () => {
-                        // Reset semua data
-                        this.nodes = [];
-                        this.edges = [];
-                        this.nodeCounter = 1;
-                        this.edgeCounter = 1;
-                        this.selectedNode = null;
-                        this.isAddingEdge = false;
-                        this.isAddingLoop = false;
-                        this.edgeStartNode = null;
-                        
-                        // Hapus tombol active state
-                        document.getElementById('add-edge')?.classList.remove('active');
-                        document.getElementById('add-loop')?.classList.remove('active');
-                        document.getElementById('add-multigraph')?.classList.remove('active');
-                        document.getElementById('add-directed')?.classList.remove('active');
-                        
-                        // Bersihkan canvas dan gambar ulang
-                        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                        this.draw();
-                        this.updateStats();
-                        
-                        // Tampilkan notifikasi
-                        NotificationSystem.showToast('success', 'Graf Dihapus', 'Semua simpul dan sisi telah dihapus. Graf kosong siap digunakan.', 3000);
-                        NotificationSystem.hideModal(document.querySelector('.modal-overlay.active'));
-                    }
-                }
-            ]
-        );
-    }
-    
-    loadPreset(presetType) {
-        this.nodes = [];
-        this.edges = [];
-        this.nodeCounter = 1;
-        this.edgeCounter = 1;
-        
-        switch(presetType) {
-            case 'simple':
-                // Simple graph: triangle
-                this.addNode(100, 100);
-                this.addNode(200, 100);
-                this.addNode(150, 200);
-                this.addEdge(0, 1);
-                this.addEdge(1, 2);
-                this.addEdge(2, 0);
-                break;
                 
-            case 'multi':
-                // Multi graph: with multiple edges
-                this.addNode(100, 100);
-                this.addNode(200, 100);
-                this.addNode(150, 200);
-                this.addEdge(0, 1);
-                this.addEdge(0, 1); // Multiple edge
-                this.addEdge(1, 2);
-                this.addEdge(2, 0);
-                break;
-                
-            case 'pseudo':
-                // Pseudo graph: with loop
-                this.addNode(100, 100);
-                this.addNode(200, 100);
-                this.addNode(150, 200);
-                this.addEdge(0, 1);
-                this.addEdge(1, 2);
-                this.addEdge(2, 2, true); // Loop
-                break;
-                
-            case 'directed':
-                // Directed graph
-                this.edgeType = 'directed';
-                this.addNode(100, 100);
-                this.addNode(200, 100);
-                this.addNode(150, 200);
-                this.addEdge(0, 1);
-                this.addEdge(1, 2);
-                this.addEdge(2, 0);
-                break;
-                
-            case 'complete':
-                // Complete graph K4
-                this.addNode(100, 100);
-                this.addNode(200, 100);
-                this.addNode(100, 200);
-                this.addNode(200, 200);
-                // Connect every node to every other node
-                for (let i = 0; i < 4; i++) {
-                    for (let j = i + 1; j < 4; j++) {
-                        this.addEdge(i, j);
-                    }
-                }
-                break;
+                resultTitle.textContent = `Kuis Selesai! Skor: ${quizState.score}/${quizState.maxQuestions}`;
+                resultMessage.textContent = finalMessage;
+            }
         }
-        
-        this.draw();
-        this.updateStats();
-        NotificationSystem.showToast('info', 'Preset Dimuat', `Graf ${presetType} berhasil dimuat`, 3000);
-    }
-    
-    setEdgeType(type) {
-        this.edgeType = type;
-        document.querySelectorAll('.edge-type-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        document.querySelector(`.edge-type-btn[data-type="${type}"]`).classList.add('active');
-    }
-}
 
-// ==================== QUIZ SYSTEM ====================
-const quizQuestions = [
-    {
-        question: "Himpunan simpul-simpul yang dihubungkan oleh sisi sisi disebut…….",
-        options: ["Graf", "Pohon", "vertex", "edges", "node"],
-        correct: 0,
-        explanation: "Graf adalah himpunan simpul-simpul yang dihubungkan oleh sisi-sisi."
-    },
-    {
-        question: "Graf yang tidak mengandung gelang maupun sisi ganda disebut graf…….",
-        options: ["Berhingga", "Sederhana", "Berarah", "Tak sederhana", "Tak berhingga"],
-        correct: 1,
-        explanation: "Graf sederhana adalah graf yang tidak mengandung gelang maupun sisi ganda."
-    },
-    {
-        question: "Dalam pengujian program kita menerapkan jenis graf…..",
-        options: ["Sederhana", "Tak berarah", "Berarah", "Tak sederhana", "Tak berhingga"],
-        correct: 2,
-        explanation: "Dalam pengujian program (control flow graph) kita menggunakan graf berarah."
-    },
-    {
-        question: "Lintasan elementer dengan simpul awal sama dengan simpul akhir disebut…….",
-        options: ["Derajat", "Terhubung", "Simpul terpencil", "Siklus", "Pohon"],
-        correct: 3,
-        explanation: "Siklus adalah lintasan elementer dengan simpul awal sama dengan simpul akhir."
-    },
-    {
-        question: "Jumlah sisi pada graf lengkap dirumuskan dengan…….",
-        options: ["n-1", "(n-1)/2", "2n", "n(n-1)/2", "nr/2"],
-        correct: 3,
-        explanation: "Jumlah sisi pada graf lengkap dengan n simpul adalah n(n-1)/2."
-    },
-    {
-        question: "Suatu graf dimana simpul tidak boleh kosong tetapi garis atau sisi boleh kosong terminologi graf ……",
-        options: ["simpul terpencil", "pohon", "graf kosong", "derajat", "lintasan"],
-        correct: 2,
-        explanation: "Graf kosong adalah graf yang tidak mempunyai sisi satupun tetapi simpulnya harus ada."
-    },
-    {
-        question: "Simpul yang tidak bersisian dengan simpul lainnya merupakan terminologi graf ……",
-        options: ["simpul terpencil", "graf kosong", "derajat", "lintasan", "pohon"],
-        correct: 0,
-        explanation: "Simpul terpencil adalah simpul yang tidak mempunyai sisi yang bersisian dengannya."
-    },
-    {
-        question: "Jumlah sisi pada sebuah simpul dalam terminologi graf disebut ……",
-        options: ["graf terpencil", "graf kosong", "derajat", "lintasan", "pohon"],
-        correct: 2,
-        explanation: "Derajat suatu simpul adalah jumlah sisi yang bersisian dengan simpul tersebut."
-    },
-    {
-        question: "Rangkaian sisi yang menghubungkan dari simpul awal hingga simpul akhir terminologi graf ……",
-        options: ["graf terpencil", "graf kosong", "derajat", "lintasan", "pohon"],
-        correct: 3,
-        explanation: "Lintasan adalah rangkaian sisi-sisi yang menghubungkan dari simpul awal hingga simpul akhir."
-    },
-    {
-        question: "Graf dimana sisi-sisinya hanya berupa percabangan tidak membentuk lintasan tertutup atau sirkuit terminologi graf ……",
-        options: ["graf terpencil", "graf kosong", "derajat", "lintasan", "pohon"],
-        correct: 4,
-        explanation: "Pohon adalah graf terhubung yang tidak mempunyai sirkuit (lintasan tertutup)."
-    }
-];
+        // Fungsi untuk mendapatkan teks jawaban
+        function getAnswerText(questionId, answerValue) {
+            const questionCard = document.querySelector(`.question-card[data-question="${questionId}"]`);
+            if (!questionCard) return answerValue;
+            
+            const option = questionCard.querySelector(`.option[data-value="${answerValue}"]`);
+            if (!option) return answerValue;
+            
+            const optionText = option.querySelector('.option-text');
+            return optionText ? optionText.textContent : answerValue;
+        }
 
-function generateQuiz() {
-    const container = document.getElementById('quiz-container');
-    if (!container) return;
-    
-    container.innerHTML = '';
-    
-    quizQuestions.forEach((q, index) => {
-        const questionElement = document.createElement('div');
-        questionElement.className = 'quiz-item';
-        questionElement.innerHTML = `
-            <h4>${index + 1}. ${q.question}</h4>
-            <div class="options">
-                ${q.options.map((option, optIndex) => `
-                    <label class="option">
-                        <input type="radio" name="question-${index}" value="${optIndex}">
-                        <span class="option-text">${option}</span>
-                    </label>
-                `).join('')}
-            </div>
-            <div class="explanation" id="explanation-${index}" style="display: none;">
-                <p><strong>Penjelasan:</strong> ${q.explanation}</p>
-            </div>
-        `;
-        container.appendChild(questionElement);
-        
-        // Add event listener to show explanation when option is selected
-        questionElement.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.addEventListener('change', () => {
-                const explanation = document.getElementById(`explanation-${index}`);
-                explanation.style.display = 'block';
+        // Fungsi untuk setup tombol reset
+        function setupResetButton() {
+            const resetBtn = document.getElementById('reset-btn');
+            
+            resetBtn.addEventListener('click', function() {
+                if (confirm('Apakah Anda yakin ingin mereset kuis? Semua jawaban akan dihapus.')) {
+                    resetQuiz();
+                }
             });
-        });
-    });
-}
-
-function checkQuiz() {
-    let score = 0;
-    const totalQuestions = quizQuestions.length;
-    
-    quizQuestions.forEach((q, index) => {
-        const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
-        if (selectedOption) {
-            const selectedValue = parseInt(selectedOption.value);
-            if (selectedValue === q.correct) {
-                score++;
-            }
         }
-    });
-    
-    const percentage = (score / totalQuestions) * 100;
-    const resultMessage = `Anda mendapatkan ${score} dari ${totalQuestions} soal benar (${percentage.toFixed(1)}%)`;
-    
-    NotificationSystem.showModal(
-        'Hasil Kuis',
-        `
-        <div class="quiz-result">
-            <h3>${resultMessage}</h3>
-            <p>Kunci Jawaban: ABCDEBACDE</p>
-            <p>${percentage >= 70 ? '🎉 Selamat! Anda memahami materi dengan baik.' : '📚 Anda perlu mempelajari kembali materi ini.'}</p>
-        </div>
-        `,
-        [
-            { text: 'Tutup', class: 'btn', action: 'close' },
-            { 
-                text: 'Coba Lagi', 
-                class: 'btn btn-primary',
-                action: () => {
-                    generateQuiz();
-                    NotificationSystem.hideModal(document.querySelector('.modal-overlay.active'));
-                }
-            }
-        ]
-    );
-}
 
-// ==================== INITIALIZATION ====================
-document.addEventListener('DOMContentLoaded', function() {
-    // Draw visualizations
-    drawHeroGraph();
-    drawDefinitionGraph();
-    drawGraphTypes();
-    generateTerminology();
-    generateQuiz();
-    
-    // Initialize game
-    let game = null;
-    const gameCanvas = document.getElementById('graph-canvas');
-    if (gameCanvas) {
-        game = new EnhancedGraphGame();
-    }
-    
-    // Game controls
-    const addNodeBtn = document.getElementById('add-node');
-    const addEdgeBtn = document.getElementById('add-edge');
-    const addLoopBtn = document.getElementById('add-loop');
-    const addMultigraphBtn = document.getElementById('add-multigraph');
-    const addDirectedBtn = document.getElementById('add-directed');
-    const clearBtn = document.getElementById('clear-graph');
-    const checkGraphBtn = document.getElementById('check-graph');
-    const checkQuizBtn = document.getElementById('submit-quiz');
-    
-    if (addNodeBtn && game) {
-        addNodeBtn.addEventListener('click', () => {
-            const x = Math.random() * (game.canvas.width - 100) + 50;
-            const y = Math.random() * (game.canvas.height - 100) + 50;
-            game.addNode(x, y);
-            game.draw();
-        });
-    }
-    
-    if (addEdgeBtn && game) {
-        addEdgeBtn.addEventListener('click', () => {
-            game.isAddingEdge = !game.isAddingEdge;
-            game.isAddingLoop = false;
-            addEdgeBtn.classList.toggle('active');
-            addLoopBtn.classList.remove('active');
-            addMultigraphBtn.classList.remove('active');
-            addDirectedBtn.classList.remove('active');
-        });
-    }
-    
-    if (addLoopBtn && game) {
-        addLoopBtn.addEventListener('click', () => {
-            game.isAddingLoop = !game.isAddingLoop;
-            game.isAddingEdge = false;
-            addLoopBtn.classList.toggle('active');
-            addEdgeBtn.classList.remove('active');
-            addMultigraphBtn.classList.remove('active');
-            addDirectedBtn.classList.remove('active');
-        });
-    }
-    
-    if (addMultigraphBtn && game) {
-        addMultigraphBtn.addEventListener('click', () => {
-            // Add multiple edges between two random nodes
-            if (game.nodes.length >= 2) {
-                const node1 = Math.floor(Math.random() * game.nodes.length);
-                let node2 = Math.floor(Math.random() * game.nodes.length);
-                while (node2 === node1 && game.nodes.length > 1) {
-                    node2 = Math.floor(Math.random() * game.nodes.length);
-                }
-                game.addEdge(node1, node2);
-                game.addEdge(node1, node2); // Add second edge for multigraph
-                game.draw();
-                addMultigraphBtn.classList.add('active');
-                setTimeout(() => addMultigraphBtn.classList.remove('active'), 500);
-            } else {
-                NotificationSystem.showToast('warning', 'Perhatian', 'Tambahkan minimal 2 simpul untuk membuat multigraph', 3000);
-            }
-        });
-    }
-    
-    if (addDirectedBtn && game) {
-        addDirectedBtn.addEventListener('click', () => {
-            // Add directed edge between two random nodes
-            if (game.nodes.length >= 2) {
-                const node1 = Math.floor(Math.random() * game.nodes.length);
-                let node2 = Math.floor(Math.random() * game.nodes.length);
-                while (node2 === node1 && game.nodes.length > 1) {
-                    node2 = Math.floor(Math.random() * game.nodes.length);
-                }
-                game.edgeType = 'directed';
-                game.addEdge(node1, node2);
-                game.draw();
-                addDirectedBtn.classList.add('active');
-                setTimeout(() => addDirectedBtn.classList.remove('active'), 500);
-            } else {
-                NotificationSystem.showToast('warning', 'Perhatian', 'Tambahkan minimal 2 simpul untuk membuat directed graph', 3000);
-            }
-        });
-    }
-    
-    if (clearBtn && game) {
-        clearBtn.addEventListener('click', () => {
-            game.clear();
-        });
-    }
-    
-    if (checkGraphBtn && game) {
-        checkGraphBtn.addEventListener('click', () => {
-            const graphType = document.getElementById('graph-type').textContent;
-            NotificationSystem.showModal(
-                'Jenis Graf Terdeteksi',
-                `Graf yang Anda buat adalah: <strong>${graphType}</strong><br><br>
-                <p>Penjelasan:</p>
-                <ul>
-                    <li><strong>Sederhana:</strong> Tidak ada loop atau sisi ganda</li>
-                    <li><strong>Ganda (Multigraph):</strong> Memiliki sisi ganda</li>
-                    <li><strong>Semu:</strong> Memiliki loop</li>
-                    <li><strong>Berarah:</strong> Sisi memiliki arah</li>
-                    <li><strong>Berbobot:</strong> Sisi memiliki bobot/nilai</li>
-                </ul>`,
-                [
-                    { text: 'Tutup', class: 'btn', action: 'close' }
-                ]
-            );
-        });
-    }
-    
-    if (checkQuizBtn) {
-        checkQuizBtn.addEventListener('click', checkQuiz);
-    }
-    
-    // Reset quiz button
-    const resetQuizBtn = document.getElementById('reset-quiz');
-    if (resetQuizBtn) {
-        resetQuizBtn.addEventListener('click', () => {
-            generateQuiz();
-            NotificationSystem.showToast('info', 'Kuis Diulang', 'Kuis telah direset. Silakan jawab kembali.', 3000);
-        });
-    }
-    
-    // Mobile responsiveness
-    function handleResize() {
-        if (game) {
-            game.canvas.width = game.canvas.offsetWidth;
-            game.canvas.height = game.canvas.offsetHeight;
-            game.draw();
+        // Fungsi untuk reset kuis
+        function resetQuiz() {
+            // Reset state
+            quizState = {
+                score: 0,
+                totalAnswered: 0,
+                userAnswers: {},
+                maxQuestions: 20
+            };
+            
+            // Reset semua opsi
+            const allOptions = document.querySelectorAll('.option');
+            allOptions.forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Reset feedback
+            const resultTitle = document.getElementById('result-title');
+            const resultMessage = document.getElementById('result-message');
+            
+            resultTitle.textContent = 'Mulai Kuis!';
+            resultTitle.style.color = 'var(--primary)';
+            resultMessage.textContent = 'Pilih jawaban untuk melihat hasil';
+            
+            // Update display
+            updateDisplay();
         }
-    }
-    
-    window.addEventListener('resize', handleResize);
-    
-    // Show welcome message
-    setTimeout(() => {
-        NotificationSystem.showToast('info', 'Selamat Datang!', 'Selamat belajar teori graf. Gunakan game interaktif untuk memahami konsep graf.', 5000);
-    }, 1000);
-});
 
-// ==================== MOBILE TOUCH SUPPORT ====================
-function setupTouchSupport() {
-    const canvas = document.getElementById('graph-canvas');
-    if (!canvas) return;
-    
-    canvas.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        const touch = e.touches[0];
-        const mouseEvent = new MouseEvent('mousedown', {
-            clientX: touch.clientX,
-            clientY: touch.clientY
-        });
-        canvas.dispatchEvent(mouseEvent);
-    }, false);
-    
-    canvas.addEventListener('touchmove', function(e) {
-        e.preventDefault();
-        const touch = e.touches[0];
-        const mouseEvent = new MouseEvent('mousemove', {
-            clientX: touch.clientX,
-            clientY: touch.clientY
-        });
-        canvas.dispatchEvent(mouseEvent);
-    }, false);
-    
-    canvas.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        const mouseEvent = new MouseEvent('mouseup', {});
-        canvas.dispatchEvent(mouseEvent);
-    }, false);
-}
+        // Animasi untuk efek visual tambahan
+        function addVisualEffects() {
+            // Efek hover untuk section
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 15px 40px rgba(0, 255, 255, 0.1)';
+                });
+                
+                section.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.3)';
+                });
+            });
+            
+            // Efek klik untuk tombol
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = '';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                });
+            });
+        }
 
-// Initialize touch support for mobile
-if ('ontouchstart' in window) {
-    document.addEventListener('DOMContentLoaded', setupTouchSupport);
-}
+        // Panggil fungsi efek visual
+        addVisualEffects();
     </script>
 </body>
 </html>
