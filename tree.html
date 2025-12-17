@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Struktur Pohon - Game Edukasi Struktur Diskrit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ffff;
+            --secondary: #ff00ff;
+            --accent: #00ff00;
+            --dark-bg: #121212;
+            --darker-bg: #0a0a0a;
+            --card-bg: #1a1a2e;
+            --text: #f0f0ff;
+            --text-secondary: #b0b0d0;
+            --border: #2a2a5a;
+            --correct: #00ff88;
+            --incorrect: #ff3366;
+            --warning: #ffaa00;
+            --node-color: #ff00ff;
+            --edge-color: #00ffff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text);
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.05) 0%, transparent 20%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--darker-bg) 0%, #151540 100%);
+            border-bottom: 2px solid var(--primary);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        h1 i {
+            margin-right: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.1);
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        h2 i {
+            margin-right: 10px;
+        }
+
+        .section-intro {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem 1.5rem;
+            background: var(--darker-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--darker-bg);
+            border-color: transparent;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Learning Content */
+        .concept-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .concept-card h3 {
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            font-size: 1.4rem;
+        }
+
+        .concept-card p {
+            margin-bottom: 0.5rem;
+        }
+
+        .analogy {
+            background: rgba(255, 0, 255, 0.05);
+            border: 1px dashed var(--secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .analogy strong {
+            color: var(--secondary);
+        }
+
+        /* Tree Visualization */
+        .tree-visualization {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .tree-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tree-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--darker-bg);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tree-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        }
+
+        .tree-container {
+            width: 100%;
+            height: 400px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        #treeCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .tree-info {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Application Grid */
+        .application-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .app-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.1);
+        }
+
+        .app-card h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-icon {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .app-card p {
+            color: var(--text);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .app-details {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid var(--warning);
+            padding: 0.8rem;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .app-details strong {
+            color: var(--warning);
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            margin-top: 3rem;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .score-display {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .score-display span {
+            color: var(--primary);
+        }
+
+        #score, #progress {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, var(--incorrect), #ff6699);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reset-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
+        }
+
+        /* Quiz Questions */
+        .question-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            border-color: var(--primary);
+        }
+
+        .question-number {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--darker-bg);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+            color: var(--text);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 10px;
+        }
+
+        .option {
+            padding: 1rem;
+            background: var(--darker-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option:hover {
+            border-color: var(--primary);
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .option.selected {
+            border-color: var(--accent);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .option.correct {
+            border-color: var(--correct);
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--correct);
+        }
+
+        .option.incorrect {
+            border-color: var(--incorrect);
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--incorrect);
+        }
+
+        .option-letter {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: var(--border);
+            color: var(--text);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .option.selected .option-letter {
+            background: var(--accent);
+            color: var(--darker-bg);
+        }
+
+        .option.correct .option-letter {
+            background: var(--correct);
+            color: var(--darker-bg);
+        }
+
+        .option.incorrect .option-letter {
+            background: var(--incorrect);
+            color: var(--darker-bg);
+        }
+
+        /* Quiz Result */
+        .quiz-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        #result-title {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        #result-message {
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker-bg);
+            border-top: 1px solid var(--border);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-note {
+            font-size: 0.9rem;
+            color: var(--border) !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            section {
+                padding: 1.5rem;
+            }
+            
+            .quiz-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .score-display {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-btn {
+                min-width: 100%;
+            }
+            
+            .tree-container {
+                height: 300px;
+            }
+            
+            .application-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .question-text {
+                font-size: 1rem;
+            }
+            
+            .tree-container {
+                height: 250px;
+            }
+            
+            .tree-btn, .reset-btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-tree"></i> Petualangan Struktur Pohon</h1>
+            <p class="subtitle">Eksplorasi Interaktif Struktur Diskrit - Pertemuan 13: Pohon (Tree)</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Materi Belajar -->
+        <section class="learning-section">
+            <h2><i class="fas fa-book-open"></i> Materi Belajar Interaktif</h2>
+            <p class="section-intro">Pelajari struktur pohon dengan analogi dunia nyata yang mudah dipahami!</p>
+            
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="dasar">Dasar-Dasar Pohon</button>
+                <button class="tab-btn" data-tab="jenis">Jenis-Jenis Pohon</button>
+                <button class="tab-btn" data-tab="penerapan">Penerapan Nyata</button>
+            </div>
+            
+            <div class="tab-content active" id="dasar">
+                <div class="concept-card">
+                    <h3><i class="fas fa-sitemap"></i> Definisi Dasar Pohon</h3>
+                    <p>Pohon adalah struktur data hierarkis yang terdiri dari simpul-simpul (nodes) yang terhubung oleh sisi (edges).</p>
+                    <div class="analogy">
+                        <strong>Analogi Struktur Organisasi/Folder:</strong> Bayangkan <strong>struktur perusahaan</strong> atau <strong>folder di komputer</strong>! 
+                        <ul>
+                            <li><strong>Root (Akar):</strong> Bos Besar atau Folder "C:/"</li>
+                            <li><strong>Node (Simpul):</strong> Karyawan atau Sub-folder</li>
+                            <li><strong>Leaf (Daun):</strong> Karyawan staff (tidak punya bawahan) atau File mentok</li>
+                            <li><strong>Parent & Child:</strong> Hubungan Ayah-Anak (atasan-bawahan)</li>
+                        </ul>
+                    </div>
+                    <p><strong>Fakta Menarik:</strong> Pohon dalam ilmu komputer digambarkan <strong>terbalik</strong> - akar di atas, daun di bawah!</p>
+                </div>
+                
+                <div class="concept-card">
+                    <h3><i class="fas fa-users"></i> Terminologi Penting</h3>
+                    <p><strong>Root:</strong> Simpul paling atas (tidak memiliki parent)</p>
+                    <p><strong>Parent:</strong> Simpul yang memiliki anak</p>
+                    <p><strong>Child:</strong> Simpul yang memiliki parent</p>
+                    <p><strong>Leaf:</strong> Simpul tanpa anak (derajat keluar = 0)</p>
+                    <p><strong>Internal Node:</strong> Simpul yang memiliki setidaknya satu anak</p>
+                    <p><strong>Depth:</strong> Jarak dari root ke simpul tertentu</p>
+                    <p><strong>Height:</strong> Jarak maksimum dari root ke leaf terjauh</p>
+                    <p><strong>Degree:</strong> Jumlah anak yang dimiliki sebuah simpul</p>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="jenis">
+                <div class="concept-card">
+                    <h3><i class="fas fa-code-branch"></i> Pohon Biner (Binary Tree)</h3>
+                    <p>Pohon dimana setiap simpul maksimal memiliki 2 anak (kiri dan kanan).</p>
+                    <div class="analogy">
+                        <strong>Analogi Keluarga:</strong> Seperti peraturan keluarga dimana orang tua maksimal cuma boleh punya 2 anak (Kiri & Kanan).
+                    </div>
+                    <p><strong>Jenis Binary Tree:</strong></p>
+                    <ul>
+                        <li><strong>Full Binary Tree:</strong> Setiap simpul memiliki 0 atau 2 anak</li>
+                        <li><strong>Complete Binary Tree:</strong> Semua level terisi penuh kecuali mungkin level terakhir</li>
+                        <li><strong>Perfect Binary Tree:</strong> Semua internal node memiliki 2 anak dan semua leaf berada di level yang sama</li>
+                    </ul>
+                </div>
+                
+                <div class="concept-card">
+                    <h3><i class="fas fa-project-diagram"></i> Pohon Rentang (Spanning Tree)</h3>
+                    <p>Subgraf yang menghubungkan semua simpul dalam graf tanpa membentuk sirkuit.</p>
+                    <div class="analogy">
+                        <strong>Analogi Jaringan Kabel:</strong> Cara menghubungkan semua kota (simpul) dengan kabel sesedikit mungkin tanpa membuat loop/sirkuit.
+                    </div>
+                    <p><strong>Pohon Rentang Minimum (MST):</strong> Spanning tree dengan total bobot sisi minimum.</p>
+                    <p><strong>Algoritma MST:</strong> Prim dan Kruskal (keduanya menghasilkan MST tetapi dengan pendekatan berbeda).</p>
+                </div>
+                
+                <div class="concept-card">
+                    <h3><i class="fas fa-calculator"></i> Pohon Ekspresi (Expression Tree)</h3>
+                    <p>Pohon biner khusus dimana daun berupa operand (angka) dan simpul dalam berupa operator (+, -, *, /).</p>
+                    <div class="analogy">
+                        <strong>Analogi Kalkulator:</strong> Seperti cara komputer mengevaluasi ekspresi matematika secara hierarkis.
+                    </div>
+                    <p>Contoh: Ekspresi (2 + 3) * 4 direpresentasikan sebagai pohon dengan * sebagai root, + sebagai child kiri, dan 4 sebagai child kanan.</p>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="penerapan">
+                <div class="application-grid">
+                    <div class="app-card">
+                        <h3><i class="fas fa-folder"></i> Struktur Folder</h3>
+                        <div class="app-icon">
+                            <i class="fas fa-folder-tree fa-3x" style="color: var(--primary);"></i>
+                        </div>
+                        <p>Windows Explorer, macOS Finder adalah contoh nyata struktur pohon. Setiap folder bisa berisi subfolder (anak) dan file (leaf).</p>
+                        <div class="app-details">
+                            <strong>Implementasi:</strong> Tree traversal untuk navigasi file
+                        </div>
+                    </div>
+                    
+                    <div class="app-card">
+                        <h3><i class="fas fa-robot"></i> AI Game (Decision Tree)</h3>
+                        <div class="app-icon">
+                            <i class="fas fa-gamepad fa-3x" style="color: var(--accent);"></i>
+                        </div>
+                        <p>Musuh dalam game menggunakan decision tree untuk berpikir. Contoh: Apakah pemain dekat? Jika Ya -> Serang. Jika Tidak -> Patroli.</p>
+                        <div class="app-details">
+                            <strong>Contoh:</strong> Chess AI, NPC behavior
+                        </div>
+                    </div>
+                    
+                    <div class="app-card">
+                        <h3><i class="fas fa-file-archive"></i> Kompresi Data (Huffman)</h3>
+                        <div class="app-icon">
+                            <i class="fas fa-file-zipper fa-3x" style="color: var(--secondary);"></i>
+                        </div>
+                        <p>Algoritma Huffman menggunakan pohon untuk kompresi data. Karakter yang sering muncul mendapat kode pendek, yang jarang muncul mendapat kode panjang.</p>
+                        <div class="app-details">
+                            <strong>Aplikasi:</strong> File .zip, .jpg, MP3
+                        </div>
+                    </div>
+                    
+                    <div class="app-card">
+                        <h3><i class="fas fa-database"></i> Basis Data (B-Tree)</h3>
+                        <div class="app-icon">
+                            <i class="fas fa-database fa-3x" style="color: var(--correct);"></i>
+                        </div>
+                        <p>Basis data menggunakan B-tree untuk indexing, memungkinkan pencarian, penyisipan, dan penghapusan data yang efisien.</p>
+                        <div class="app-details">
+                            <strong>Keunggulan:</strong> Pencarian O(log n)
+                        </div>
+                    </div>
+                    
+                    <div class="app-card">
+                        <h3><i class="fas fa-network-wired"></i> Jaringan Komputer</h3>
+                        <div class="app-icon">
+                            <i class="fas fa-wifi fa-3x" style="color: var(--warning);"></i>
+                        </div>
+                        <p>Spanning Tree Protocol (STP) mencegah loop dalam jaringan switch, memastikan hanya ada satu jalur aktif antara dua node.</p>
+                        <div class="app-details">
+                            <strong>Protokol:</strong> IEEE 802.1D
+                        </div>
+                    </div>
+                    
+                    <div class="app-card">
+                        <h3><i class="fas fa-family"></i> Silsilah Keluarga</h3>
+                        <div class="app-icon">
+                            <i class="fas fa-users-line fa-3x" style="color: var(--incorrect);"></i>
+                        </div>
+                        <p>Struktur pohon sempurna untuk merepresentasikan hubungan keluarga: leluhur sebagai root, orangtua sebagai internal node, anak sebagai leaf/child.</p>
+                        <div class="app-details">
+                            <strong>Contoh:</strong> Family tree, genealogy software
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visualisasi Pohon Interaktif -->
+        <section class="tree-section">
+            <h2><i class="fas fa-project-diagram"></i> Visualisasi Pohon Interaktif</h2>
+            <p class="section-intro">Lihat dan interaksi dengan struktur pohon secara visual!</p>
+            
+            <div class="tree-visualization">
+                <div class="tree-controls">
+                    <button id="generateTree" class="tree-btn">
+                        <i class="fas fa-magic"></i> Generate Binary Tree
+                    </button>
+                    <button id="clearTree" class="tree-btn">
+                        <i class="fas fa-trash"></i> Clear Tree
+                    </button>
+                    <button id="traverseTree" class="tree-btn">
+                        <i class="fas fa-walking"></i> Traverse (In-Order)
+                    </button>
+                </div>
+                
+                <div class="tree-container">
+                    <canvas id="treeCanvas"></canvas>
+                </div>
+                
+                <div class="tree-info">
+                    <p><i class="fas fa-info-circle"></i> Klik tombol "Generate Binary Tree" untuk melihat visualisasi struktur pohon biner dengan animasi.</p>
+                    <p>Setiap node akan muncul secara berurutan dengan efek animasi.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kuis Interaktif -->
+        <section class="quiz-section">
+            <h2><i class="fas fa-gamepad"></i> Kuis Interaktif</h2>
+            <p class="section-intro">Uji pemahamanmu tentang struktur pohon dengan kuis berikut!</p>
+            
+            <div class="quiz-header">
+                <div class="score-display">
+                    <span>Skor: <span id="score">0</span>/10</span>
+                    <span class="progress">Progress: <span id="progress">0</span>/10</span>
+                </div>
+                <button id="reset-btn" class="reset-btn"><i class="fas fa-redo"></i> Reset Kuis</button>
+            </div>
+            
+            <!-- Soal kuis akan ditambahkan di sini -->
+            <div id="quiz-questions">
+                <!-- Soal akan di-generate oleh JavaScript -->
+            </div>
+            
+            <div class="quiz-result">
+                <h3 id="result-title">Mulai Kuis!</h3>
+                <p id="result-message">Pilih jawaban untuk melihat hasil</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Dibuat untuk Mata Kuliah Struktur Diskrit - Pertemuan 13: Pohon (Tree)</p>
+            <p class="footer-note">© 2023 - Game Edukasi Interaktif untuk Mahasiswa</p>
+        </div>
+    </footer>
+
+    <script>
+        // State untuk kuis
+        let quizState = {
+            score: 0,
+            totalAnswered: 0,
+            userAnswers: {},
+            maxQuestions: 10
+        };
+
+        // Data soal kuis sesuai dengan kunci jawaban: A, B, E, C, D, C, A, B, E, D
+        const quizQuestions = [
+            {
+                question: "Graf tak berarah terhubung yang tidak mengandung sirkuit (loop) disebut...",
+                options: ["Pohon", "Binary", "Akar", "Level", "Anak"],
+                correct: "a"
+            },
+            {
+                question: "Sisi (edge) yang menghubungkan simpul dalam pohon rentang sering disebut dengan istilah...",
+                options: ["Tali hubung", "Cabang", "Akar", "Rank", "Upapohon"],
+                correct: "b"
+            },
+            {
+                question: "Metode algoritma terkenal untuk menyelesaikan masalah Pohon Rentang Minimum (MST) adalah...",
+                options: ["Algoritma Prim", "Algoritma Kruskal", "Traveling Salesman", "a dan c benar", "a dan b benar"],
+                correct: "e"
+            },
+            {
+                question: "Di bawah ini yang <strong>BUKAN</strong> merupakan terminologi dasar dalam struktur data pohon adalah...",
+                options: ["Anak (Child)", "Lintasan (Path)", "Sirkuit (Circuit)", "Derajat (Degree)", "Daun (Leaf)"],
+                correct: "c"
+            },
+            {
+                question: "Pohon biner khusus dimana daun berupa operand (angka) dan simpul dalam berupa operator (+, -, *, /) disebut...",
+                options: ["Keputusan", "Huffman", "Prefiks", "Ekspresi", "Pencarian biner"],
+                correct: "d"
+            },
+            {
+                question: "Sisi yang menghubungkan node orang tua ke node di bawahnya sering diasosiasikan dengan hubungan ke...",
+                options: ["derajat", "daun", "anak", "aras", "tinggi"],
+                correct: "c"
+            },
+            {
+                question: "Jika sebuah pohon memiliki <strong>n</strong> buah simpul, maka jumlah sisi (edge) yang dimiliki pasti sebanyak...",
+                options: ["n - 1", "n + 1", "2n", "n / 2", "n^2"],
+                correct: "a"
+            },
+            {
+                question: "Simpul yang berada tepat di atas simpul lain (terhubung langsung) disebut...",
+                options: ["Anak", "Orangtua (Parent)", "Saudara", "Leluhur", "Cucu"],
+                correct: "b"
+            },
+            {
+                question: "Simpul yang tidak memiliki anak (derajat keluar = 0) dalam terminologi pohon disebut...",
+                options: ["Akar", "Cabang", "Ranting", "Trunk", "Daun (Leaf)"],
+                correct: "e"
+            },
+            {
+                question: "Banyaknya tingkatan atau level maksimum dalam sebuah pohon dihitung dari akar sampai daun terjauh disebut...",
+                options: ["Derajat", "Bobot", "Lebar", "Tinggi/Kedalaman (Height/Depth)", "Size"],
+                correct: "d"
+            }
+        ];
+
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            initializeTreeVisualization();
+            initializeQuiz();
+            setupResetButton();
+            updateDisplay();
+        });
+
+        // Fungsi untuk tab materi belajar
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    // Hapus class active dari semua tab buttons dan contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Tambah class active ke tab yang dipilih
+                    button.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        // Fungsi untuk visualisasi pohon
+        function initializeTreeVisualization() {
+            const canvas = document.getElementById('treeCanvas');
+            const ctx = canvas.getContext('2d');
+            const generateBtn = document.getElementById('generateTree');
+            const clearBtn = document.getElementById('clearTree');
+            const traverseBtn = document.getElementById('traverseTree');
+            
+            // Set canvas size
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            
+            // Tree data structure
+            let tree = null;
+            let animationNodes = [];
+            let animationStep = 0;
+            let animationInterval = null;
+            
+            // Node class untuk binary tree
+            class TreeNode {
+                constructor(value, x, y) {
+                    this.value = value;
+                    this.left = null;
+                    this.right = null;
+                    this.x = x;
+                    this.y = y;
+                    this.radius = 20;
+                    this.visited = false;
+                }
+            }
+            
+            // Generate random binary tree
+            function generateRandomTree() {
+                // Clear previous animation
+                if (animationInterval) {
+                    clearInterval(animationInterval);
+                    animationInterval = null;
+                }
+                
+                // Reset canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Create tree structure (perfect binary tree level 3)
+                const root = new TreeNode("Root", canvas.width / 2, 60);
+                root.left = new TreeNode("A", canvas.width / 2 - 120, 140);
+                root.right = new TreeNode("B", canvas.width / 2 + 120, 140);
+                
+                root.left.left = new TreeNode("C", canvas.width / 2 - 180, 220);
+                root.left.right = new TreeNode("D", canvas.width / 2 - 60, 220);
+                root.right.left = new TreeNode("E", canvas.width / 2 + 60, 220);
+                root.right.right = new TreeNode("F", canvas.width / 2 + 180, 220);
+                
+                root.left.left.left = new TreeNode("G", canvas.width / 2 - 210, 300);
+                root.left.left.right = new TreeNode("H", canvas.width / 2 - 150, 300);
+                root.left.right.left = new TreeNode("I", canvas.width / 2 - 90, 300);
+                root.left.right.right = new TreeNode("J", canvas.width / 2 - 30, 300);
+                root.right.left.left = new TreeNode("K", canvas.width / 2 + 30, 300);
+                root.right.left.right = new TreeNode("L", canvas.width / 2 + 90, 300);
+                root.right.right.left = new TreeNode("M", canvas.width / 2 + 150, 300);
+                root.right.right.right = new TreeNode("N", canvas.width / 2 + 210, 300);
+                
+                tree = root;
+                animationNodes = flattenTree(root);
+                animationStep = 0;
+                
+                // Start animation
+                animationInterval = setInterval(drawAnimationStep, 300);
+            }
+            
+            // Flatten tree for animation (BFS traversal)
+            function flattenTree(root) {
+                const nodes = [];
+                const queue = [root];
+                
+                while (queue.length > 0) {
+                    const node = queue.shift();
+                    nodes.push(node);
+                    
+                    if (node.left) queue.push(node.left);
+                    if (node.right) queue.push(node.right);
+                }
+                
+                return nodes;
+            }
+            
+            // Draw a single animation step
+            function drawAnimationStep() {
+                if (animationStep >= animationNodes.length) {
+                    clearInterval(animationInterval);
+                    animationInterval = null;
+                    return;
+                }
+                
+                const node = animationNodes[animationStep];
+                node.visited = true;
+                
+                // Draw edges to parent
+                drawEdges(node);
+                
+                // Draw the node
+                drawNode(node);
+                
+                animationStep++;
+            }
+            
+            // Draw a tree node
+            function drawNode(node) {
+                // Draw circle
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                ctx.fillStyle = node.visited ? 'var(--node-color)' : 'rgba(255, 0, 255, 0.3)';
+                ctx.fill();
+                ctx.strokeStyle = 'var(--primary)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Draw glow effect for visited nodes
+                if (node.visited) {
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, node.radius + 5, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'rgba(0, 255, 255, 0.5)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+                
+                // Draw text
+                ctx.fillStyle = 'var(--text)';
+                ctx.font = 'bold 14px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(node.value, node.x, node.y);
+            }
+            
+            // Draw edges from node to its children
+            function drawEdges(node) {
+                ctx.strokeStyle = 'var(--edge-color)';
+                ctx.lineWidth = 2;
+                
+                if (node.left && node.left.visited) {
+                    ctx.beginPath();
+                    ctx.moveTo(node.x, node.y + node.radius);
+                    ctx.lineTo(node.left.x, node.left.y - node.left.radius);
+                    ctx.stroke();
+                }
+                
+                if (node.right && node.right.visited) {
+                    ctx.beginPath();
+                    ctx.moveTo(node.x, node.y + node.radius);
+                    ctx.lineTo(node.right.x, node.right.y - node.right.radius);
+                    ctx.stroke();
+                }
+            }
+            
+            // Draw entire tree
+            function drawTree() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw all edges first
+                function drawAllEdges(node) {
+                    if (!node) return;
+                    
+                    if (node.left) {
+                        ctx.beginPath();
+                        ctx.moveTo(node.x, node.y + node.radius);
+                        ctx.lineTo(node.left.x, node.left.y - node.left.radius);
+                        ctx.stroke();
+                        drawAllEdges(node.left);
+                    }
+                    
+                    if (node.right) {
+                        ctx.beginPath();
+                        ctx.moveTo(node.x, node.y + node.radius);
+                        ctx.lineTo(node.right.x, node.right.y - node.right.radius);
+                        ctx.stroke();
+                        drawAllEdges(node.right);
+                    }
+                }
+                
+                ctx.strokeStyle = 'var(--edge-color)';
+                ctx.lineWidth = 2;
+                drawAllEdges(tree);
+                
+                // Draw all nodes
+                function drawAllNodes(node) {
+                    if (!node) return;
+                    drawNode(node);
+                    drawAllNodes(node.left);
+                    drawAllNodes(node.right);
+                }
+                
+                drawAllNodes(tree);
+            }
+            
+            // Clear tree visualization
+            function clearTree() {
+                if (animationInterval) {
+                    clearInterval(animationInterval);
+                    animationInterval = null;
+                }
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                tree = null;
+                animationNodes = [];
+                animationStep = 0;
+            }
+            
+            // Traverse tree (In-Order)
+            function traverseTree() {
+                if (!tree) {
+                    alert('Generate tree terlebih dahulu!');
+                    return;
+                }
+                
+                const result = [];
+                function inOrder(node) {
+                    if (!node) return;
+                    inOrder(node.left);
+                    result.push(node.value);
+                    inOrder(node.right);
+                }
+                
+                inOrder(tree);
+                alert('Hasil traversal In-Order: ' + result.join(' → '));
+            }
+            
+            // Event listeners
+            generateBtn.addEventListener('click', generateRandomTree);
+            clearBtn.addEventListener('click', clearTree);
+            traverseBtn.addEventListener('click', traverseTree);
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+                if (tree) {
+                    drawTree();
+                }
+            });
+        }
+
+        // Fungsi untuk inisialisasi kuis
+        function initializeQuiz() {
+            const quizContainer = document.getElementById('quiz-questions');
+            
+            // Generate soal kuis
+            quizQuestions.forEach((q, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.setAttribute('data-question', (index + 1).toString());
+                questionCard.setAttribute('data-correct', q.correct);
+                
+                questionCard.innerHTML = `
+                    <div class="question-number">${index + 1}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((option, optIndex) => `
+                            <div class="option" data-value="${String.fromCharCode(97 + optIndex)}">
+                                <span class="option-letter">${String.fromCharCode(97 + optIndex)}</span>
+                                <span class="option-text">${option}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                quizContainer.appendChild(questionCard);
+            });
+            
+            // Add event listeners to options
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionCard = this.closest('.question-card');
+                    const questionId = questionCard.getAttribute('data-question');
+                    const selectedValue = this.getAttribute('data-value');
+                    const correctAnswer = questionCard.getAttribute('data-correct');
+                    
+                    // Jika sudah menjawab, jangan biarkan mengubah jawaban
+                    if (quizState.userAnswers[questionId]) {
+                        return;
+                    }
+                    
+                    // Hapus seleksi dari semua opsi di pertanyaan ini
+                    const allOptions = questionCard.querySelectorAll('.option');
+                    allOptions.forEach(opt => {
+                        opt.classList.remove('selected', 'correct', 'incorrect');
+                    });
+                    
+                    // Tandai opsi yang dipilih
+                    this.classList.add('selected');
+                    
+                    // Cek jawaban
+                    const isCorrect = selectedValue === correctAnswer;
+                    
+                    if (isCorrect) {
+                        this.classList.add('correct');
+                        quizState.score++;
+                    } else {
+                        this.classList.add('incorrect');
+                        
+                        // Tampilkan jawaban yang benar
+                        const correctOption = questionCard.querySelector(`.option[data-value="${correctAnswer}"]`);
+                        if (correctOption) {
+                            correctOption.classList.add('correct');
+                        }
+                    }
+                    
+                    // Simpan jawaban user
+                    quizState.userAnswers[questionId] = {
+                        selected: selectedValue,
+                        correct: correctAnswer,
+                        isCorrect: isCorrect
+                    };
+                    
+                    // Update progress
+                    quizState.totalAnswered = Object.keys(quizState.userAnswers).length;
+                    
+                    // Update display
+                    updateDisplay();
+                    
+                    // Update feedback
+                    updateFeedback(isCorrect, questionId);
+                });
+            });
+        }
+
+        // Fungsi untuk update tampilan skor dan progress
+        function updateDisplay() {
+            document.getElementById('score').textContent = quizState.score;
+            document.getElementById('progress').textContent = quizState.totalAnswered;
+        }
+
+        // Fungsi untuk update feedback
+        function updateFeedback(isCorrect, questionId) {
+            const resultTitle = document.getElementById('result-title');
+            const resultMessage = document.getElementById('result-message');
+            
+            if (isCorrect) {
+                resultTitle.textContent = 'Benar! 🎉';
+                resultTitle.style.color = 'var(--correct)';
+                resultMessage.textContent = `Jawaban Anda untuk soal ${questionId} benar! Skor bertambah.`;
+            } else {
+                resultTitle.textContent = 'Salah! 💡';
+                resultTitle.style.color = 'var(--incorrect)';
+                const correctAnswer = quizState.userAnswers[questionId].correct;
+                const answerText = getAnswerText(questionId, correctAnswer);
+                resultMessage.textContent = `Jawaban yang benar untuk soal ${questionId} adalah: ${answerText}`;
+            }
+            
+            // Update hasil akhir jika semua soal sudah dijawab
+            if (quizState.totalAnswered === quizState.maxQuestions) {
+                const percentage = (quizState.score / quizState.maxQuestions) * 100;
+                let finalMessage = '';
+                
+                if (percentage >= 90) {
+                    finalMessage = 'Luar biasa! Anda menguasai materi struktur pohon dengan sempurna! 🏆';
+                } else if (percentage >= 70) {
+                    finalMessage = 'Bagus! Pemahaman Anda tentang struktur pohon sudah sangat baik. 👍';
+                } else if (percentage >= 50) {
+                    finalMessage = 'Cukup baik. Pelajari kembali materi untuk meningkatkan pemahaman. 📚';
+                } else {
+                    finalMessage = 'Perlu belajar lebih giat lagi. Coba pelajari materi sekali lagi! 💪';
+                }
+                
+                resultTitle.textContent = `Kuis Selesai! Skor: ${quizState.score}/${quizState.maxQuestions}`;
+                resultMessage.textContent = finalMessage;
+            }
+        }
+
+        // Fungsi untuk mendapatkan teks jawaban
+        function getAnswerText(questionId, answerValue) {
+            const questionCard = document.querySelector(`.question-card[data-question="${questionId}"]`);
+            if (!questionCard) return answerValue;
+            
+            const option = questionCard.querySelector(`.option[data-value="${answerValue}"]`);
+            if (!option) return answerValue;
+            
+            const optionText = option.querySelector('.option-text');
+            return optionText ? optionText.textContent : answerValue;
+        }
+
+        // Fungsi untuk setup tombol reset
+        function setupResetButton() {
+            const resetBtn = document.getElementById('reset-btn');
+            
+            resetBtn.addEventListener('click', function() {
+                if (confirm('Apakah Anda yakin ingin mereset kuis? Semua jawaban akan dihapus.')) {
+                    resetQuiz();
+                }
+            });
+        }
+
+        // Fungsi untuk reset kuis
+        function resetQuiz() {
+            // Reset state
+            quizState = {
+                score: 0,
+                totalAnswered: 0,
+                userAnswers: {},
+                maxQuestions: 10
+            };
+            
+            // Reset semua opsi
+            const allOptions = document.querySelectorAll('.option');
+            allOptions.forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Reset feedback
+            const resultTitle = document.getElementById('result-title');
+            const resultMessage = document.getElementById('result-message');
+            
+            resultTitle.textContent = 'Mulai Kuis!';
+            resultTitle.style.color = 'var(--primary)';
+            resultMessage.textContent = 'Pilih jawaban untuk melihat hasil';
+            
+            // Update display
+            updateDisplay();
+        }
+
+        // Animasi untuk efek visual tambahan
+        function addVisualEffects() {
+            // Efek hover untuk section
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 15px 40px rgba(0, 255, 255, 0.1)';
+                });
+                
+                section.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.3)';
+                });
+            });
+            
+            // Efek klik untuk tombol
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = '';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                });
+            });
+        }
+
+        // Panggil fungsi efek visual
+        addVisualEffects();
+    </script>
+</body>
+</html>
