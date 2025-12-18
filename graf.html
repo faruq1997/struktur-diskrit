@@ -873,33 +873,175 @@
                         <p class="graph-description">Struktur pohon dengan simpul root dan cabang-cabang. Tidak ada sirkuit, digunakan untuk hierarki.</p>
                     </div>
                     
-                    <div class="graph-card">
-                        <h3><i class="fas fa-sitemap"></i> Graf Planar</h3>
-                        <div class="graph-container">
-                            <svg class="graph-svg" viewBox="0 0 200 150">
-                                <!-- Simpul -->
-                                <circle cx="100" cy="50" r="15" fill="var(--primary)" class="vertex"/>
-                                <circle cx="50" cy="100" r="15" fill="var(--primary)" class="vertex"/>
-                                <circle cx="150" cy="100" r="15" fill="var(--primary)" class="vertex"/>
-                                <circle cx="100" cy="100" r="15" fill="var(--primary)" class="vertex"/>
-                                
-                                <!-- Sisi tanpa perpotongan -->
-                                <line x1="100" y1="65" x2="100" y2="85" stroke="var(--primary)" stroke-width="2"/>
-                                <line x1="100" y1="65" x2="60" y2="95" stroke="var(--primary)" stroke-width="2"/>
-                                <line x1="100" y1="65" x2="140" y2="95" stroke="var(--primary)" stroke-width="2"/>
-                                <line x1="60" y1="105" x2="140" y2="105" stroke="var(--primary)" stroke-width="2"/>
-                                <line x1="60" y1="105" x2="90" y2="95" stroke="var(--primary)" stroke-width="2"/>
-                                <line x1="140" y1="105" x2="110" y2="95" stroke="var(--primary)" stroke-width="2"/>
-                                
-                                <!-- Label simpul -->
-                                <text x="100" y="50" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">P</text>
-                                <text x="50" y="100" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">Q</text>
-                                <text x="150" y="100" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">R</text>
-                                <text x="100" y="100" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">S</text>
-                            </svg>
-                        </div>
-                        <p class="graph-description">Graf planar dapat digambar tanpa sisi yang saling berpotongan. Penting dalam desain papan sirkuit.</p>
+                <div class="graph-card">
+                    <h3><i class="fas fa-sitemap"></i> Graf Planar</h3>
+                    <div class="graph-container">
+                        <svg class="graph-svg" viewBox="0 0 200 150">
+                            <!-- Simpul -->
+                            <circle cx="100" cy="50" r="15" fill="var(--primary)" class="vertex"/>
+                            <circle cx="50" cy="100" r="15" fill="var(--primary)" class="vertex"/>
+                            <circle cx="150" cy="100" r="15" fill="var(--primary)" class="vertex"/>
+                            <circle cx="100" cy="100" r="15" fill="var(--primary)" class="vertex"/>
+                            
+                            <!-- Sisi tanpa perpotongan -->
+                            <line x1="100" y1="65" x2="100" y2="85" stroke="var(--primary)" stroke-width="2"/>
+                            <line x1="100" y1="65" x2="60" y2="95" stroke="var(--primary)" stroke-width="2"/>
+                            <line x1="100" y1="65" x2="140" y2="95" stroke="var(--primary)" stroke-width="2"/>
+                            <line x1="60" y1="105" x2="140" y2="105" stroke="var(--primary)" stroke-width="2"/>
+                            <line x1="60" y1="105" x2="90" y2="95" stroke="var(--primary)" stroke-width="2"/>
+                            <line x1="140" y1="105" x2="110" y2="95" stroke="var(--primary)" stroke-width="2"/>
+                            
+                            <!-- Label simpul -->
+                            <text x="100" y="50" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">P</text>
+                            <text x="50" y="100" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">Q</text>
+                            <text x="150" y="100" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">R</text>
+                            <text x="100" y="100" text-anchor="middle" dy="5" fill="var(--text)" font-size="12" font-weight="bold">S</text>
+                        </svg>
                     </div>
+                    <p class="graph-description">Graf planar dapat digambar tanpa sisi yang saling berpotongan. Penting dalam desain papan sirkuit.</p>
+                </div>
+                
+                <div class="graph-card">
+                    <h3><i class="fas fa-spider"></i> Graf Isomorfik</h3>
+                    <div class="graph-container">
+                        <svg class="graph-svg" viewBox="0 0 200 150">
+                            <!-- Graf pertama (kiri) -->
+                            <circle cx="60" cy="50" r="12" fill="#00ffff" class="vertex"/>
+                            <circle cx="60" cy="100" r="12" fill="#00ffff" class="vertex"/>
+                            <circle cx="100" cy="75" r="12" fill="#00ffff" class="vertex"/>
+                            <circle cx="140" cy="50" r="12" fill="#00ffff" class="vertex"/>
+                            <circle cx="140" cy="100" r="12" fill="#00ffff" class="vertex"/>
+                            
+                            <!-- Sisi graf pertama -->
+                            <line x1="60" y1="62" x2="60" y2="88" stroke="#00ffff" stroke-width="2"/>
+                            <line x1="60" y1="50" x2="100" y2="75" stroke="#00ffff" stroke-width="2"/>
+                            <line x1="60" y1="100" x2="100" y2="75" stroke="#00ffff" stroke-width="2"/>
+                            <line x1="140" y1="50" x2="100" y2="75" stroke="#00ffff" stroke-width="2"/>
+                            <line x1="140" y1="100" x2="100" y2="75" stroke="#00ffff" stroke-width="2"/>
+                            <line x1="140" y1="62" x2="140" y2="88" stroke="#00ffff" stroke-width="2"/>
+                            
+                            <!-- Label graf pertama -->
+                            <text x="60" y="50" text-anchor="middle" dy="4" fill="var(--text)" font-size="10" font-weight="bold">A</text>
+                            <text x="60" y="100" text-anchor="middle" dy="4" fill="var(--text)" font-size="10" font-weight="bold">B</text>
+                            <text x="100" y="75" text-anchor="middle" dy="4" fill="var(--text)" font-size="10" font-weight="bold">C</text>
+                            <text x="140" y="50" text-anchor="middle" dy="4" fill="var(--text)" font-size="10" font-weight="bold">D</text>
+                            <text x="140" y="100" text-anchor="middle" dy="4" fill="var(--text)" font-size="10" font-weight="bold">E</text>
+                            
+                            <!-- Panah isomorfik -->
+                            <line x1="160" y1="75" x2="180" y2="75" stroke="var(--accent)" stroke-width="2" marker-end="url(#iso-arrow)"/>
+                            
+                            <!-- Graf kedua (kanan) -->
+                            <circle cx="200" cy="40" r="12" fill="#ff00ff" class="vertex"/>
+                            <circle cx="200" cy="110" r="12" fill="#ff00ff" class="vertex"/>
+                            <circle cx="240" cy="75" r="12" fill="#ff00ff" class="vertex"/>
+                            <circle cx="280" cy="40" r="12" fill="#ff00ff" class="vertex"/>
+                            <circle cx="280" cy="110" r="12" fill="#ff00ff" class="vertex"/>
+                            
+                            <!-- Sisi graf kedua -->
+                            <line x1="200" y1="52" x2="200" y2="98" stroke="#ff00ff" stroke-width="2"/>
+                            <line x1="200" y1="40" x2="240" y2="75" stroke="#ff00ff" stroke-width="2"/>
+                            <line x1="200" y1="110" x2="240" y2="75" stroke="#ff00ff" stroke-width="2"/>
+                            <line x1="280" y1="40" x2="240" y2="75" stroke="#ff00ff" stroke-width="2"/>
+                            <line x1="280" y1="110" x2="240" y2="75" stroke="#ff00ff" stroke-width="2"/>
+                            <line x1="280" y1="52" x2="280" y2="98" stroke="#ff00ff" stroke-width="2"/>
+                            
+                            <!-- Label graf kedua -->
+                            <text x="200" y="40" text-anchor="middle" dy="4" fill="var(--text)" font-size="10" font-weight="bold">1</text>
+                            <text x="200" y="110" text-anchor="middle" dy="4" fill="var(--text)" font-size="10" font-weight="bold">2</text>
+                            <text x="240" y="75" text-anchor="middle" dy="4" fill="var(--text)" font-size="10" font-weight="bold">3</text>
+                            <text x="280" y="40" text-anchor="middle" dy="4" fill="var(--text)" font-size="10" font-weight="bold">4</text>
+                            <text x="280" y="110" text-anchor="middle" dy="4" fill="var(--text)" font-size="10" font-weight="bold">5</text>
+                            
+                            <!-- Definisi marker panah isomorfik -->
+                            <defs>
+                                <marker id="iso-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L9,3 z" fill="var(--accent)"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                    <p class="graph-description">Dua graf isomorfik memiliki struktur yang sama meski bentuk visual berbeda. A↔1, B↔2, C↔3, D↔4, E↔5.</p>
+                </div>
+                
+                <div class="graph-card">
+                    <h3><i class="fas fa-route"></i> Lintasan Euler</h3>
+                    <div class="graph-container">
+                        <svg class="graph-svg" viewBox="0 0 200 150">
+                            <!-- Simpul -->
+                            <circle cx="50" cy="50" r="12" fill="var(--correct)" class="vertex"/>
+                            <circle cx="150" cy="50" r="12" fill="var(--correct)" class="vertex"/>
+                            <circle cx="50" cy="120" r="12" fill="var(--correct)" class="vertex"/>
+                            <circle cx="150" cy="120" r="12" fill="var(--correct)" class="vertex"/>
+                            <circle cx="100" cy="85" r="12" fill="var(--correct)" class="vertex"/>
+                            
+                            <!-- Sisi dengan lintasan Euler -->
+                            <line x1="50" y1="62" x2="50" y2="108" stroke="var(--correct)" stroke-width="2"/>
+                            <line x1="150" y1="62" x2="150" y2="108" stroke="var(--correct)" stroke-width="2"/>
+                            <line x1="62" y1="50" x2="138" y2="50" stroke="var(--correct)" stroke-width="2"/>
+                            <line x1="62" y1="120" x2="138" y2="120" stroke="var(--correct)" stroke-width="2"/>
+                            <line x1="62" y1="62" x2="138" y2="108" stroke="var(--correct)" stroke-width="2"/>
+                            <line x1="62" y1="108" x2="138" y2="62" stroke="var(--correct)" stroke-width="2"/>
+                            
+                            <!-- Lintasan Euler (panah) -->
+                            <path d="M50,50 L100,85 L150,50 L150,120 L100,85 L50,120" fill="none" stroke="var(--warning)" stroke-width="3" stroke-dasharray="5,5" marker-end="url(#euler-arrow)"/>
+                            
+                            <!-- Label simpul -->
+                            <text x="50" y="50" text-anchor="middle" dy="4" fill="var(--darker-bg)" font-size="10" font-weight="bold">A</text>
+                            <text x="150" y="50" text-anchor="middle" dy="4" fill="var(--darker-bg)" font-size="10" font-weight="bold">B</text>
+                            <text x="50" y="120" text-anchor="middle" dy="4" fill="var(--darker-bg)" font-size="10" font-weight="bold">C</text>
+                            <text x="150" y="120" text-anchor="middle" dy="4" fill="var(--darker-bg)" font-size="10" font-weight="bold">D</text>
+                            <text x="100" y="85" text-anchor="middle" dy="4" fill="var(--darker-bg)" font-size="10" font-weight="bold">E</text>
+                            
+                            <!-- Definisi marker panah Euler -->
+                            <defs>
+                                <marker id="euler-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L9,3 z" fill="var(--warning)"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                    <p class="graph-description">Lintasan Euler melewati semua sisi tepat satu kali. Contoh: A→E→B→D→E→C (melewati semua 6 sisi).</p>
+                </div>
+                
+                <div class="graph-card">
+                    <h3><i class="fas fa-road"></i> Lintasan Hamilton</h3>
+                    <div class="graph-container">
+                        <svg class="graph-svg" viewBox="0 0 200 150">
+                            <!-- Simpul -->
+                            <circle cx="50" cy="50" r="12" fill="var(--secondary)" class="vertex"/>
+                            <circle cx="150" cy="50" r="12" fill="var(--secondary)" class="vertex"/>
+                            <circle cx="50" cy="120" r="12" fill="var(--secondary)" class="vertex"/>
+                            <circle cx="150" cy="120" r="12" fill="var(--secondary)" class="vertex"/>
+                            <circle cx="100" cy="85" r="12" fill="var(--secondary)" class="vertex"/>
+                            
+                            <!-- Sisi -->
+                            <line x1="50" y1="62" x2="50" y2="108" stroke="var(--secondary)" stroke-width="2"/>
+                            <line x1="150" y1="62" x2="150" y2="108" stroke="var(--secondary)" stroke-width="2"/>
+                            <line x1="62" y1="50" x2="138" y2="50" stroke="var(--secondary)" stroke-width="2"/>
+                            <line x1="62" y1="120" x2="138" y2="120" stroke="var(--secondary)" stroke-width="2"/>
+                            <line x1="62" y1="62" x2="138" y2="108" stroke="var(--secondary)" stroke-width="2"/>
+                            <line x1="62" y1="108" x2="138" y2="62" stroke="var(--secondary)" stroke-width="2"/>
+                            
+                            <!-- Lintasan Hamilton (panah) -->
+                            <path d="M50,50 L150,50 L150,120 L50,120 L50,50" fill="none" stroke="var(--primary)" stroke-width="3" stroke-dasharray="5,5" marker-end="url(#hamilton-arrow)"/>
+                            
+                            <!-- Label simpul dengan urutan kunjungan -->
+                            <text x="50" y="50" text-anchor="middle" dy="4" fill="var(--darker-bg)" font-size="10" font-weight="bold">1</text>
+                            <text x="150" y="50" text-anchor="middle" dy="4" fill="var(--darker-bg)" font-size="10" font-weight="bold">2</text>
+                            <text x="150" y="120" text-anchor="middle" dy="4" fill="var(--darker-bg)" font-size="10" font-weight="bold">3</text>
+                            <text x="50" y="120" text-anchor="middle" dy="4" fill="var(--darker-bg)" font-size="10" font-weight="bold">4</text>
+                            <text x="100" y="85" text-anchor="middle" dy="4" fill="var(--darker-bg)" font-size="10" font-weight="bold">5</text>
+                            
+                            <!-- Definisi marker panah Hamilton -->
+                            <defs>
+                                <marker id="hamilton-arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L9,3 z" fill="var(--primary)"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                    <p class="graph-description">Lintasan Hamilton mengunjungi semua simpul tepat satu kali. Contoh: 1→2→3→4→1 (mengunjungi semua 5 simpul).</p>
+                </div>
                 </div>
             </div>
             
