@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bletchley Park - Pemecahan Kode Enigma</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --bs-dark: #0a1929;
+            --bs-darker: #051423;
+            --bs-primary: #1a73e8;
+            --bs-success: #0d8b5c;
+            --bs-warning: #ff9800;
+            --bs-info: #17a2b8;
+            --bs-british: #c8102e;
+        }
+        
+        body {
+            background-color: var(--bs-darker);
+            color: #f8f9fa;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding-top: 20px;
+            padding-bottom: 40px;
+            background-image: linear-gradient(rgba(5, 20, 35, 0.9), rgba(5, 20, 35, 0.9)), 
+                            url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Bletchley_Park_Mansion_2010.jpg/800px-Bletchley_Park_Mansion_2010.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        
+        .british-card {
+            background: linear-gradient(145deg, rgba(26, 35, 50, 0.9), rgba(15, 25, 40, 0.95));
+            border: 1px solid #2a3b5a;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .british-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--bs-british);
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, #1c2b3e, #2c3e50);
+            border-bottom: 3px solid var(--bs-british);
+            border-radius: 15px 15px 0 0 !important;
+            padding: 1.2rem;
+        }
+        
+        .form-control, .form-select {
+            background-color: rgba(40, 50, 70, 0.8);
+            border: 1px solid #3a4a6a;
+            color: #f8f9fa;
+            border-radius: 8px;
+            padding: 0.75rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background-color: rgba(50, 60, 80, 0.9);
+            border-color: var(--bs-british);
+            color: #f8f9fa;
+            box-shadow: 0 0 0 0.25rem rgba(200, 16, 46, 0.25);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #adb5bd;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-british {
+            background: linear-gradient(135deg, var(--bs-british), #a00d24);
+            border: none;
+            border-radius: 10px;
+            padding: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-british:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(200, 16, 46, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--bs-success), #0a6e4a);
+        }
+        
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .tooltip-inner {
+            max-width: 300px;
+            padding: 0.75rem 1rem;
+            background-color: #1c2b3e;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border: 1px solid var(--bs-british);
+        }
+        
+        .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before {
+            border-top-color: #1c2b3e;
+        }
+        
+        .component-explanation {
+            background: rgba(200, 16, 46, 0.1);
+            border-left: 4px solid var(--bs-british);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .bombe-visual {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .bombe-drum {
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(145deg, #2a2a2a, #1e1e1e);
+            border: 3px solid #444;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .bombe-drum.active {
+            border-color: var(--bs-british);
+            box-shadow: 0 0 15px rgba(200, 16, 46, 0.7);
+            background: linear-gradient(145deg, #3a2a2a, #2e1e1e);
+        }
+        
+        .connection-line {
+            height: 3px;
+            background: linear-gradient(90deg, #555, #888, #555);
+            flex-grow: 1;
+            margin-top: 40px;
+            border-radius: 3px;
+        }
+        
+        .connection-line.active {
+            background: linear-gradient(90deg, #555, var(--bs-british), #555);
+        }
+        
+        .timeline-item {
+            border-left: 3px solid var(--bs-british);
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background-color: var(--bs-british);
+        }
+        
+        .cipher-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        
+        .decrypted-success {
+            animation: successFlash 2s ease;
+            border-color: var(--bs-success) !important;
+        }
+        
+        @keyframes successFlash {
+            0%, 100% { background-color: rgba(13, 139, 92, 0.1); }
+            50% { background-color: rgba(13, 139, 92, 0.3); }
+        }
+        
+        .person-card {
+            background: rgba(40, 50, 70, 0.7);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--bs-info);
+        }
+        
+        @media (max-width: 768px) {
+            .bombe-visual {
+                gap: 0.5rem;
+            }
+            
+            .bombe-drum {
+                width: 45px;
+                height: 65px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="text-center mb-5">
+            <h1 class="display-4 fw-bold mb-3" style="color: #c8102e;">
+                <i class="bi bi-shield-shaded"></i> Bletchley Park - Operasi Ultra
+            </h1>
+            <p class="lead text-light mb-4">Perspektif Tentara Inggris: Memecahkan Kode Enigma Jerman</p>
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <div class="alert alert-dark border-warning">
+                        <i class="bi bi-exclamation-triangle-fill text-warning"></i> 
+                        <strong>OPERASI RAHASIA:</strong> Simulasi ini merekonstruksi upaya rahasia Sekutu di Bletchley Park untuk memecahkan kode Enigma. Informasi ini diklasifikasikan "ULTRA" dan baru dibuka untuk publik setelah 30 tahun.
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="row g-4">
+            <!-- ========== INTERCEPT STATION ========== -->
+            <div class="col-lg-4">
+                <div class="british-card h-100">
+                    <div class="card-header">
+                        <h3 class="mb-0 text-white">
+                            <i class="bi bi-radioactive"></i> Stasiun Penyadapan
+                            <span class="badge bg-danger float-end">Y Station</span>
+                        </h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="text-warning mb-3">
+                            <i class="bi bi-ear-fill"></i> Intercept Radio Jerman
+                        </h5>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-broadcast"></i> Transmisi Terdeteksi
+                                <i class="bi bi-question-circle text-warning" 
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top"
+                                   title="Y Station: Jaringan stasiun penyadapan Inggris yang menangkap transmisi radio Enigma Jerman."></i>
+                            </label>
+                            <div class="cipher-display mb-3" id="interceptedMessage">
+                                ZKRTN BLYUP VQXWM GHJKL POIUY TREWQ MNBVC XZASD FGHJK
+                            </div>
+                            <button class="btn btn-british w-100 mb-2" onclick="interceptNewMessage()">
+                                <i class="bi bi-radio"></i> Tangkap Transmisi Baru
+                            </button>
+                            <div class="form-text text-light-emphasis">
+                                <i class="bi bi-info-circle"></i> Transmisi Enigma Jerman ditangkap oleh stasiun Y di seluruh Inggris.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-lightbulb"></i> Crib (Teks Terduga)
+                                <i class="bi bi-question-circle text-warning" 
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top"
+                                   title="Crib: Potongan pesan asli(plaintext) yang diduga ada dalam ciphertext(plaintext yang telah diubah menjadi bentuk yang tidak dapat dibaca dan tidak berarti melalui proses enkripsi menggunakan algoritma tertentu (cipher), sehingga hanya dapat dibaca kembali menjadi teks asli setelah didekripsi dengan kunci yang tepat). Contoh: 'HEILHITLER' sering digunakan di akhir pesan Jerman."></i>
+                            </label>
+                            <input type="text" class="form-control" id="cribText" value="HEILHITLER" placeholder="Masukkan crib...">
+                            <div class="form-text text-light-emphasis">
+                                Intelijen memberikan "crib" - teks yang diduga ada dalam pesan (misal: laporan cuaca, salam standar).
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <label class="form-label">
+                                <i class="bi bi-clock-history"></i> Status Penyadapan
+                            </label>
+                            <div class="status-badge bg-dark border border-warning" id="interceptStatus">
+                                <i class="bi bi-hourglass-split"></i> Memantau frekuensi...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ========== BOMBE MACHINE ========== -->
+            <div class="col-lg-4">
+                <div class="british-card h-100">
+                    <div class="card-header">
+                        <h3 class="mb-0 text-white">
+                            <i class="bi bi-cpu"></i> Mesin Bombe
+                            <span class="badge bg-info float-end">Turing-Welchman</span>
+                        </h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="text-info mb-3">
+                            <i class="bi bi-gear-fill"></i> Simulasi Bombe
+                        </h5>
+                        
+                        <!-- Bombe Visualization -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-diagram-3"></i> Konfigurasi Bombe
+                            </label>
+                            <div class="bombe-visual mb-3">
+                                <div class="bombe-drum" id="drum1" data-bs-toggle="tooltip" title="Drum 1 - Mensimulasikan Rotor I">A</div>
+                                <div class="connection-line" id="conn1"></div>
+                                <div class="bombe-drum" id="drum2" data-bs-toggle="tooltip" title="Drum 2 - Mensimulasikan Rotor II">B</div>
+                                <div class="connection-line" id="conn2"></div>
+                                <div class="bombe-drum" id="drum3" data-bs-toggle="tooltip" title="Drum 3 - Mensimulasikan Rotor III">C</div>
+                            </div>
+                            
+                            <div class="row g-2 mb-3">
+                                <div class="col-4">
+                                    <button class="btn btn-outline-info w-100 btn-sm" onclick="testRotorSetting(1)">Test I</button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-outline-info w-100 btn-sm" onclick="testRotorSetting(2)">Test II</button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-outline-info w-100 btn-sm" onclick="testRotorSetting(3)">Test III</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bombe Controls -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-play-circle"></i> Kontrol Bombe
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button class="btn btn-british w-100" onclick="startBombe()">
+                                        <i class="bi bi-play-fill"></i> Start Bombe
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-outline-warning w-100" onclick="stopBombe()">
+                                        <i class="bi bi-stop-fill"></i> Stop
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="progress mt-3" style="height: 10px;">
+                                <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" 
+                                     id="bombeProgress" style="width: 0%"></div>
+                            </div>
+                            <div class="form-text text-light-emphasis text-center">
+                                <span id="bombeStats">Mencari konfigurasi yang valid...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Bombe Results -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-check-circle"></i> Hasil Bombe
+                            </label>
+                            <div class="cipher-display" id="bombeResults">
+                                <i class="bi bi-hourglass-split"></i> Hasil akan muncul di sini...
+                            </div>
+                            <div class="form-text text-light-emphasis">
+                                Bombe menguji 17,576 kemungkinan posisi rotor (26×26×26) dalam hitungan jam, bukan bulan.
+                            </div>
+                        </div>
+                        
+                        <div class="component-explanation">
+                            <small><i class="bi bi-lightbulb"></i> <strong>Mesin Bombe</strong>: Dikembangkan oleh Alan Turing dan Gordon Welchman. Mesin elektromekanis yang mensimulasikan ribuan mesin Enigma secara paralel untuk menemukan pengaturan rotor harian Jerman.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ========== DECRYPTION & ANALYSIS ========== -->
+            <div class="col-lg-4">
+                <div class="british-card h-100">
+                    <div class="card-header">
+                        <h3 class="mb-0 text-white">
+                            <i class="bi bi-file-earmark-text"></i> Analisis & Dekripsi
+                            <span class="badge bg-success float-end">ULTRA</span>
+                        </h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="text-success mb-3">
+                            <i class="bi bi-unlock-fill"></i> Dekripsi Pesan
+                        </h5>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-key"></i> Pengaturan yang Ditemukan
+                            </label>
+                            <div class="row g-2 mb-3">
+                                <div class="col-4">
+                                    <input type="text" class="form-control text-center" id="foundRotor1" value="I" readonly>
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" class="form-control text-center" id="foundRotor2" value="II" readonly>
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" class="form-control text-center" id="foundRotor3" value="III" readonly>
+                                </div>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <input type="text" class="form-control text-center" id="foundPos1" value="A" readonly>
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" class="form-control text-center" id="foundPos2" value="B" readonly>
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" class="form-control text-center" id="foundPos3" value="C" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-chat-left-text"></i> Pesan Terdekripsi
+                            </label>
+                            <div class="cipher-display decrypted-success" id="decryptedMessage">
+                                <i class="bi bi-chat-quote"></i> Pesan terdekripsi akan muncul di sini...
+                            </div>
+                            <button class="btn btn-success w-100 mt-2" onclick="decryptMessage()">
+                                <i class="bi bi-unlock"></i> Dekripsi dengan Pengaturan
+                            </button>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <label class="form-label">
+                                <i class="bi bi-graph-up"></i> Intelijen yang Diperoleh
+                            </label>
+                            <div class="alert alert-dark border-success">
+                                <i class="bi bi-shield-check"></i>
+                                <strong>INTEL ULTRA:</strong> Informasi dari pesan terdekripsi diklasifikasikan sebagai "ULTRA" - tingkat rahasia tertinggi Sekutu.
+                            </div>
+                            <div class="status-badge bg-success bg-opacity-10 border border-success" id="intelStatus">
+                                <i class="bi bi-hourglass-split"></i> Menunggu dekripsi...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== TURING MACHINE SIMULATION ========== -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="british-card">
+                    <div class="card-header">
+                        <h4 class="mb-0 text-white">
+                            <i class="bi bi-cpu-fill"></i> Mesin Turing - Simulasi Komputasi
+                            <span class="badge bg-warning float-end">Konsep Dasar</span>
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="text-warning mb-3">
+                            <i class="bi bi-diagram-3"></i> Simulasi Mesin Turing
+                        </h5>
+                        
+                        <div class="alert alert-dark border-info mb-4">
+                            <i class="bi bi-info-circle-fill text-info"></i>
+                            <strong>KONSEP MESIN TURING:</strong> Dikembangkan oleh Alan Turing pada 1936. Mesin teoretis yang menjadi dasar ilmu komputer modern. Mesin Turing terdiri dari pita (tape) tak terbatas, kepala baca/tulis, dan tabel aturan (state table).
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label class="form-label">
+                                        <i class="bi bi-input-cursor"></i> Input String (Biner)
+                                        <i class="bi bi-question-circle text-warning" 
+                                           data-bs-toggle="tooltip" 
+                                           data-bs-placement="top"
+                                           title="Masukkan string biner (0 dan 1) untuk diproses oleh mesin Turing. Contoh: '1010' untuk menguji mesin."></i>
+                                    </label>
+                                    <input type="text" class="form-control" id="turingInput" value="1010" placeholder="Masukkan string biner...">
+                                    <div class="form-text text-light-emphasis">
+                                        String biner akan diproses oleh mesin Turing untuk melakukan operasi sederhana.
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label">
+                                        <i class="bi bi-gear"></i> Operasi Mesin Turing
+                                    </label>
+                                    <select class="form-select" id="turingOperation">
+                                        <option value="copy">Copy String (Menduplikasi)</option>
+                                        <option value="invert">Invert (0→1, 1→0)</option>
+                                        <option value="palindrome">Cek Palindrome</option>
+                                        <option value="add">Tambah 1 (Biner)</option>
+                                    </select>
+                                    <div class="form-text text-light-emphasis">
+                                        Pilih operasi yang akan dilakukan oleh mesin Turing.
+                                    </div>
+                                </div>
+                                
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <button class="btn btn-british w-100" onclick="startTuring()">
+                                            <i class="bi bi-play-fill"></i> Start
+                                        </button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button class="btn btn-outline-warning w-100" onclick="pauseTuring()">
+                                            <i class="bi bi-pause-fill"></i> Pause
+                                        </button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button class="btn btn-outline-secondary w-100" onclick="resetTuring()">
+                                            <i class="bi bi-arrow-clockwise"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="progress mt-3" style="height: 8px;">
+                                    <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" 
+                                         id="turingProgress" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label class="form-label">
+                                        <i class="bi bi-cassette"></i> Pita (Tape) Mesin Turing
+                                    </label>
+                                    <div class="cipher-display text-center" id="turingTape" style="min-height: 60px; font-size: 1.2rem; letter-spacing: 3px;">
+                                        <div class="d-flex justify-content-center flex-wrap" id="tapeCells">
+                                            <span class="cell">_</span>
+                                            <span class="cell">_</span>
+                                            <span class="cell">_</span>
+                                            <span class="cell head">1</span>
+                                            <span class="cell">0</span>
+                                            <span class="cell">1</span>
+                                            <span class="cell">0</span>
+                                            <span class="cell">_</span>
+                                            <span class="cell">_</span>
+                                            <span class="cell">_</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-text text-light-emphasis text-center">
+                                        <span id="turingHeadPos">Kepala: posisi 3</span> | <span id="turingState">State: q0</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label">
+                                        <i class="bi bi-journal-text"></i> Log Eksekusi
+                                    </label>
+                                    <div class="cipher-display" id="turingLog" style="height: 100px; font-size: 0.9rem; overflow-y: auto;">
+                                        <i class="bi bi-hourglass-split"></i> Log akan muncul di sini...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label class="form-label">
+                                        <i class="bi bi-check-circle"></i> Hasil Komputasi
+                                    </label>
+                                    <div class="cipher-display" id="turingResult">
+                                        <i class="bi bi-hourglass-split"></i> Hasil akan muncul di sini...
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="component-explanation">
+                                    <small><i class="bi bi-lightbulb"></i> <strong>Hubungan dengan Bombe:</strong> Mesin Turing adalah konsep teoretis yang mendasari mesin komputasi modern. Bombe adalah implementasi praktis yang menggunakan prinsip-prinsip mesin Turing untuk memecahkan kode Enigma. Alan Turing menggunakan pemahaman mendalam tentang komputasi untuk merancang Bombe.</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-dark border-warning mt-3">
+                            <i class="bi bi-cpu text-warning"></i> 
+                            <strong>WARISAN ALAN TURING:</strong> Konsep Mesin Turing (1936) menjadi dasar ilmu komputer modern. Mesin Bombe (1940) adalah aplikasi praktis dari pemikiran komputasi Turing untuk memecahkan masalah nyata. Keduanya menunjukkan bagaimana teori komputasi dapat mengubah dunia.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== HISTORICAL CONTEXT ========== -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="british-card">
+                    <div class="card-header">
+                        <h4 class="mb-0 text-white">
+                            <i class="bi bi-clock-history"></i> Konteks Historis: Bletchley Park
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <!-- Gambar Bletchley Park -->
+                            <div class="col-md-4 mb-4">
+                                <div class="text-center">
+                                    <img src="https://www.uib.ac.id/wp-content/uploads/2025/03/a-person-sitting-next-to-a-machine-ai-generated-c.jpeg" 
+                                         alt="Mesin Turing" 
+                                         class="img-fluid rounded border border-secondary mb-3"
+                                         style="max-width: 100%; height: auto;">
+                                    <p class="small text-light-emphasis">
+                                        <i class="bi bi-building"></i> Mesin turing berada di Bletchley Park, markas rahasia pemecahan kode Inggris.
+                                        <br>
+                                        <a href="https://www.uib.ac.id/mengenal-alan-turning-sang-jenius-dibalik-revolusi-komputer/" target="_blank"> Baca lainnya</a>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- Video tentang Bombe -->
+                            <div class="col-md-8 mb-4">
+                                <div class="ratio ratio-16x9">
+                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/QTAWkcB6JtE?si=MqsM6qiXz7mdxzY7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
+                                <p class="small text-light-emphasis mt-2">
+                                    <i class="bi bi-youtube"></i> Dokumentasi tentang mesin Bombe dan upaya pemecahan kode Enigma
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Timeline Operasi Ultra -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="text-warning mb-3">
+                                    <i class="bi bi-calendar-range"></i> Timeline Operasi Ultra
+                                </h5>
+                                <div class="timeline">
+                                    <div class="timeline-item">
+                                        <h6 class="text-primary">1939</h6>
+                                        <p class="small mb-0">Bletchley Park didirikan sebagai markas rahasia Government Code and Cypher School (GC&CS). Tim matematikawan, linguistik, dan ahli kripto dikumpulkan.</p>
+                                    </div>
+                                    
+                                    <div class="timeline-item">
+                                        <h6 class="text-warning">1940</h6>
+                                        <p class="small mb-0">Alan Turing menyelesaikan spesifikasi mesin Bombe. Bombe pertama (Victory) mulai beroperasi di Bletchley Park.</p>
+                                    </div>
+                                    
+                                    <div class="timeline-item">
+                                        <h6 class="text-danger">1941</h6>
+                                        <p class="small mb-0">Bombe berhasil memecahkan kode Enigma Angkatan Laut Jerman (Kriegsmarine), memberikan informasi vital tentang pergerakan U-boat di Atlantik.</p>
+                                    </div>
+                                    
+                                    <div class="timeline-item">
+                                        <h6 class="text-success">1942-1945</h6>
+                                        <p class="small mb-0">Sekitar 200 mesin Bombe beroperasi, dioperasikan terutama oleh Wrens (Women's Royal Naval Service). Intelijen ULTRA memperpendek perang sekitar 2 tahun.</p>
+                                    </div>
+                                    
+                                    <div class="timeline-item">
+                                        <h6 class="text-secondary">1974</h6>
+                                        <p class="small mb-0">Rahasia Bletchley Park akhirnya dibuka untuk publik. Kontribusi Alan Turing dan timnya diakui secara luas.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Tokoh Penting -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="text-info mb-3">
+                                    <i class="bi bi-people-fill"></i> Tokoh Kunci Bletchley Park
+                                </h5>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="person-card">
+                                            <h6 class="text-info">Alan Turing</h6>
+                                            <p class="small mb-0">Matematikawan jenius yang merancang mesin Bombe. Konsep "Mesin Turing" menjadi dasar ilmu komputer modern.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="person-card">
+                                            <h6 class="text-info">Gordon Welchman</h6>
+                                            <p class="small mb-0">Mengembangkan "diagonal board" yang meningkatkan efisiensi Bombe 26 kali lipat.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="person-card">
+                                            <h6 class="text-info">Joan Clarke</h6>
+                                            <p class="small mb-0">Kriptoanalis wanita yang bekerja di Hut 8. Salah satu dari sedikit wanita yang memegang posisi senior.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Dampak Historis -->
+                        <div class="alert alert-dark border-warning mt-3">
+                            <i class="bi bi-award-fill text-warning"></i> 
+                            <strong>DAMPAK SEJARAH:</strong> Intelijen ULTRA dari Bletchley Park merupakan salah satu keberhasilan intelijen terbesar dalam sejarah. Informasi yang diperoleh membantu Sekutu dalam Pertempuran Atlantik, D-Day, dan berbagai operasi militer penting. Rahasia ini dijaga hingga 1970-an untuk melindungi sumber dan metode.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== COMPARISON SECTION ========== -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="british-card">
+                    <div class="card-header">
+                        <h4 class="mb-0 text-white">
+                            <i class="bi bi-arrow-left-right"></i> Perbandingan: Perspektif Jerman vs Inggris
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="component-explanation" style="border-left-color: #0d6efd;">
+                                    <h6 class="text-primary">
+                                        <i class="bi bi-flag-fill"></i> Perspektif Jerman (Enigma)
+                                    </h6>
+                                    <ul class="small mb-0">
+                                        <li>Menggunakan Enigma untuk komunikasi rahasia</li>
+                                        <li>Percaya Enigma "tidak dapat dipecahkan"</li>
+                                        <li>Prosedur ketat untuk buku kunci harian</li>
+                                        <li>Operator memilih kunci pesan acak</li>
+                                        <li>Tidak menyadari pemecahan kode oleh Sekutu</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="component-explanation" style="border-left-color: #c8102e;">
+                                    <h6 class="text-danger">
+                                        <i class="bi bi-shield-fill"></i> Perspektif Inggris (Bombe)
+                                    </h6>
+                                    <ul class="small mb-0">
+                                        <li>Menyadap transmisi radio Enigma</li>
+                                        <li>Mengembangkan Bombe untuk memecahkan kode</li>
+                                        <li>Memanfaatkan kelemahan prosedural Jerman</li>
+                                        <li>Menggunakan "crib" untuk mempercepat proses</li>
+                                        <li>Menjaga rahasia ULTRA dengan ketat</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-dark border-info mt-4">
+                            <i class="bi bi-lightbulb-fill text-info"></i> 
+                            <strong>PELAJARAN DARI SEJARAH:</strong> Kisah Enigma dan Bombe mengajarkan pentingnya keamanan informasi, nilai kerja tim multidisiplin, dan bagaimana inovasi teknologi dapat mengubah jalannya sejarah. Warisan Bletchley Park terus mempengaruhi kriptografi dan ilmu komputer modern.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="text-center mt-5 pt-4 border-top border-secondary">
+            <p class="text-light-emphasis">
+                <i class="bi bi-shield-lock"></i> Simulasi Bletchley Park &copy; 2026
+            </p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+    /* ---------- BOMBE SIMULATION ---------- */
+    const abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let bombeInterval = null;
+    let bombeProgress = 0;
+    let currentTest = 0;
+    const totalTests = 17576; // 26×26×26
+    
+    // Sample intercepted messages
+    const interceptedMessages = [
+        "ZKRTN BLYUP VQXWM GHJKL POIUY TREWQ MNBVC XZASD FGHJK",
+        "QWERT ZUIO P ASDFG HJKL YXCVB NMQWE RTYUI OPASD FGHJK",
+        "MNBCX ZLKJH GFDS APOIU YTREW QAZWS XEDCR FVTGB YHNUM",
+        "POLKM IJNUH BYGVT FCRDX ESZWA QPLOK MIJNU HBYGV TFCRD",
+        "XSWED CVFTR GBNHY UJMKI OLPMI JNUHB YGVTF CRDXS WEDCV"
+    ];
+    
+    // Sample decrypted messages (corresponding to above)
+    const decryptedMessages = [
+        "ANGRIFF AUF KONVOI PQ17 UM 0600 UHR STOP",
+        "U BOOT GRUPPE NORD MELDET SICH BEREIT STOP",
+        "LUFTWAFFE BOMBARDEMENT LONDON FUER MORGEN STOP",
+        "PANZERDIVISION IN STELLUNG BEI CALAIS STOP",
+        "VERSORGUNGSNACH SCHIFFE ERWARTET IN HAFEN STOP"
+    ];
+    
+    function interceptNewMessage() {
+        const randomIndex = Math.floor(Math.random() * interceptedMessages.length);
+        document.getElementById('interceptedMessage').textContent = interceptedMessages[randomIndex];
+        document.getElementById('interceptStatus').innerHTML = 
+            `<i class="bi bi-check-circle-fill text-success"></i> Transmisi ditangkap: ${new Date().toLocaleTimeString()}`;
+        document.getElementById('interceptStatus').className = 'status-badge bg-success bg-opacity-10 border border-success';
+        
+        // Reset bombe
+        stopBombe();
+        document.getElementById('bombeResults').innerHTML = '<i class="bi bi-hourglass-split"></i> Hasil akan muncul di sini...';
+        document.getElementById('decryptedMessage').innerHTML = '<i class="bi bi-chat-quote"></i> Pesan terdekripsi akan muncul di sini...';
+        document.getElementById('decryptedMessage').className = 'cipher-display';
+        document.getElementById('intelStatus').innerHTML = '<i class="bi bi-hourglass-split"></i> Menunggu dekripsi...';
+    }
+    
+    function testRotorSetting(drumNum) {
+        const drum = document.getElementById(`drum${drumNum}`);
+        const conn = document.getElementById(`conn${drumNum}`);
+        
+        // Activate visual
+        drum.classList.add('active');
+        conn.classList.add('active');
+        
+        // Update drum letter
+        const currentLetter = drum.textContent;
+        const nextIndex = (abc.indexOf(currentLetter) + 1) % 26;
+        drum.textContent = abc[nextIndex];
+        
+        // Deactivate after delay
+        setTimeout(() => {
+            drum.classList.remove('active');
+            conn.classList.remove('active');
+        }, 300);
+    }
+    
+    function startBombe() {
+        if (bombeInterval) {
+            stopBombe();
+            return;
+        }
+        
+        bombeProgress = 0;
+        currentTest = 0;
+        
+        // Update status
+        document.getElementById('bombeStats').textContent = 'Memulai mesin Bombe...';
+        document.getElementById('bombeResults').innerHTML = '<i class="bi bi-gear"></i> Mesin Bombe berjalan...';
+        
+        bombeInterval = setInterval(() => {
+            currentTest += Math.floor(Math.random() * 100) + 50;
+            if (currentTest > totalTests) currentTest = totalTests;
+            
+            bombeProgress = (currentTest / totalTests) * 100;
+            document.getElementById('bombeProgress').style.width = `${bombeProgress}%`;
+            
+            // Update stats
+            const remaining = Math.max(0, totalTests - currentTest);
+            document.getElementById('bombeStats').textContent = 
+                `Diuji: ${currentTest.toLocaleString()} / ${totalTests.toLocaleString()} (${Math.round(bombeProgress)}%)`;
+            
+            // Randomly "find" a solution
+            if (currentTest >= totalTests || Math.random() < 0.01) {
+                stopBombe();
+                const solutionIndex = Math.floor(Math.random() * 5);
+                
+                // Update found settings
+                const rotors = ['I', 'II', 'III'];
+                const positions = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+                                  'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+                
+                document.getElementById('foundRotor1').value = rotors[0];
+                document.getElementById('foundRotor2').value = rotors[1];
+                document.getElementById('foundRotor3').value = rotors[2];
+                
+                const pos1 = positions[Math.floor(Math.random() * 26)];
+                const pos2 = positions[Math.floor(Math.random() * 26)];
+                const pos3 = positions[Math.floor(Math.random() * 26)];
+                
+                document.getElementById('foundPos1').value = pos1;
+                document.getElementById('foundPos2').value = pos2;
+                document.getElementById('foundPos3').value = pos3;
+                
+                // Show results
+                document.getElementById('bombeResults').innerHTML = 
+                    `<i class="bi bi-check-circle-fill text-success"></i> <strong>KONFIGURASI DITEMUKAN!</strong><br>` +
+                    `Rotor: ${rotors[0]} ${rotors[1]} ${rotors[2]} | Posisi: ${pos1}${pos2}${pos3}`;
+                
+                document.getElementById('bombeStats').textContent = 'Konfigurasi ditemukan!';
+                document.getElementById('bombeProgress').style.width = '100%';
+            }
+        }, 100);
+    }
+    
+    function stopBombe() {
+        if (bombeInterval) {
+            clearInterval(bombeInterval);
+            bombeInterval = null;
+        }
+    }
+    
+    function decryptMessage() {
+        const messageIndex = interceptedMessages.indexOf(document.getElementById('interceptedMessage').textContent);
+        if (messageIndex === -1) return;
+        
+        const decrypted = decryptedMessages[messageIndex];
+        document.getElementById('decryptedMessage').innerHTML = 
+            `<i class="bi bi-check-circle-fill text-success"></i> <strong>PESAN TERDEKRIPSI:</strong><br>${decrypted}`;
+        document.getElementById('decryptedMessage').className = 'cipher-display decrypted-success';
+        
+        document.getElementById('intelStatus').innerHTML = 
+            `<i class="bi bi-shield-check text-success"></i> Intel ULTRA diperoleh: ${new Date().toLocaleTimeString()}`;
+        document.getElementById('intelStatus').className = 'status-badge bg-success bg-opacity-10 border border-success';
+    }
+    
+    /* ---------- TURING MACHINE SIMULATION ---------- */
+    let turingInterval = null;
+    let turingTape = [];
+    let turingHead = 0;
+    let turingState = 'q0';
+    let turingSteps = 0;
+    let turingMaxSteps = 100;
+    
+    // State tables for different operations
+    const turingRules = {
+        'copy': {
+            'q0': { '0': ['q0', '0', 'R'], '1': ['q0', '1', 'R'], '_': ['q1', '_', 'L'] },
+            'q1': { '0': ['q2', '0', 'L'], '1': ['q2', '1', 'L'], '_': ['qA', '_', 'S'] },
+            'q2': { '0': ['q2', '0', 'L'], '1': ['q2', '1', 'L'], '_': ['q3', '_', 'R'] },
+            'q3': { '0': ['q3', '0', 'R'], '1': ['q3', '1', 'R'], '_': ['q4', '_', 'R'] },
+            'q4': { '_': ['qA', '_', 'S'] }
+        },
+        'invert': {
+            'q0': { '0': ['q0', '1', 'R'], '1': ['q0', '0', 'R'], '_': ['qA', '_', 'S'] }
+        },
+        'palindrome': {
+            'q0': { '0': ['q1', '_', 'R'], '1': ['q2', '_', 'R'], '_': ['qA', '1', 'S'] },
+            'q1': { '0': ['q1', '0', 'R'], '1': ['q1', '1', 'R'], '_': ['q3', '_', 'L'] },
+            'q2': { '0': ['q2', '0', 'R'], '1': ['q2', '1', 'R'], '_': ['q4', '_', 'L'] },
+            'q3': { '0': ['q5', '_', 'L'], '1': ['qR', '1', 'S'], '_': ['qA', '1', 'S'] },
+            'q4': { '0': ['qR', '0', 'S'], '1': ['q5', '_', 'L'], '_': ['qA', '1', 'S'] },
+            'q5': { '0': ['q5', '0', 'L'], '1': ['q5', '1', 'L'], '_': ['q0', '_', 'R'] }
+        },
+        'add': {
+            'q0': { '0': ['q0', '0', 'R'], '1': ['q0', '1', 'R'], '_': ['q1', '_', 'L'] },
+            'q1': { '0': ['qA', '1', 'S'], '1': ['q1', '0', 'L'], '_': ['qA', '1', 'S'] }
+        }
+    };
+    
+    function initializeTuringTape(input) {
+        turingTape = ['_', '_', '_', ...input.split(''), '_', '_', '_'];
+        turingHead = 3; // Start at first input character
+        turingState = 'q0';
+        turingSteps = 0;
+        
+        // Render tape
+        const tapeCells = document.getElementById('tapeCells');
+        tapeCells.innerHTML = '';
+        
+        turingTape.forEach((cell, index) => {
+            const span = document.createElement('span');
+            span.className = `cell ${index === turingHead ? 'head' : ''}`;
+            span.textContent = cell;
+            span.style.cssText = `
+                display: inline-block;
+                width: 35px;
+                height: 35px;
+                margin: 2px;
+                border: 1px solid #555;
+                border-radius: 3px;
+                text-align: center;
+                line-height: 35px;
+                background: ${index === turingHead ? '#ff9800' : '#2a3b5a'};
+                color: white;
+                font-weight: ${index === turingHead ? 'bold' : 'normal'};
+            `;
+            tapeCells.appendChild(span);
+        });
+        
+        document.getElementById('turingHeadPos').textContent = `Kepala: posisi ${turingHead}`;
+        document.getElementById('turingState').textContent = `State: ${turingState}`;
+        document.getElementById('turingProgress').style.width = '0%';
+        document.getElementById('turingResult').innerHTML = '<i class="bi bi-hourglass-split"></i> Hasil akan muncul di sini...';
+    }
+    
+    function turingStep() {
+        if (turingState === 'qA' || turingState === 'qR' || turingSteps >= turingMaxSteps) {
+            stopTuring();
+            return false;
+        }
+        
+        const operation = document.getElementById('turingOperation').value;
+        const rules = turingRules[operation];
+        const currentSymbol = turingTape[turingHead] || '_';
+        
+        if (!rules[turingState] || !rules[turingState][currentSymbol]) {
+            stopTuring();
+            return false;
+        }
+        
+        const [newState, newSymbol, direction] = rules[turingState][currentSymbol];
+        
+        // Update tape
+        turingTape[turingHead] = newSymbol;
+        
+        // Update state
+        turingState = newState;
+        
+        // Move head
+        if (direction === 'R') {
+            turingHead++;
+            if (turingHead >= turingTape.length) turingTape.push('_');
+        } else if (direction === 'L') {
+            turingHead--;
+            if (turingHead < 0) {
+                turingTape.unshift('_');
+                turingHead = 0;
+            }
+        }
+        
+        turingSteps++;
+        
+        // Update display
+        updateTuringDisplay();
+        
+        // Update log
+        const log = document.getElementById('turingLog');
+        log.innerHTML = `Step ${turingSteps}: State=${turingState}, Symbol=${currentSymbol}→${newSymbol}, Move=${direction}<br>` + log.innerHTML;
+        
+        // Update progress
+        const progress = Math.min(100, (turingSteps / turingMaxSteps) * 100);
+        document.getElementById('turingProgress').style.width = `${progress}%`;
+        
+        return true;
+    }
+    
+    function updateTuringDisplay() {
+        const tapeCells = document.getElementById('tapeCells');
+        tapeCells.innerHTML = '';
+        
+        turingTape.forEach((cell, index) => {
+            const span = document.createElement('span');
+            span.className = `cell ${index === turingHead ? 'head' : ''}`;
+            span.textContent = cell;
+            span.style.cssText = `
+                display: inline-block;
+                width: 35px;
+                height: 35px;
+                margin: 2px;
+                border: 1px solid #555;
+                border-radius: 3px;
+                text-align: center;
+                line-height: 35px;
+                background: ${index === turingHead ? '#ff9800' : '#2a3b5a'};
+                color: white;
+                font-weight: ${index === turingHead ? 'bold' : 'normal'};
+            `;
+            tapeCells.appendChild(span);
+        });
+        
+        document.getElementById('turingHeadPos').textContent = `Kepala: posisi ${turingHead}`;
+        document.getElementById('turingState').textContent = `State: ${turingState}`;
+        
+        // Check if computation is complete
+        if (turingState === 'qA' || turingState === 'qR') {
+            stopTuring();
+            const operation = document.getElementById('turingOperation').value;
+            const input = document.getElementById('turingInput').value;
+            let result = '';
+            
+            if (operation === 'copy') {
+                const tapeStr = turingTape.join('').replace(/_/g, ' ').trim();
+                const parts = tapeStr.split(' ');
+                result = `Input: ${parts[0] || ''}, Output: ${parts[1] || ''}`;
+            } else if (operation === 'invert') {
+                result = `Input: ${input}, Output: ${turingTape.slice(3, 3 + input.length).join('')}`;
+            } else if (operation === 'palindrome') {
+                const isPalindrome = turingState === 'qA';
+                result = `Input: ${input}, Palindrome: ${isPalindrome ? 'YA' : 'TIDAK'}`;
+            } else if (operation === 'add') {
+                const output = turingTape.join('').replace(/_/g, ' ').trim();
+                result = `Input: ${input} (${parseInt(input, 2)}), Output: ${output} (${parseInt(output, 2) || 0})`;
+            }
+            
+            document.getElementById('turingResult').innerHTML = 
+                `<i class="bi bi-check-circle-fill text-success"></i> <strong>HASIL:</strong> ${result}`;
+        }
+    }
+    
+    function startTuring() {
+        if (turingInterval) {
+            stopTuring();
+            return;
+        }
+        
+        const input = document.getElementById('turingInput').value;
+        if (!/^[01]+$/.test(input)) {
+            alert('Masukkan string biner yang valid (hanya 0 dan 1)!');
+            return;
+        }
+        
+        initializeTuringTape(input);
+        
+        document.getElementById('turingLog').innerHTML = '<i class="bi bi-play-fill"></i> Memulai mesin Turing...<br>';
+        document.getElementById('turingResult').innerHTML = '<i class="bi bi-gear"></i> Mesin Turing berjalan...';
+        
+        turingInterval = setInterval(() => {
+            if (!turingStep()) {
+                stopTuring();
+            }
+        }, 500);
+    }
+    
+    function pauseTuring() {
+        if (turingInterval) {
+            clearInterval(turingInterval);
+            turingInterval = null;
+            document.getElementById('turingLog').innerHTML = 
+                '<i class="bi bi-pause-fill"></i> Dijeda<br>' + document.getElementById('turingLog').innerHTML;
+        }
+    }
+    
+    function stopTuring() {
+        if (turingInterval) {
+            clearInterval(turingInterval);
+            turingInterval = null;
+        }
+    }
+    
+    function resetTuring() {
+        stopTuring();
+        const input = document.getElementById('turingInput').value;
+        initializeTuringTape(input);
+        document.getElementById('turingLog').innerHTML = '<i class="bi bi-arrow-clockwise"></i> Direset<br>';
+        document.getElementById('turingResult').innerHTML = '<i class="bi bi-hourglass-split"></i> Hasil akan muncul di sini...';
+        document.getElementById('turingProgress').style.width = '0%';
+    }
+    
+    /* ---------- INITIALIZATION ---------- */
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Bootstrap tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Auto-uppercase for crib text
+        document.getElementById('cribText').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '');
+        });
+        
+        // Initialize Turing machine with default input
+        initializeTuringTape('1010');
+        
+        // Auto-validate Turing input
+        document.getElementById('turingInput').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^01]/g, '');
+            if (this.value) {
+                initializeTuringTape(this.value);
+            }
+        });
+        
+        // Update Turing machine when operation changes
+        document.getElementById('turingOperation').addEventListener('change', function() {
+            const input = document.getElementById('turingInput').value;
+            if (input) {
+                initializeTuringTape(input);
+            }
+        });
+    });
+    </script>
+</body>
+</html>
