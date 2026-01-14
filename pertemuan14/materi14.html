@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi 14: Bahasa Formal & Mesin Status Terhingga</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --success-color: #4ade80;
+            --warning-color: #fbbf24;
+            --danger-color: #f87171;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --bg-color: #f0f4f8;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --text-secondary: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-top: 20px;
+            padding-bottom: 50px;
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .header h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            background-color: var(--card-color);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            background-color: rgba(67, 97, 238, 0.1);
+            border-bottom: 2px solid rgba(67, 97, 238, 0.2);
+            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .badge-custom {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid rgba(67, 97, 238, 0.2);
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--text-secondary);
+            font-weight: 500;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px 8px 0 0;
+            margin-right: 0.5rem;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.1);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .code-block {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .table-custom {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-custom th {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+            border: none;
+            padding: 1rem;
+        }
+
+        .table-custom td {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .btn-custom {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-custom:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .quiz-container {
+            background-color: #f8f9ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .quiz-option {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quiz-option:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+            border-color: var(--primary-color);
+        }
+
+        .quiz-option.correct {
+            background-color: rgba(76, 201, 240, 0.1);
+            border-color: var(--accent-color);
+            color: #0d6efd;
+        }
+
+        .quiz-option.incorrect {
+            background-color: rgba(248, 113, 113, 0.1);
+            border-color: var(--danger-color);
+            color: #dc3545;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+            display: none;
+        }
+
+        .faq-answer.show {
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #dee2e6;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header {
+                padding: 1.5rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .automata-diagram {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            font-family: 'Roboto Mono', monospace;
+            margin: 1rem 0;
+            border: 2px solid var(--primary-color);
+        }
+        
+        .highlight {
+            background-color: rgba(76, 201, 240, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header text-center">
+            <h1><i class="fas fa-code me-2"></i>Materi 14: Bahasa Formal & Mesin Status Terhingga</h1>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab">Pengantar</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="formal-tab" data-bs-toggle="tab" data-bs-target="#formal" type="button" role="tab">Bahasa Formal</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="automata-tab" data-bs-toggle="tab" data-bs-target="#automata" type="button" role="tab">Finite Automata</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="chomsky-tab" data-bs-toggle="tab" data-bs-target="#chomsky" type="button" role="tab">Hierarki Chomsky</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="quiz-tab" data-bs-toggle="tab" data-bs-target="#quiz" type="button" role="tab">Latihan Soal</button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="myTabContent">
+            <!-- Tab 1: Pengantar -->
+            <div class="tab-pane fade show active" id="home" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-info-circle me-2"></i>Apa itu Bahasa Formal?
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Bahasa Formal</strong> adalah bahasa yang harus mengikuti aturan ketat seperti bahasa pemrograman dan bahasa matematis (aljabar, logika proposisi). Berbeda dengan bahasa natural (sehari-hari) yang fleksibel, bahasa formal bersifat kaku dan presisi.</p>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-md-6">
+                                        <div class="card border-primary">
+                                            <div class="card-body">
+                                                <h5 class="card-title text-primary"><i class="fas fa-road me-2"></i>Bahasa Natural</h5>
+                                                <p class="card-text">Seperti <strong>jalan raya bebas</strong>:</p>
+                                                <ul>
+                                                    <li>Kata-kata bisa menyerobot, berhenti tiba-tiba</li>
+                                                    <li>Banyak cara mencapai makna yang sama</li>
+                                                    <li>Sering ambigu: "Makan tuh anjing!"</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card border-success">
+                                            <div class="card-body">
+                                                <h5 class="card-title text-success"><i class="fas fa-train me-2"></i>Bahasa Formal</h5>
+                                                <p class="card-text">Seperti <strong>rel kereta api</strong>:</p>
+                                                <ul>
+                                                    <li>Harus mengikuti rel (aturan) dengan presisi</li>
+                                                    <li>Tidak ada pilihan keluar jalur</li>
+                                                    <li>Satu jalur = satu makna tanpa keraguan</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h5>Contoh Perbandingan</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-custom">
+                                            <thead>
+                                                <tr>
+                                                    <th>Fitur</th>
+                                                    <th>Bahasa Natural</th>
+                                                    <th>Bahasa Formal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><strong>Aturan</strong></td>
+                                                    <td>Fleksibel, bisa dilanggar</td>
+                                                    <td>Kaku, kalau salah = gagal</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Ambiguitas</strong></td>
+                                                    <td>Wajar & sering</td>
+                                                    <td>Dilarang keras</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Tujuan</strong></td>
+                                                    <td>Komunikasi manusia</td>
+                                                    <td>Instruksi mesin</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Contoh</strong></td>
+                                                    <td>Novel, chat, puisi</td>
+                                                    <td>Python, rumus logika, kode IBAN</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-cogs me-2"></i>Demo Cepat: Finite Automata
+                            </div>
+                            <div class="card-body">
+                                <p>Finite Automata untuk mengenali bilangan biner genap (berakhir dengan 0):</p>
+                                <div class="automata-diagram">
+                                    <strong>Q = {q0, q1}</strong><br>
+                                    <strong>Σ = {0, 1}</strong><br>
+                                    <strong>q₀ = q0</strong><br>
+                                    <strong>F = {q0}</strong><br><br>
+                                    <strong>Fungsi Transisi δ:</strong><br>
+                                    δ(q0, 0) = q0<br>
+                                    δ(q0, 1) = q1<br>
+                                    δ(q1, 0) = q1<br>
+                                    δ(q1, 1) = q0
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="binaryInput" placeholder="Masukkan bilangan biner (contoh: 1010)">
+                                    <button class="btn btn-custom" type="button" onclick="checkBinary()">Cek</button>
+                                </div>
+                                <div id="binaryResult" class="alert" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-lightbulb me-2"></i>Fakta Menarik
+                            </div>
+                            <div class="card-body">
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFAQ(1)">
+                                        <span>Level terendah hirarki mesin & bahasa?</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="faq-answer" id="faq1">
+                                        <strong>Automata Terhingga (Finite Automata)</strong> adalah level terendah dalam hirarki mesin dan bahasa formal.
+                                    </div>
+                                </div>
+                                
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFAQ(2)">
+                                        <span>Penemu Mesin Turing?</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="faq-answer" id="faq2">
+                                        <strong>Alan Turing</strong> adalah tokoh yang menemukan konsep Mesin Turing pada tahun 1936.
+                                    </div>
+                                </div>
+                                
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFAQ(3)">
+                                        <span>Proses translasi dalam compiler?</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="faq-answer" id="faq3">
+                                        Source Program → Lexical Analyzer → Parser → Code Generator → Object Program
+                                    </div>
+                                </div>
+                                
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFAQ(4)">
+                                        <span>Diagram transisi untuk string valid?</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="faq-answer" id="faq4">
+                                        Ditandai dengan <strong>lingkaran ganda</strong> pada diagram transisi Finite Automata.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <i class="fas fa-history me-2"></i>Proses Translasi Compiler
+                            </div>
+                            <div class="card-body">
+                                <p>Proses translasi dari kode sumber ke kode mesin:</p>
+                                <ol>
+                                    <li><strong>Source Program</strong>: Kode yang ditulis programmer</li>
+                                    <li><strong>Lexical Analyzer</strong>: Memecah kode menjadi token</li>
+                                    <li><strong>Parser</strong>: Menganalisis struktur sintaks</li>
+                                    <li><strong>Code Generator</strong>: Menghasilkan kode intermediate</li>
+                                    <li><strong>Object Program</strong>: Kode mesin yang siap dieksekusi</li>
+                                </ol>
+                                <div class="code-block">
+// Contoh: Python ke Bytecode
+import dis
+def tambah(a,b): return a+b
+dis.dis(tambah)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <i class="fas fa-external-link-alt me-2"></i>Simulasi Terkait
+                            </div>
+                            <div class="card-body">
+                                <p>Simulasi interaktif terkait mesin Turing dan Enigma:</p>
+                                <div class="d-grid gap-2">
+                                    <a href="https://faruq1997.github.io/struktur-diskrit/pertemuan14/simulasi_enigma.html" target="_blank" class="btn btn-outline-primary">
+                                        <i class="fas fa-key me-2"></i>Simulasi Enigma
+                                    </a>
+                                    <a href="https://faruq1997.github.io/struktur-diskrit/pertemuan14/simulasi_bombe_turing.html" target="_blank" class="btn btn-outline-success">
+                                        <i class="fas fa-bomb me-2"></i>Simulasi Bombe Turing
+                                    </a>
+                                </div>
+                                <p class="mt-2 small text-muted">Klik link di atas untuk membuka simulasi di tab baru.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 2: Bahasa Formal -->
+            <div class="tab-pane fade" id="formal" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-language me-2"></i>Bahasa Formal: Definisi & Contoh
+                    </div>
+                    <div class="card-body">
+                        <h5>Definisi Formal</h5>
+                        <p>Bahasa formal didefinisikan sebagai <strong>himpunan string</strong> yang dibentuk dari alfabet tertentu menurut aturan (grammar) yang ketat.</p>
+                        
+                        <h5 class="mt-4">Context-Free Grammar (CFG)</h5>
+                        <p>CFG = (T, N, P, S) dimana:</p>
+                        <ul>
+                            <li><strong>T</strong>: Terminal (simbol akhir)</li>
+                            <li><strong>N</strong>: Non-terminal (simbol variabel)</li>
+                            <li><strong>P</strong>: Produksi (aturan)</li>
+                            <li><strong>S</strong>: Start symbol</li>
+                        </ul>
+                        
+                        <div class="code-block">
+// Contoh CFG untuk ekspresi aritmatika
+E → E + T | T
+T → T * F | F
+F → ( E ) | id
+                        </div>
+                        
+                        <h5 class="mt-4">Contoh Bahasa Formal</h5>
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Bahasa</th>
+                                        <th>Alfabet</th>
+                                        <th>Aturan</th>
+                                        <th>Contoh String Valid</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Biner Genap</td>
+                                        <td>{0, 1}</td>
+                                        <td>Berakhir dengan 0</td>
+                                        <td>1010, 1100, 0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Palindrome</td>
+                                        <td>{a, b}</td>
+                                        <td>Dibaca sama depan-belakang</td>
+                                        <td>aba, bb, abba</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ekspresi Matematika</td>
+                                        <td>{0-9, +, -, *, /, (, )}</td>
+                                        <td>Kurung seimbang</td>
+                                        <td>(3+4)*5, 10/(2+3)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <i class="fas fa-layer-group me-2"></i>Hierarki Bahasa Pemrograman
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Level</th>
+                                        <th>Nama</th>
+                                        <th>Contoh</th>
+                                        <th>Dekat Manusia</th>
+                                        <th>Dekat Mesin</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>High-Level</strong></td>
+                                        <td>Bahasa Tingkat Tinggi</td>
+                                        <td>Python, Java, JavaScript</td>
+                                        <td>✅ Super dekat</td>
+                                        <td>❌ Jauh</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Middle-Level</strong></td>
+                                        <td>Assembly</td>
+                                        <td>NASM, ARM asm</td>
+                                        <td>⚖️ Sedikit</td>
+                                        <td>⚖️ Sedikit</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Low-Level</strong></td>
+                                        <td>Machine Code</td>
+                                        <td>Binary (0-1)</td>
+                                        <td>❌ Tidak sama sekali</td>
+                                        <td>✅ Langsung CPU</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="mt-3"><strong>Catatan:</strong> Komputer hanya mengerti 0 dan 1, tetapi compiler/interpreter menerjemahkan kode high-level ke low-level secara otomatis.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 3: Finite Automata -->
+            <div class="tab-pane fade" id="automata" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-project-diagram me-2"></i>Finite Automata (Mesin Status Terhingga)
+                    </div>
+                    <div class="card-body">
+                        <h5>Definisi Formal (5-tuple)</h5>
+                        <p>FA = (Q, Σ, δ, q₀, F) dimana:</p>
+                        <ul>
+                            <li><strong>Q</strong>: Himpunan status terhingga</li>
+                            <li><strong>Σ</strong>: Alfabet input</li>
+                            <li><strong>δ</strong>: Fungsi transisi Q × Σ → Q</li>
+                            <li><strong>q₀</strong>: Status awal ∈ Q</li>
+                            <li><strong>F</strong>: Himpunan status akhir ⊆ Q</li>
+                        </ul>
+                        
+                        <h5 class="mt-4">Contoh: Vending Machine</h5>
+                        <div class="automata-diagram">
+                            <strong>Harga: 30, Koin: {10, 20}</strong><br>
+                            Q = {0, 10, 20, 30, >30}<br>
+                            Σ = {10, 20}<br>
+                            q₀ = 0<br>
+                            F = {30}<br><br>
+                            <strong>Transisi:</strong><br>
+                            0 +10→ 10<br>
+                            10 +10→ 20<br>
+                            10 +20→ 30 (terima)<br>
+                            20 +10→ 30 (terima)<br>
+                            30 +koin→ >30 (tolak)
+                        </div>
+                        
+                        <h5 class="mt-4">DFA vs NFA</h5>
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Ciri</th>
+                                        <th>DFA (Deterministic)</th>
+                                        <th>NFA (Non-Deterministic)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>δ(q,input)</strong></td>
+                                        <td>1 hasil saja</td>
+                                        <td>Bisa 0, 1, atau banyak</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>ε-move</strong></td>
+                                        <td>Tidak ada</td>
+                                        <td>Boleh tanpa baca input</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Implementasi</strong></td>
+                                        <td>Langsung di kode</td>
+                                        <td>Ditransform ke DFA dulu</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <i class="fas fa-gamepad me-2"></i>Simulator Finite Automata
+                    </div>
+                    <div class="card-body">
+                        <p>Simulasikan DFA untuk string yang mengandung substring "abb":</p>
+                        <div class="automata-diagram">
+                            <strong>DFA untuk pola "abb"</strong><br>
+                            q0 --a--> q0<br>
+                            q0 --b--> q1<br>
+                            q1 --b--> q2<br>
+                            q2 --b--> q3 (F)<br>
+                            q2 --a--> q0<br>
+                            q3 --a,b--> q3
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="patternInput" placeholder="Masukkan string (hanya a dan b)">
+                            <button class="btn btn-custom" type="button" onclick="checkPattern()">Cek Pola "abb"</button>
+                        </div>
+                        <div id="patternResult" class="alert" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 4: Hierarki Chomsky -->
+            <div class="tab-pane fade" id="chomsky" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-sitemap me-2"></i>Hierarki Chomsky (4 Tipe)
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Tipe</th>
+                                        <th>Nama</th>
+                                        <th>Aturan Produksi</th>
+                                        <th>Mesin yang Cukup</th>
+                                        <th>Contoh Bahasa</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>3</strong></td>
+                                        <td>Regular</td>
+                                        <td>A → aB atau A → a</td>
+                                        <td>Finite Automata</td>
+                                        <td>a*b+ (regex)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>2</strong></td>
+                                        <td>Context-Free</td>
+                                        <td>A → α (α string apa saja)</td>
+                                        <td>Push-Down Automata (stack)</td>
+                                        <td>Palindrome aⁿbⁿ</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>1</strong></td>
+                                        <td>Context-Sensitive</td>
+                                        <td>α→β dengan |α| ≤ |β|</td>
+                                        <td>Linear-Bounded Automata</td>
+                                        <td>aⁿbⁿcⁿ</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>0</strong></td>
+                                        <td>Unrestricted</td>
+                                        <td>α→β (bebas)</td>
+                                        <td>Mesin Turing</td>
+                                        <td>Semua yang bisa dihitung</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h5 class="mt-4">Analogi Sederhana</h5>
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <div class="card border-primary">
+                                    <div class="card-body">
+                                        <h6>Tipe-3</h6>
+                                        <i class="fas fa-motorcycle fa-2x text-primary"></i>
+                                        <p class="mt-2">Sepeda motor<br>(jalan lurus, cepat)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="card border-success">
+                                    <div class="card-body">
+                                        <h6>Tipe-2</h6>
+                                        <i class="fas fa-truck fa-2x text-success"></i>
+                                        <p class="mt-2">Truk dengan dongkrak<br>(bawa stack)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="card border-warning">
+                                    <div class="card-body">
+                                        <h6>Tipe-1</h6>
+                                        <i class="fas fa-truck-loading fa-2x text-warning"></i>
+                                        <p class="mt-2">Truk + GPS terbatas<br>(lebih fleksibel)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="card border-danger">
+                                    <div class="card-body">
+                                        <h6>Tipe-0</h6>
+                                        <i class="fas fa-rocket fa-2x text-danger"></i>
+                                        <p class="mt-2">Kapal luar angkasa<br>(mana pun bisa)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <i class="fas fa-question-circle me-2"></i>Kuis Cepat: Tipe Chomsky
+                    </div>
+                    <div class="card-body">
+                        <div class="quiz-container">
+                            <div class="quiz-question">Bahasa Python termasuk tipe Chomsky berapa?</div>
+                            <div class="quiz-option" onclick="checkChomskyAnswer(1)">Tipe-3 (Regular)</div>
+                            <div class="quiz-option" onclick="checkChomskyAnswer(2)">Tipe-2 (Context-Free)</div>
+                            <div class="quiz-option" onclick="checkChomskyAnswer(3)">Tipe-1 (Context-Sensitive)</div>
+                            <div class="quiz-option" onclick="checkChomskyAnswer(4)">Tipe-0 (Unrestricted)</div>
+                            <div id="chomskyResult" class="mt-3" style="display:none;"></div>
+                        </div>
+                        <p class="mt-3"><strong>Jawaban:</strong> Python sintaks mayoritas <strong>Tipe-2 (CFG)</strong>, tapi semantic analysis memerlukan <strong>Tipe-1</strong> (hybrid).</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 5: Latihan Soal -->
+            <div class="tab-pane fade" id="quiz" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-clipboard-list me-2"></i>Latihan Soal - Bahasa Formal & Finite Automata
+                    </div>
+                    <div class="card-body">
+                        <p>Berikut adalah 10 soal pilihan ganda berdasarkan materi. Pilih jawaban yang benar!</p>
+                        
+                        <div class="quiz-container">
+                            <div class="quiz-question">1. Suatu bahasa yang harus mengikuti aturan bahasa pemrograman dan bahasa matematis seperti aljabar dan logika proposisi disebut bahasa...</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(1, 'A')">A. Formal</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(1, 'B')">B. Natural</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(1, 'C')">C. Verbal</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(1, 'D')">D. Frasa</div>
+                        </div>
+                        
+                        <div class="quiz-container">
+                            <div class="quiz-question">2. Jenis tatabahasa dalam bahasa formal terdiri dari...</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(2, 'A')">A. 1</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(2, 'B')">B. 2</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(2, 'C')">C. 3</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(2, 'D')">D. 4</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(2, 'E')">E. 5</div>
+                        </div>
+                        
+                        <div class="quiz-container">
+                            <div class="quiz-question">3. Level terendah dari hirarki mesin dan bahasa disebut...</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(3, 'A')">A. Formal</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(3, 'B')">B. Natural</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(3, 'C')">C. Verbal</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(3, 'D')">D. Frasa</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(3, 'E')">E. Automata terhingga</div>
+                        </div>
+                        
+                        <div class="quiz-container">
+                            <div class="quiz-question">4. Dalam diagram transisi untuk menyatakan string yang valid telah dikenali ditandai dengan...</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(4, 'A')">A. Busur</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(4, 'B')">B. Lingkaran ganda</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(4, 'C')">C. Simbol</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(4, 'D')">D. Kategori</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(4, 'E')">E. Inisiasi</div>
+                        </div>
+                        
+                        <div class="quiz-container">
+                            <div class="quiz-question">5. Tokoh penemu mesin Turing adalah...</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(5, 'A')">A. Alan</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(5, 'B')">B. Automata</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(5, 'C')">C. Alan Turing</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(5, 'D')">D. James Turing</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(5, 'E')">E. David Turing</div>
+                        </div>
+                        
+                        <div class="quiz-container">
+                            <div class="quiz-question">6. Proses mengenali runtunan multisimbol di dalam program ditangani oleh compiler disebut...</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(6, 'A')">A. source program</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(6, 'B')">B. lexical analyzer</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(6, 'C')">C. parser</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(6, 'D')">D. code generation</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(6, 'E')">E. object program</div>
+                        </div>
+                        
+                        <div class="quiz-container">
+                            <div class="quiz-question">7. Translator menganalisa pola dari token, misal if-then, if then-else, atau perulangan loop disebut...</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(7, 'A')">A. source program</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(7, 'B')">B. lexical analyzer</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(7, 'C')">C. parser</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(7, 'D')">D. code generation</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(7, 'E')">E. object program</div>
+                        </div>
+                        
+                        <div class="quiz-container">
+                            <div class="quiz-question">8. Suatu proses yang menghasilkan versi translasi dari bagian program disebut...</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(8, 'A')">A. source program</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(8, 'B')">B. lexical analyzer</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(8, 'C')">C. parser</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(8, 'D')">D. code generation</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(8, 'E')">E. object program</div>
+                        </div>
+                        
+                        <div class="quiz-container">
+                            <div class="quiz-question">9. Semua bagian translasi dibentuk, maka dibentuk versi translasi program yang disebut...</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(9, 'A')">A. source program</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(9, 'B')">B. lexical analyzer</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(9, 'C')">C. parser</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(9, 'D')">D. code generation</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(9, 'E')">E. object program</div>
+                        </div>
+                        
+                        <div class="quiz-container">
+                            <div class="quiz-question">10. Tata bahasa jenis 3 jika semua produksi didalam tata bahasa berbentuk di bawah ini Kecuali...</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(10, 'A')">A. A -> a</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(10, 'B')">B. A -> aB</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(10, 'C')">C. A -> Ba</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(10, 'D')">D. A -> ab</div>
+                            <div class="quiz-option" onclick="checkQuizAnswer(10, 'E')">E. a,b, dan c benar</div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button class="btn btn-custom" onclick="checkAllAnswers()">Cek Semua Jawaban</button>
+                            <button class="btn btn-outline-secondary" onclick="resetQuiz()">Reset</button>
+                        </div>
+                        
+                        <div id="quizResult" class="alert mt-3" style="display:none;"></div>
+                        
+                        <div class="mt-4">
+                            <h5>Kunci Jawaban: <span class="highlight">ADEBCBCDED</span></h5>
+                            <p>Jawaban yang benar: 1-A, 2-D, 3-E, 4-B, 5-C, 6-B, 7-C, 8-D, 9-E, 10-D</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>Materi 14: Bahasa Formal & Mesin Status Terhingga | Struktur Diskrit</p>
+            <p>Dibuat dengan ❤️ menggunakan Bootstrap 5 | Warna psikologis ramah mata</p>
+            <p class="mt-2">
+                <i class="fas fa-mobile-alt me-1"></i> Responsive Design | 
+                <i class="fas fa-brain me-1"></i> Interaktif | 
+                <i class="fas fa-book me-1"></i> Materi Lengkap
+            </p>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Fungsi untuk toggle FAQ
+        function toggleFAQ(id) {
+            const answer = document.getElementById('faq' + id);
+            const icon = answer.previousElementSibling.querySelector('i');
+            
+            if (answer.classList.contains('show')) {
+                answer.classList.remove('show');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            } else {
+                answer.classList.add('show');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            }
+        }
+        
+        // Fungsi untuk cek bilangan biner genap
+        function checkBinary() {
+            const input = document.getElementById('binaryInput').value;
+            const resultDiv = document.getElementById('binaryResult');
+            
+            // Validasi input
+            if (!/^[01]+$/.test(input)) {
+                resultDiv.innerHTML = '<strong>Error:</strong> Masukkan hanya angka 0 dan 1!';
+                resultDiv.className = 'alert alert-danger';
+                resultDiv.style.display = 'block';
+                return;
+            }
+            
+            // Cek apakah berakhir dengan 0 (genap)
+            const isEven = input.endsWith('0');
+            
+            if (isEven) {
+                resultDiv.innerHTML = `<strong>✓ DITERIMA:</strong> "${input}" adalah bilangan biner genap (berakhir dengan 0)`;
+                resultDiv.className = 'alert alert-success';
+            } else {
+                resultDiv.innerHTML = `<strong>✗ DITOLAK:</strong> "${input}" adalah bilangan biner ganjil (berakhir dengan 1)`;
+                resultDiv.className = 'alert alert-danger';
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+        
+        // Fungsi untuk cek pola "abb"
+        function checkPattern() {
+            const input = document.getElementById('patternInput').value.toLowerCase();
+            const resultDiv = document.getElementById('patternResult');
+            
+            // Validasi input
+            if (!/^[ab]+$/.test(input)) {
+                resultDiv.innerHTML = '<strong>Error:</strong> Masukkan hanya huruf a dan b!';
+                resultDiv.className = 'alert alert-danger';
+                resultDiv.style.display = 'block';
+                return;
+            }
+            
+            // Cek apakah mengandung substring "abb"
+            const containsAbb = input.includes('abb');
+            
+            if (containsAbb) {
+                resultDiv.innerHTML = `<strong>✓ DITERIMA:</strong> "${input}" mengandung substring "abb"`;
+                resultDiv.className = 'alert alert-success';
+            } else {
+                resultDiv.innerHTML = `<strong>✗ DITOLAK:</strong> "${input}" tidak mengandung substring "abb"`;
+                resultDiv.className = 'alert alert-danger';
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+        
+        // Fungsi untuk kuis Chomsky
+        function checkChomskyAnswer(option) {
+            const resultDiv = document.getElementById('chomskyResult');
+            const correctAnswer = 2; // Tipe-2 (Context-Free)
+            
+            // Reset semua option
+            document.querySelectorAll('#chomskyResult').forEach(div => {
+                div.innerHTML = '';
+            });
+            
+            if (option === correctAnswer) {
+                resultDiv.innerHTML = '<div class="alert alert-success"><strong>Benar!</strong> Python sintaks mayoritas Tipe-2 (Context-Free Grammar), tapi semantic analysis memerlukan Tipe-1.</div>';
+            } else {
+                resultDiv.innerHTML = '<div class="alert alert-danger"><strong>Salah!</strong> Python sintaks mayoritas Tipe-2 (Context-Free Grammar).</div>';
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+        
+        // Variabel untuk menyimpan jawaban quiz
+        const quizAnswers = {
+            1: 'A', 2: 'D', 3: 'E', 4: 'B', 5: 'C',
+            6: 'B', 7: 'C', 8: 'D', 9: 'E', 10: 'D'
+        };
+        
+        const userAnswers = {};
+        
+        // Fungsi untuk cek jawaban per soal
+        function checkQuizAnswer(questionNum, selectedAnswer) {
+            userAnswers[questionNum] = selectedAnswer;
+            
+            // Reset style untuk semua option soal ini
+            const container = document.querySelectorAll('.quiz-container')[questionNum - 1];
+            container.querySelectorAll('.quiz-option').forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+            });
+            
+            // Tandai jawaban yang dipilih
+            const selectedOption = Array.from(container.querySelectorAll('.quiz-option')).find(
+                option => option.textContent.trim().startsWith(selectedAnswer + '.')
+            );
+            
+            if (selectedOption) {
+                if (selectedAnswer === quizAnswers[questionNum]) {
+                    selectedOption.classList.add('correct');
+                } else {
+                    selectedOption.classList.add('incorrect');
+                    
+                    // Tampilkan jawaban yang benar
+                    const correctOption = Array.from(container.querySelectorAll('.quiz-option')).find(
+                        option => option.textContent.trim().startsWith(quizAnswers[questionNum] + '.')
+                    );
+                    if (correctOption) {
+                        correctOption.classList.add('correct');
+                    }
+                }
+            }
+        }
+        
+        // Fungsi untuk cek semua jawaban
+        function checkAllAnswers() {
+            let score = 0;
+            const totalQuestions = 10;
+            
+            // Hitung skor
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (userAnswers[i] === quizAnswers[i]) {
+                    score++;
+                }
+            }
+            
+            // Tampilkan hasil
+            const resultDiv = document.getElementById('quizResult');
+            const percentage = (score / totalQuestions) * 100;
+            
+            let message = `<h5>Hasil Kuis</h5>`;
+            message += `<p>Skor: <strong>${score}/${totalQuestions}</strong> (${percentage.toFixed(1)}%)</p>`;
+            
+            if (percentage >= 80) {
+                message += `<div class="alert alert-success">Excellent! Anda menguasai materi dengan baik.</div>`;
+            } else if (percentage >= 60) {
+                message += `<div class="alert alert-warning">Good! Coba pelajari lagi bagian yang salah.</div>`;
+            } else {
+                message += `<div class="alert alert-danger">Perlu belajar lebih giat lagi. Pelajari materi sekali lagi.</div>`;
+            }
+            
+            resultDiv.innerHTML = message;
+            resultDiv.className = 'alert alert-info';
+            resultDiv.style.display = 'block';
+        }
+        
+        // Fungsi untuk reset quiz
+        function resetQuiz() {
+            // Reset user answers
+            for (let i = 1; i <= 10; i++) {
+                userAnswers[i] = null;
+            }
+            
+            // Reset semua style option
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+            });
+            
+            // Sembunyikan hasil
+            document.getElementById('quizResult').style.display = 'none';
+        }
+        
+        // Inisialisasi FAQ
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto close other FAQs when one is opened
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const thisAnswer = this.nextElementSibling;
+                    const thisIcon = this.querySelector('i');
+                    
+                    // Close all other FAQs
+                    faqQuestions.forEach(otherQuestion => {
+                        if (otherQuestion !== question) {
+                            const otherAnswer = otherQuestion.nextElementSibling;
+                            const otherIcon = otherQuestion.querySelector('i');
+                            otherAnswer.classList.remove('show');
+                            otherIcon.classList.remove('fa-chevron-up');
+                            otherIcon.classList.add('fa-chevron-down');
+                        }
+                    });
+                    
+                    // Toggle this FAQ
+                    if (thisAnswer.classList.contains('show')) {
+                        thisAnswer.classList.remove('show');
+                        thisIcon.classList.remove('fa-chevron-up');
+                        thisIcon.classList.add('fa-chevron-down');
+                    } else {
+                        thisAnswer.classList.add('show');
+                        thisIcon.classList.remove('fa-chevron-down');
+                        thisIcon.classList.add('fa-chevron-up');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
