@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif Struktur Diskrit</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --success-color: #4ade80;
+            --warning-color: #fbbf24;
+            --danger-color: #f87171;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --bg-color: #f0f4f8;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --text-secondary: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-top: 20px;
+            padding-bottom: 50px;
+        }
+
+        .container {
+            max-width: 1000px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-weight: 700;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            background-color: var(--card-color);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            background-color: rgba(67, 97, 238, 0.1);
+            border-bottom: 2px solid rgba(67, 97, 238, 0.2);
+            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid rgba(67, 97, 238, 0.2);
+            margin-bottom: 2rem;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--text-secondary);
+            font-weight: 500;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px 8px 0 0;
+            margin-right: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.1);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .quiz-option {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            background-color: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .quiz-option:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+            border-color: var(--primary-color);
+        }
+
+        .quiz-option.selected {
+            background-color: rgba(67, 97, 238, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .quiz-option.correct {
+            background-color: rgba(76, 201, 240, 0.1);
+            border-color: var(--accent-color);
+            color: #0d6efd;
+        }
+
+        .quiz-option.incorrect {
+            background-color: rgba(248, 113, 113, 0.1);
+            border-color: var(--danger-color);
+            color: #dc3545;
+        }
+
+        .option-letter {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            background-color: #e9ecef;
+            border-radius: 50%;
+            margin-right: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .option-text {
+            flex: 1;
+        }
+
+        .btn-custom {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-custom:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-custom {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-outline-custom:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #eef2ff 100%);
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .progress-bar-custom {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #e9ecef;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .answer-key {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #dee2e6;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header {
+                padding: 1.5rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .nav-tabs .nav-link {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .quiz-option {
+                padding: 0.6rem 0.8rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .badge-custom {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-graduation-cap me-2"></i>Kuis Interaktif Struktur Diskrit</h1>
+            <p>Uji pemahaman Anda dengan kuis dari pertemuan 9-14. Auto-correction dengan penjelasan.</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs" id="quizTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pertemuan9-tab" data-bs-toggle="tab" data-bs-target="#pertemuan9" type="button">Pertemuan 9</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pertemuan10-tab" data-bs-toggle="tab" data-bs-target="#pertemuan10" type="button">Pertemuan 10</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pertemuan11-tab" data-bs-toggle="tab" data-bs-target="#pertemuan11" type="button">Pertemuan 11</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pertemuan12-tab" data-bs-toggle="tab" data-bs-target="#pertemuan12" type="button">Pertemuan 12</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pertemuan13-tab" data-bs-toggle="tab" data-bs-target="#pertemuan13" type="button">Pertemuan 13</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pertemuan14-tab" data-bs-toggle="tab" data-bs-target="#pertemuan14" type="button">Pertemuan 14</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="semua-tab" data-bs-toggle="tab" data-bs-target="#semua" type="button">Semua</button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="quizTabContent">
+            <!-- Pertemuan 9 -->
+            <div class="tab-pane fade show active" id="pertemuan9" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fas fa-calculator me-2"></i>Pertemuan 9: Aljabar Boolean Lanjutan</span>
+                        <span class="badge-custom">10 Soal</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="quiz9"></div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <button class="btn btn-outline-custom" onclick="resetQuiz(9)">Reset</button>
+                            <button class="btn btn-custom" onclick="checkAnswers(9)">Cek Jawaban</button>
+                        </div>
+                        <div id="result9" class="result-card" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pertemuan 10 -->
+            <div class="tab-pane fade" id="pertemuan10" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fas fa-code me-2"></i>Pertemuan 10: Algoritma & Hubungan Rekurensi</span>
+                        <span class="badge-custom">10 Soal</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="quiz10"></div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <button class="btn btn-outline-custom" onclick="resetQuiz(10)">Reset</button>
+                            <button class="btn btn-custom" onclick="checkAnswers(10)">Cek Jawaban</button>
+                        </div>
+                        <div id="result10" class="result-card" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pertemuan 11 -->
+            <div class="tab-pane fade" id="pertemuan11" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fas fa-project-diagram me-2"></i>Pertemuan 11: Teori Graf</span>
+                        <span class="badge-custom">10 Soal</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="quiz11"></div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <button class="btn btn-outline-custom" onclick="resetQuiz(11)">Reset</button>
+                            <button class="btn btn-custom" onclick="checkAnswers(11)">Cek Jawaban</button>
+                        </div>
+                        <div id="result11" class="result-card" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pertemuan 12 -->
+            <div class="tab-pane fade" id="pertemuan12" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fas fa-sitemap me-2"></i>Pertemuan 12: Teori Graf Lanjutan</span>
+                        <span class="badge-custom">10 Soal</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="quiz12"></div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <button class="btn btn-outline-custom" onclick="resetQuiz(12)">Reset</button>
+                            <button class="btn btn-custom" onclick="checkAnswers(12)">Cek Jawaban</button>
+                        </div>
+                        <div id="result12" class="result-card" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pertemuan 13 -->
+            <div class="tab-pane fade" id="pertemuan13" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fas fa-tree me-2"></i>Pertemuan 13: Pohon (Tree)</span>
+                        <span class="badge-custom">10 Soal</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="quiz13"></div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <button class="btn btn-outline-custom" onclick="resetQuiz(13)">Reset</button>
+                            <button class="btn btn-custom" onclick="checkAnswers(13)">Cek Jawaban</button>
+                        </div>
+                        <div id="result13" class="result-card" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pertemuan 14 -->
+            <div class="tab-pane fade" id="pertemuan14" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fas fa-language me-2"></i>Pertemuan 14: Bahasa Formal & Mesin Status Terhingga</span>
+                        <span class="badge-custom">10 Soal</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="quiz14"></div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <button class="btn btn-outline-custom" onclick="resetQuiz(14)">Reset</button>
+                            <button class="btn btn-custom" onclick="checkAnswers(14)">Cek Jawaban</button>
+                        </div>
+                        <div id="result14" class="result-card" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Semua Kuis -->
+            <div class="tab-pane fade" id="semua" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fas fa-star me-2"></i>Semua Pertemuan (9-14)</span>
+                        <span class="badge-custom">60 Soal</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-4">Jawab semua soal dari pertemuan 9-14 sekaligus. Klik tombol di bawah untuk memulai.</p>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-outline-custom" onclick="resetAllQuizzes()">Reset Semua</button>
+                            <button class="btn btn-custom" onclick="checkAllQuizzes()">Cek Semua Jawaban</button>
+                        </div>
+                        <div id="resultAll" class="result-card mt-4" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+               
+        <!-- Footer -->
+        <div class="footer">
+            <p>Kuis Interaktif Struktur Diskrit | Universitas Nusa Mandiri</p>
+            <p>Dibuat dengan ❤️ menggunakan Bootstrap 5 | Auto-correction dengan JavaScript</p>
+            <p class="mt-2">
+                <i class="fas fa-mobile-alt me-1"></i> Responsive Design | 
+                <i class="fas fa-check-circle me-1"></i> Auto-correction | 
+                <i class="fas fa-book me-1"></i> 60 Soal Lengkap
+            </p>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Data soal dan jawaban
+        const quizData = {
+            9: {
+                title: "Aljabar Boolean Lanjutan",
+                questions: [
+                    {
+                        question: "Fungsi Boolean yang dinyatakan sebagai jumlah dari hasil kali, hasil kali dari jumlah dengan setiap suku mengandung literal yang lengkap disebut dengan...",
+                        options: ["Literal", "Suku/term", "Kanonik", "Komplemen", "Baku"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Di bawah ini yang merupakan jenis-jenis bentuk kanonik adalah...",
+                        options: ["Minterm", "Maxterm", "SOP", "POS", "Benar semua"],
+                        answer: "E"
+                    },
+                    {
+                        question: "Dalam aplikasi fungsi Boolean dalam jaringan pensaklaran, operasi perkalian merupakan bentuk...",
+                        options: ["Seri", "Paralel", "Seri-paralel", "Tertutup", "Terbuka"],
+                        answer: "A"
+                    },
+                    {
+                        question: "Dalam aplikasi fungsi Boolean dalam rangkaian digital elektronik, negasi dari perkalian adalah...",
+                        options: ["AND", "NAND", "OR", "NOR", "XOR"],
+                        answer: "B"
+                    },
+                    {
+                        question: "f(w,x,y,z) = wxy'z' + wxy'z + wx'y'z' + wx'y'z jika disederhanakan menjadi...",
+                        options: ["f = WX", "f = Xy", "f = Wy", "f = Wy'", "f = Yz"],
+                        answer: "D"
+                    },
+                    {
+                        question: "f(x,y) = xy + x'y + xy' merupakan bentuk penyajian fungsi kanonik...",
+                        options: ["SOP", "POS", "Dual", "Komplemen", "Baku"],
+                        answer: "A"
+                    },
+                    {
+                        question: "f(x,y) = (x + y)(x' + y)(x + y') merupakan bentuk penyajian fungsi kanonik...",
+                        options: ["SOP", "POS", "Dual", "Komplemen", "Baku"],
+                        answer: "B"
+                    },
+                    {
+                        question: "f(x,y) = xy + x + y merupakan bentuk penyajian fungsi kanonik...",
+                        options: ["SOP", "POS", "Dual", "Komplemen", "Baku"],
+                        answer: "E"
+                    },
+                    {
+                        question: "Dalam pembuatan peta Karnaugh, kita menggunakan nilai yang merepresentasikan nilai...",
+                        options: ["Minterm/SOP", "Maksterm/POS", "Dual", "Komplemen", "Baku"],
+                        answer: "A"
+                    },
+                    {
+                        question: "Penyederhanaan fungsi Boolean dengan manipulasi hukum aljabar secara cut-and-try disebut penyederhanaan...",
+                        options: ["Dualitas", "Komplemen", "Aljabar", "Peta Karnaugh", "Quine-McCluskey"],
+                        answer: "C"
+                    }
+                ],
+                answerKey: "CEABDABEAC"
+            },
+            10: {
+                title: "Algoritma & Hubungan Rekurensi",
+                questions: [
+                    {
+                        question: "Langkah-langkah logis untuk menyelesaikan masalah disebut dengan...",
+                        options: ["Algoritma", "Notasi O-besar", "Rekurensi", "Fungsi", "Relasi"],
+                        answer: "A"
+                    },
+                    {
+                        question: "Permasalahan pencarian biner akan optimal jika menggunakan algoritma waktu...",
+                        options: ["O(1)", "O(n!)", "O(log n)", "O(n log n)", "O(n)"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Jenis cara pencarian data ada...",
+                        options: ["1", "2", "4", "5", "6"],
+                        answer: "B"
+                    },
+                    {
+                        question: "Data: 27, 80, 02, 46, 16, 12, 50. Jika diurutkan dengan metode seleksi, maka pada langkah ke-3 diperoleh urutan...",
+                        options: [
+                            "02, 80, 27, 46, 16, 12, 50",
+                            "02, 12, 27, 46, 16, 80, 50",
+                            "02, 12, 16, 46, 27, 80, 50",
+                            "02, 12, 16, 27, 46, 80, 50",
+                            "02, 12, 16, 27, 46, 50, 80"
+                        ],
+                        answer: "C"
+                    },
+                    {
+                        question: "Kemampuan memanggil dirinya sendiri dengan parameter berbeda sampai pengulangan berhenti disebut...",
+                        options: ["Algoritma", "Notasi O-besar", "Relasi", "Fungsi", "Rekurensi"],
+                        answer: "E"
+                    },
+                    {
+                        question: "Di bawah ini contoh algoritma yang menggunakan waktu kompleksitas O(log n) adalah...",
+                        options: ["Linear search", "Binary search", "Bubble sort", "Selection sort", "Merge, quick, heap sort"],
+                        answer: "B"
+                    },
+                    {
+                        question: "Di bawah ini contoh algoritma yang menggunakan waktu kompleksitas O(n) adalah...",
+                        options: ["Linear search", "Binary search", "Bubble sort", "Merge sort", "Quick sort"],
+                        answer: "A"
+                    },
+                    {
+                        question: "Di bawah ini contoh algoritma yang menggunakan waktu kompleksitas O(n²) adalah...",
+                        options: ["Linear search", "Binary search", "Bubble sort", "Merge sort", "Quick sort"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Di bawah ini contoh algoritma yang menggunakan waktu kompleksitas O(n log n) adalah...",
+                        options: ["Linear search", "Binary search", "Bubble sort", "Merge, quick, heap sort", "Selection sort"],
+                        answer: "D"
+                    },
+                    {
+                        question: "Di bawah ini merupakan contoh penerapan rekurensi...",
+                        options: ["Faktorial", "Menara Hanoi", "Fibonacci", "Quick dan binary", "Faktorial, Menara Hanoi, Fibonacci"],
+                        answer: "E"
+                    }
+                ],
+                answerKey: "ACBCEBADED"
+            },
+            11: {
+                title: "Teori Graf",
+                questions: [
+                    {
+                        question: "Himpunan simpul-simpul yang dihubungkan oleh sisi-sisi disebut...",
+                        options: ["Graf", "Pohon", "Vertex", "Edges", "Node"],
+                        answer: "A"
+                    },
+                    {
+                        question: "Graf yang tidak mengandung gelang maupun sisi ganda disebut graf...",
+                        options: ["Berhingga", "Sederhana", "Berarah", "Tak sederhana", "Tak berhingga"],
+                        answer: "B"
+                    },
+                    {
+                        question: "Dalam pengujian program, kita menerapkan jenis graf...",
+                        options: ["Sederhana", "Tak berarah", "Berarah", "Tak sederhana", "Tak berhingga"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Lintasan elementer dengan simpul awal sama dengan simpul akhir disebut...",
+                        options: ["Derajat", "Terhubung", "Siklus", "Pohon", "Simpul terpencil"],
+                        answer: "D"
+                    },
+                    {
+                        question: "Jumlah sisi pada graf lengkap dirumuskan dengan...",
+                        options: ["n – 1", "(n – 1)/2", "n(n – 1)/2", "2n", "nr/2"],
+                        answer: "E"
+                    },
+                    {
+                        question: "Suatu graf dimana simpul tidak boleh kosong tetapi garis atau sisi boleh kosong, terminologi graf...",
+                        options: ["Simpul terpencil", "Graf kosong", "Derajat", "Lintasan", "Pohon"],
+                        answer: "B"
+                    },
+                    {
+                        question: "Simpul yang tidak bersisian dengan simpul lainnya merupakan terminologi graf...",
+                        options: ["Simpul terpencil", "Graf kosong", "Derajat", "Lintasan", "Pohon"],
+                        answer: "A"
+                    },
+                    {
+                        question: "Jumlah sisi pada sebuah simpul dalam terminologi graf disebut...",
+                        options: ["Graf terpencil", "Graf kosong", "Derajat", "Lintasan", "Pohon"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Rangkaian sisi yang menghubungkan dari simpul awal hingga simpul akhir, terminologi graf...",
+                        options: ["Graf terpencil", "Graf kosong", "Derajat", "Lintasan", "Pohon"],
+                        answer: "D"
+                    },
+                    {
+                        question: "Graf dimana sisi-sisinya hanya berupa percabangan tidak membentuk lintasan tertutup atau sirkuit, terminologi graf...",
+                        options: ["Graf terpencil", "Graf kosong", "Derajat", "Lintasan", "Pohon"],
+                        answer: "E"
+                    }
+                ],
+                answerKey: "ABCDEBACDE"
+            },
+            12: {
+                title: "Teori Graf Lanjutan",
+                questions: [
+                    {
+                        question: "Untuk merepresentasikan graf ada... cara.",
+                        options: ["1", "2", "3", "4", "5"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Dua buah graf sama dengan bentuk yang berbeda disebut graf...",
+                        options: ["Isomorfik", "Dual", "Euler", "Hamilton", "Planar"],
+                        answer: "A"
+                    },
+                    {
+                        question: "Untuk menyatakan jumlah wilayah dalam graf dinotasikan dengan...",
+                        options: ["n", "f", "e", "s", "r"],
+                        answer: "B"
+                    },
+                    {
+                        question: "Lintasan atau sirkuit yang melalui sisi-sisi graf tepat satu kali disebut...",
+                        options: ["Isomorfik", "Dual", "Planar", "Euler", "Hamilton"],
+                        answer: "D"
+                    },
+                    {
+                        question: "Graf yang dapat digambarkan pada bidang datar dengan sisi-sisi tidak saling memotong disebut...",
+                        options: ["Isomorfik", "Dual", "Planar", "Euler", "Hamilton"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Lintasan yang melalui sisi-sisi dalam graf tepat satu kali disebut...",
+                        options: ["Lintasan Euler", "Sirkuit Euler", "Lintasan Hamilton", "Sirkuit Hamilton", "Pohon"],
+                        answer: "A"
+                    },
+                    {
+                        question: "Lintasan yang melalui sisi-sisi dalam graf tepat satu kali dan kembali ke simpul awal (membentuk lintasan tertutup) disebut...",
+                        options: ["Lintasan Euler", "Sirkuit Euler", "Lintasan Hamilton", "Sirkuit Hamilton", "Pohon"],
+                        answer: "B"
+                    },
+                    {
+                        question: "Lintasan yang melalui simpul dalam graf tepat satu kali disebut...",
+                        options: ["Lintasan Euler", "Sirkuit Euler", "Lintasan Hamilton", "Sirkuit Hamilton", "Pohon"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Lintasan yang melalui simpul dalam graf tepat satu kali dan kembali pada simpul awal (membentuk lintasan tertutup) disebut...",
+                        options: ["Lintasan Euler", "Sirkuit Euler", "Lintasan Hamilton", "Sirkuit Hamilton", "Pohon"],
+                        answer: "D"
+                    },
+                    {
+                        question: "Dalam representasi graf menggunakan jenis bilangan...",
+                        options: ["Asli", "Biner", "Oktal", "Heksa", "Cacah"],
+                        answer: "B"
+                    }
+                ],
+                answerKey: "CABDCABCDB"
+            },
+            13: {
+                title: "Pohon (Tree)",
+                questions: [
+                    {
+                        question: "Graf tak berarah terhubung yang tidak mengandung sirkuit disebut...",
+                        options: ["Pohon", "Level", "Binary", "Anak", "Akar"],
+                        answer: "A"
+                    },
+                    {
+                        question: "Sisi pada pohon rentang disebut dengan...",
+                        options: ["Tali hubung", "Cabang", "Akar", "Rank", "Upapohon"],
+                        answer: "B"
+                    },
+                    {
+                        question: "Metode yang digunakan untuk menyelesaikan pohon rentang minimum adalah...",
+                        options: ["Algoritma Prim", "Algoritma Kruskal", "Traveling Salesman", "a dan c benar", "a dan b benar"],
+                        answer: "E"
+                    },
+                    {
+                        question: "Di bawah ini yang bukan terminologi pohon adalah...",
+                        options: ["Anak", "Lintasan", "Sirkuit", "Derajat", "Daun"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Pohon biner dengan daun berupa operand dan simpul dalam berupa operator disebut dengan pohon...",
+                        options: ["Keputusan", "Huffman", "Prefiks", "Ekspresi", "Pencarian biner"],
+                        answer: "D"
+                    },
+                    {
+                        question: "Sisi pada sebuah simpul disebut...",
+                        options: ["Derajat", "Daun", "Anak", "Aras", "Tinggi"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Jumlah sisi atau anak pada sebuah simpul disebut...",
+                        options: ["Derajat", "Daun", "Anak", "Aras", "Tinggi"],
+                        answer: "A"
+                    },
+                    {
+                        question: "Simpul yang berderajat nol disebut...",
+                        options: ["Derajat", "Daun", "Anak", "Aras", "Tinggi"],
+                        answer: "B"
+                    },
+                    {
+                        question: "Aras maksimum dari sebuah pohon disebut...",
+                        options: ["Derajat", "Daun", "Anak", "Aras", "Tinggi"],
+                        answer: "E"
+                    },
+                    {
+                        question: "Sisi pada pohon rentang disebut...",
+                        options: ["Derajat", "Daun", "Anak", "Cabang", "Tinggi"],
+                        answer: "D"
+                    }
+                ],
+                answerKey: "ABECDCABED"
+            },
+            14: {
+                title: "Bahasa Formal & Mesin Status Terhingga",
+                questions: [
+                    {
+                        question: "Suatu bahasa yang harus mengikuti aturan bahasa pemrograman dan bahasa matematis seperti aljabar dan logika proposisi disebut bahasa...",
+                        options: ["Formal", "Natural", "Verbal", "Frasa", "Automata"],
+                        answer: "A"
+                    },
+                    {
+                        question: "Jenis tatabahasa dalam bahasa formal terdiri dari...",
+                        options: ["1", "2", "3", "4", "5"],
+                        answer: "D"
+                    },
+                    {
+                        question: "Level terendah dari hirarki mesin dan bahasa disebut...",
+                        options: ["Formal", "Frasa", "Natural", "Verbal", "Automata terhingga"],
+                        answer: "E"
+                    },
+                    {
+                        question: "Dalam diagram transisi untuk menyatakan string yang valid telah dikenali ditandai dengan...",
+                        options: ["Busur", "Kategori", "Lingkaran ganda", "Simbol", "Inisiasi"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Tokoh penemu mesin Turing adalah...",
+                        options: ["Alan", "James Turing", "Automata", "David Turing", "Alan Turing"],
+                        answer: "E"
+                    },
+                    {
+                        question: "Proses mengenali runtunan multisimbol di dalam program ditangani oleh compiler disebut...",
+                        options: ["source program", "lexical analyzer", "parser", "code generation", "object program"],
+                        answer: "B"
+                    },
+                    {
+                        question: "Translator menganalisa pola dari token, misal if-then, if then-else, atau perulangan loop disebut...",
+                        options: ["source program", "lexical analyzer", "parser", "code generation", "object program"],
+                        answer: "C"
+                    },
+                    {
+                        question: "Suatu proses yang menghasilkan versi translasi dari bagian program disebut...",
+                        options: ["source program", "object program", "lexical analyzer", "parser", "code generation"],
+                        answer: "D"
+                    },
+                    {
+                        question: "Semua bagian translasi dibentuk, maka dibentuk versi translasi program yang disebut...",
+                        options: ["source program", "lexical analyzer", "parser", "code generation", "object program"],
+                        answer: "E"
+                    },
+                    {
+                        question: "Tata bahasa jenis 3 jika semua produksi didalam tata bahasa berbentuk di bawah ini Kecuali...",
+                        options: ["A -> a", "A -> aB", "A -> Ba", "A -> ab", "a,b, dan c benar"],
+                        answer: "D"
+                    }
+                ],
+                answerKey: "ADEBCBCDED"
+            }
+        };
+
+        // State untuk menyimpan jawaban user
+        const userAnswers = {};
+        
+        // Inisialisasi state
+        function initUserAnswers() {
+            for (const quizId in quizData) {
+                userAnswers[quizId] = Array(quizData[quizId].questions.length).fill(null);
+            }
+        }
+        
+        // Render quiz
+        function renderQuiz(quizId) {
+            const quiz = quizData[quizId];
+            const container = document.getElementById(`quiz${quizId}`);
+            
+            if (!container) return;
+            
+            let html = '';
+            
+            quiz.questions.forEach((q, index) => {
+                html += `<div class="quiz-question">${index + 1}. ${q.question}</div>`;
+                
+                const letters = ['A', 'B', 'C', 'D', 'E'];
+                q.options.forEach((option, optIndex) => {
+                    const letter = letters[optIndex];
+                    const isSelected = userAnswers[quizId][index] === letter;
+                    const selectedClass = isSelected ? 'selected' : '';
+                    
+                    html += `
+                    <div class="quiz-option ${selectedClass}" onclick="selectAnswer(${quizId}, ${index}, '${letter}')">
+                        <div class="option-letter">${letter}</div>
+                        <div class="option-text">${option}</div>
+                    </div>`;
+                });
+                
+                html += '<div class="mb-4"></div>';
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Pilih jawaban
+        function selectAnswer(quizId, questionIndex, answer) {
+            userAnswers[quizId][questionIndex] = answer;
+            renderQuiz(quizId);
+        }
+        
+        // Reset quiz
+        function resetQuiz(quizId) {
+            userAnswers[quizId] = Array(quizData[quizId].questions.length).fill(null);
+            renderQuiz(quizId);
+            const resultDiv = document.getElementById(`result${quizId}`);
+            if (resultDiv) {
+                resultDiv.style.display = 'none';
+                resultDiv.innerHTML = '';
+            }
+        }
+        
+        // Reset semua quiz
+        function resetAllQuizzes() {
+            for (const quizId in quizData) {
+                resetQuiz(quizId);
+            }
+            const resultAllDiv = document.getElementById('resultAll');
+            if (resultAllDiv) {
+                resultAllDiv.style.display = 'none';
+                resultAllDiv.innerHTML = '';
+            }
+        }
+        
+        // Cek jawaban untuk satu quiz
+        function checkAnswers(quizId) {
+            const quiz = quizData[quizId];
+            let score = 0;
+            const totalQuestions = quiz.questions.length;
+            const resultDiv = document.getElementById(`result${quizId}`);
+            
+            // Hitung skor
+            for (let i = 0; i < totalQuestions; i++) {
+                if (userAnswers[quizId][i] === quiz.questions[i].answer) {
+                    score++;
+                }
+            }
+            
+            // Tampilkan hasil
+            const percentage = (score / totalQuestions) * 100;
+            let message = `<h5>Hasil Kuis: ${quiz.title}</h5>`;
+            message += `<div class="score-display">${score}/${totalQuestions}</div>`;
+            message += `<div class="progress-bar-custom"><div class="progress-fill" style="width: ${percentage}%"></div></div>`;
+            message += `<p><strong>Persentase:</strong> ${percentage.toFixed(1)}%</p>`;
+            
+            if (percentage >= 80) {
+                message += `<div class="alert alert-success mt-2">Excellent! Anda menguasai materi dengan sangat baik.</div>`;
+            } else if (percentage >= 60) {
+                message += `<div class="alert alert-warning mt-2">Good! Coba pelajari lagi bagian yang salah.</div>`;
+            } else {
+                message += `<div class="alert alert-danger mt-2">Perlu belajar lebih giat lagi. Pelajari materi sekali lagi.</div>`;
+            }
+            
+            // Tampilkan jawaban yang salah
+            let wrongAnswers = [];
+            for (let i = 0; i < totalQuestions; i++) {
+                if (userAnswers[quizId][i] !== quiz.questions[i].answer) {
+                    const correctLetter = quiz.questions[i].answer;
+                    const correctOption = quiz.questions[i].options[correctLetter.charCodeAt(0) - 65];
+                    wrongAnswers.push(`<li><strong>Soal ${i+1}:</strong> Jawaban benar: <span class="text-success">${correctLetter}. ${correctOption}</span></li>`);
+                }
+            }
+            
+            if (wrongAnswers.length > 0) {
+                message += `<div class="mt-3"><strong>Jawaban yang salah:</strong><ul class="mt-2">${wrongAnswers.join('')}</ul></div>`;
+            }
+            
+            resultDiv.innerHTML = message;
+            resultDiv.style.display = 'block';
+            resultDiv.classList.add('fade-in');
+            
+            // Highlight jawaban yang benar/salah di UI
+            highlightAnswers(quizId);
+        }
+        
+        // Cek semua quiz
+        function checkAllQuizzes() {
+            let totalScore = 0;
+            let totalQuestions = 0;
+            const resultAllDiv = document.getElementById('resultAll');
+            
+            for (const quizId in quizData) {
+                const quiz = quizData[quizId];
+                totalQuestions += quiz.questions.length;
+                
+                for (let i = 0; i < quiz.questions.length; i++) {
+                    if (userAnswers[quizId][i] === quiz.questions[i].answer) {
+                        totalScore++;
+                    }
+                }
+                
+                // Highlight jawaban untuk setiap quiz
+                highlightAnswers(quizId);
+            }
+            
+            const percentage = (totalScore / totalQuestions) * 100;
+            let message = `<h5>Hasil Semua Kuis (Pertemuan 9-14)</h5>`;
+            message += `<div class="score-display">${totalScore}/${totalQuestions}</div>`;
+            message += `<div class="progress-bar-custom"><div class="progress-fill" style="width: ${percentage}%"></div></div>`;
+            message += `<p><strong>Persentase:</strong> ${percentage.toFixed(1)}%</p>`;
+            
+            if (percentage >= 80) {
+                message += `<div class="alert alert-success mt-2">Sangat luar biasa! Anda menguasai semua materi dengan sangat baik.</div>`;
+            } else if (percentage >= 60) {
+                message += `<div class="alert alert-warning mt-2">Bagus! Coba pelajari lagi bagian yang masih kurang.</div>`;
+            } else {
+                message += `<div class="alert alert-danger mt-2">Perlu belajar lebih giat lagi. Pelajari semua materi sekali lagi.</div>`;
+            }
+            
+            message += `<p class="mt-3"><strong>Kunci Jawaban:</strong><br>`;
+            for (const quizId in quizData) {
+                message += `Pertemuan ${quizId}: ${quizData[quizId].answerKey}<br>`;
+            }
+            message += `</p>`;
+            
+            resultAllDiv.innerHTML = message;
+            resultAllDiv.style.display = 'block';
+            resultAllDiv.classList.add('fade-in');
+        }
+        
+        // Highlight jawaban yang benar dan salah
+        function highlightAnswers(quizId) {
+            const quiz = quizData[quizId];
+            const container = document.getElementById(`quiz${quizId}`);
+            
+            if (!container) return;
+            
+            const options = container.querySelectorAll('.quiz-option');
+            let optionIndex = 0;
+            
+            quiz.questions.forEach((q, qIndex) => {
+                const letters = ['A', 'B', 'C', 'D', 'E'];
+                
+                letters.forEach((letter, lIndex) => {
+                    if (optionIndex < options.length) {
+                        const option = options[optionIndex];
+                        const isCorrect = letter === q.answer;
+                        const isSelected = userAnswers[quizId][qIndex] === letter;
+                        
+                        option.classList.remove('correct', 'incorrect');
+                        
+                        if (isCorrect) {
+                            option.classList.add('correct');
+                        } else if (isSelected && !isCorrect) {
+                            option.classList.add('incorrect');
+                        }
+                        
+                        optionIndex++;
+                    }
+                });
+            });
+        }
+        
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            initUserAnswers();
+            
+            // Render semua quiz
+            for (const quizId in quizData) {
+                renderQuiz(quizId);
+            }
+            
+            // Aktifkan tab pertama
+            const firstTab = document.querySelector('#quizTabs .nav-link');
+            if (firstTab) {
+                firstTab.click();
+            }
+        });
+    </script>
+</body>
+</html>
